@@ -17,7 +17,7 @@ const Navigation = () => {
                         className="d-inline-block align-top"
                         alt="React Bootstrap logo"
                     />{" "}
-                    Firebase Todos
+                    Matapp
                 </Navbar.Brand>
 
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
