@@ -65,9 +65,9 @@ const LoginPage = () => {
 						</Card.Body>
 					</Card>
 
-					{/* <div className="text-center mt-3">
+					<div className="text-center mt-3">
 						Need an account? <Link to="/signup">Sign Up</Link>
-					</div> */}
+					</div>
 				</Col>
 			</Row>
 		</Container>
