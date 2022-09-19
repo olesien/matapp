@@ -1,6 +1,11 @@
 import React, { useEffect } from "react";
-import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
-import { Marker, InfoWindow } from "@react-google-maps/api";
+import {
+    GoogleMap,
+    useJsApiLoader,
+    Marker,
+    InfoWindow,
+    InfoBox,
+} from "@react-google-maps/api";
 import { useState } from "react";
 import Resturant from "./Resturant";
 import useStreamRestaurants from "../hooks/useStreamRestaurants";
@@ -101,7 +106,7 @@ const Map = () => {
     const onUnmount = React.useCallback(function callback(map) {
         setMap(null);
     }, []);
-
+    const options = { closeBoxURL: "", enableEventPropagation: true };
     return isLoaded ? (
         <div className="flex">
             <Resturant resturant={resturant}></Resturant>
@@ -121,14 +126,38 @@ const Map = () => {
                         lat: resturant.position._lat,
                         lng: resturant.position._long,
                     };
+
                     return (
-                        <Marker
-                            key={key}
-                            position={position}
-                            onClick={() => setResturant(resturant)}
-                            title={resturant.name}
-                            label={resturant.name}
-                        />
+                        <>
+                            <Marker
+                                key={key}
+                                position={position}
+                                onClick={() => setResturant(resturant)}
+                                title={resturant.name}
+                                // label={resturant.name}
+                            />
+                            <InfoBox
+                                options={options}
+                                onClick={() => setResturant(resturant)}
+                                position={position}
+                            >
+                                <div
+                                    style={{
+                                        opacity: 1,
+                                        marginBottom: 10,
+                                    }}
+                                >
+                                    <div
+                                        style={{
+                                            fontSize: 16,
+                                            fontColor: `#08233B`,
+                                        }}
+                                    >
+                                        {resturant.name}
+                                    </div>
+                                </div>
+                            </InfoBox>
+                        </>
                     );
                 })}
 
