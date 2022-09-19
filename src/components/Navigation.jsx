@@ -1,11 +1,11 @@
 import Container from "react-bootstrap/Container";
-import Image from "react-bootstrap/Image";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import { Link, NavLink } from "react-router-dom";
-import { NavDropdown } from "react-bootstrap";
+import { useAuthContext } from "../contexts/AuthContext";
 
 const Navigation = () => {
+    const { currentUser } = useAuthContext()
     return (
         <Navbar bg="dark" variant="dark" expand="md">
             <Container>
@@ -23,9 +23,22 @@ const Navigation = () => {
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="ms-auto align-items-center">
-                        <Nav.Link as={NavLink} to="/">
-                            Home
-                        </Nav.Link>
+                        {
+                            currentUser ? (
+                                <>
+                                    {/* User is logged in */}
+                                    <Nav.Link as={NavLink} end to="/restaurants">Restaurants</Nav.Link>
+                                    <Nav.Link as={NavLink} end to="logout">Log Out</Nav.Link>
+                                    {/* </NavDropdown> */}
+                                </>
+                            ) : (
+                                <>
+                                    {/* No user is logged in */}
+                                    <Nav.Link as={NavLink} to="/login">Login</Nav.Link>
+                                    <Nav.Link as={NavLink} to="/signup">Signup</Nav.Link>
+                                </>
+                            )
+                        }
                     </Nav>
                 </Navbar.Collapse>
             </Container>
