@@ -4,6 +4,9 @@ import { ToastContainer } from "react-toastify";
 import Navigation from "./components/Navigation";
 import HomePage from "./pages/HomePage";
 import NotFound from "./pages/NotFound";
+import LoginPage from "./pages/LoginPage";
+import LogoutPage from "./pages/LogoutPage";
+import SignupPage from "./pages/SignupPage";
 import "./assets/scss/App.scss";
 
 function App() {
@@ -16,6 +19,10 @@ function App() {
                 <Route path="*" element={<NotFound />} />
 
                 <Route path="/" element={<HomePage />} />
+
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/logout" element={<LogoutPage />} />
+                <Route path="/signup" element={<SignupPage />} />
             </Routes>
 
             <ToastContainer autoClose={3000} />
