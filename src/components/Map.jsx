@@ -1,9 +1,12 @@
+
 import React, { useEffect } from "react";
-import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
+import { GoogleMap, useJsApiLoader, StandaloneSearchBox } from "@react-google-maps/api";
 import { Marker, InfoWindow } from "@react-google-maps/api";
 import { useState } from "react";
 import Resturant from "./Resturant";
 import useStreamRestaurants from "../hooks/useStreamRestaurants";
+
+const libraries = ["places"]
 
 const containerStyle = {
     width: "400px",
@@ -44,6 +47,7 @@ const Map = () => {
     const { isLoaded } = useJsApiLoader({
         id: "google-map-script",
         googleMapsApiKey: import.meta.env.VITE_MAPS_KEY,
+        libraries,
     });
     const restaurants = useStreamRestaurants();
     console.log(restaurants);
@@ -94,7 +98,7 @@ const Map = () => {
 
     const onLoad = React.useCallback(function callback(map) {
         const bounds = new window.google.maps.LatLngBounds(center);
-        map.fitBounds(bounds);
+        // map.fitBounds(bounds);
         setMap(map);
     }, []);
 
@@ -114,6 +118,16 @@ const Map = () => {
                 onZoomChanged={handleZoomChanged}
                 onCenterChanged={handleCenterChanged}
             >
+                <StandaloneSearchBox
+                    onLoad={onLoad}
+                    onPlacesChanged={onPlaceChanged}
+                >
+                    <input
+                        type="text"
+                        placeholder="Enter a search query"
+                    />
+                </StandaloneSearchBox>
+
                 {/* Child components, such as markers, info windows, etc. */}
 
                 {restaurants.map((resturant, key) => {
