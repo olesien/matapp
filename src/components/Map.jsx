@@ -61,22 +61,20 @@ const Map = () => {
         padding: 15,
     };
 
-    const getUserLocation = () => {
+    const getUserLocation = (map) => {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition((position) => {
                 const userLocation = {
                     lat: position.coords.latitude,
                     lng: position.coords.longitude,
                 };
+                console.log(userLocation);
                 map.setCenter(userLocation); // ADDED
             });
         } else {
             // code for legacy browsers
         }
     };
-    useEffect(() => {
-        getUserLocation();
-    }, []);
 
     const mapContainerStyle = {};
 
@@ -100,6 +98,7 @@ const Map = () => {
     const onLoad = React.useCallback(function callback(map) {
         const bounds = new window.google.maps.LatLngBounds(center);
         map.fitBounds(bounds);
+        getUserLocation(map);
         setMap(map);
     }, []);
 
@@ -128,7 +127,7 @@ const Map = () => {
                     };
 
                     return (
-                        <>
+                        <div key={key}>
                             <Marker
                                 key={key}
                                 position={position}
@@ -157,7 +156,7 @@ const Map = () => {
                                     </div>
                                 </div>
                             </InfoBox>
-                        </>
+                        </div>
                     );
                 })}
 
