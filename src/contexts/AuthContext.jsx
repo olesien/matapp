@@ -1,6 +1,7 @@
-import { createContext, useContext } from 'react'
+import { createContext, useContext, useEffect, useState } from 'react'
 import { 
     createUserWithEmailAndPassword,
+    onAuthStateChanged,
     signInWithEmailAndPassword,
     signOut,
 } from 'firebase/auth'
@@ -13,6 +14,7 @@ const useAuthContext = () => {
 }
 
 const AuthContextProvider = ({ children }) => {
+    const [currentUser, setCurrentUser] = useState(null)
 
     const signup = (email, password) => {
         return createUserWithEmailAndPassword(auth, email, password)
@@ -26,8 +28,18 @@ const AuthContextProvider = ({ children }) => {
         return signOut(auth)
     }
 
+    useEffect(() => {
+        // listen for changes in auth-state
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            setCurrentUser(user)
+        })
+
+        return unsubscribe
+    }, [])
+
 	const contextValues = {
 		// here be everything the children needs/should be able to use
+        currentUser,
         login,
         logout,
         signup,
