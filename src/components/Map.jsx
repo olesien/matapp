@@ -16,9 +16,24 @@ const center = {
 const position = { lat: 33.872, lng: -117.214 };
 
 const positions = [
-    { lat: 33.772, lng: -117.214, title: "Small Shanghai" },
-    { lat: 33.672, lng: -117.214, title: "Japanese samurai special" },
-    { lat: 33.572, lng: -117.214, title: "Swedish meatballs" },
+    {
+        lat: 33.772,
+        lng: -117.214,
+        title: "Small Shanghai",
+        url: "https://www.china-briefing.com/news/wp-content/uploads/2019/04/China-Briefing-Shanghai-Industry-Economics-and-Policy.jpg",
+    },
+    {
+        lat: 33.672,
+        lng: -117.214,
+        title: "Japanese samurai special",
+        url: "https://cdn.britannica.com/71/196871-050-B8665B11/Samurai-Armour-Kusakabe-Kimbei.jpg",
+    },
+    {
+        lat: 33.572,
+        lng: -117.214,
+        title: "Swedish meatballs",
+        url: "https://www.recipetineats.com/wp-content/uploads/2017/01/Swedish-Meatballs_2-SQ.jpg",
+    },
 ];
 const Map = () => {
     const [resturant, setResturant] = useState(null);

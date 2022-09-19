@@ -8,7 +8,7 @@ export default function Resturant({ resturant }) {
     }
     return (
         <Card style={{ width: "18rem" }}>
-            <Card.Img variant="top" src="holder.js/100px180" />
+            <Card.Img variant="top" src={resturant.url} />
             <Card.Body>
                 <Card.Title>{resturant.title}</Card.Title>
                 <Card.Text>
