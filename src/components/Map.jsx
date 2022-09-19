@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import { Marker, InfoWindow } from "@react-google-maps/api";
 import { useState } from "react";
@@ -17,26 +17,26 @@ const center = {
 
 const position = { lat: 33.872, lng: -117.214 };
 
-const positions = [
-    {
-        lat: 33.772,
-        lng: -117.214,
-        title: "Small Shanghai",
-        url: "https://www.china-briefing.com/news/wp-content/uploads/2019/04/China-Briefing-Shanghai-Industry-Economics-and-Policy.jpg",
-    },
-    {
-        lat: 33.672,
-        lng: -117.214,
-        title: "Japanese samurai special",
-        url: "https://cdn.britannica.com/71/196871-050-B8665B11/Samurai-Armour-Kusakabe-Kimbei.jpg",
-    },
-    {
-        lat: 33.572,
-        lng: -117.214,
-        title: "Swedish meatballs",
-        url: "https://www.recipetineats.com/wp-content/uploads/2017/01/Swedish-Meatballs_2-SQ.jpg",
-    },
-];
+// const positions = [
+//     {
+//         lat: 33.772,
+//         lng: -117.214,
+//         title: "Small Shanghai",
+//         url: "https://www.china-briefing.com/news/wp-content/uploads/2019/04/China-Briefing-Shanghai-Industry-Economics-and-Policy.jpg",
+//     },
+//     {
+//         lat: 33.672,
+//         lng: -117.214,
+//         title: "Japanese samurai special",
+//         url: "https://cdn.britannica.com/71/196871-050-B8665B11/Samurai-Armour-Kusakabe-Kimbei.jpg",
+//     },
+//     {
+//         lat: 33.572,
+//         lng: -117.214,
+//         title: "Swedish meatballs",
+//         url: "https://www.recipetineats.com/wp-content/uploads/2017/01/Swedish-Meatballs_2-SQ.jpg",
+//     },
+// ];
 const Map = () => {
     const [resturant, setResturant] = useState(null);
     const { isLoaded } = useJsApiLoader({
@@ -46,6 +46,7 @@ const Map = () => {
     const restaurants = useStreamRestaurants();
     console.log(restaurants);
     const [map, setMap] = React.useState(null);
+    console.log(map);
 
     const divStyle = {
         background: `white`,
@@ -53,10 +54,24 @@ const Map = () => {
         padding: 15,
     };
 
-    const mapContainerStyle = {
-        height: "400px",
-        width: "800px",
+    const getUserLocation = () => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition((position) => {
+                const userLocation = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude,
+                };
+                map.setCenter(userLocation); // ADDED
+            });
+        } else {
+            // code for legacy browsers
+        }
     };
+    useEffect(() => {
+        getUserLocation();
+    });
+
+    const mapContainerStyle = {};
 
     const onLoad = React.useCallback(function callback(map) {
         const bounds = new window.google.maps.LatLngBounds(center);
@@ -77,20 +92,10 @@ const Map = () => {
                 zoom={100}
                 onLoad={onLoad}
                 onUnmount={onUnmount}
+                onZoomChanged={(test) => console.log(test)}
             >
                 {/* Child components, such as markers, info windows, etc. */}
-                <InfoWindow
-                    id="marker-example"
-                    mapContainerStyle={mapContainerStyle}
-                    zoom={2}
-                    center={center}
-                    position={position}
-                >
-                    <div style={divStyle}>
-                        <h3>InfoWindow</h3>
-                    </div>
-                    {/* <Marker position={position} /> */}
-                </InfoWindow>
+
                 {restaurants.map((resturant, key) => {
                     const position = {
                         lat: resturant.position._lat,
@@ -100,7 +105,9 @@ const Map = () => {
                         <Marker
                             key={key}
                             position={position}
-                            onClick={() => setResturant(position)}
+                            onClick={() => setResturant(resturant)}
+                            title={resturant.name}
+                            label={resturant.name}
                         />
                     );
                 })}
