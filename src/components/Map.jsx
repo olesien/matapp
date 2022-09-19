@@ -3,6 +3,7 @@ import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import { Marker, InfoWindow } from "@react-google-maps/api";
 import { useState } from "react";
 import Resturant from "./Resturant";
+import useStreamRestaurants from "../hooks/useStreamRestaurants";
 
 const containerStyle = {
     width: "400px",
@@ -13,6 +14,7 @@ const center = {
     lat: -3.745,
     lng: -38.523,
 };
+
 const position = { lat: 33.872, lng: -117.214 };
 
 const positions = [
@@ -41,7 +43,8 @@ const Map = () => {
         id: "google-map-script",
         googleMapsApiKey: import.meta.env.VITE_MAPS_KEY,
     });
-
+    const restaurants = useStreamRestaurants();
+    console.log(restaurants);
     const [map, setMap] = React.useState(null);
 
     const divStyle = {
@@ -88,13 +91,19 @@ const Map = () => {
                     </div>
                     {/* <Marker position={position} /> */}
                 </InfoWindow>
-                {positions.map((position, key) => (
-                    <Marker
-                        key={key}
-                        position={position}
-                        onClick={() => setResturant(position)}
-                    />
-                ))}
+                {restaurants.map((resturant, key) => {
+                    const position = {
+                        lat: resturant.position._lat,
+                        lng: resturant.position._long,
+                    };
+                    return (
+                        <Marker
+                            key={key}
+                            position={position}
+                            onClick={() => setResturant(position)}
+                        />
+                    );
+                })}
 
                 <></>
             </GoogleMap>
