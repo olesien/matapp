@@ -1,5 +1,8 @@
 import { createContext, useContext } from 'react'
-import { createUserWithEmailAndPassword } from 'firebase/auth'
+import { 
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword
+} from 'firebase/auth'
 import { auth } from '../firebase'
 
 const AuthContext = createContext()
@@ -14,9 +17,14 @@ const AuthContextProvider = ({ children }) => {
         return createUserWithEmailAndPassword(auth, email, password)
     }
 
+    const login = (email, password) => {
+        return signInWithEmailAndPassword(auth, email, password)
+    }
+
 	const contextValues = {
 		// here be everything the children needs/should be able to use
         signup,
+        login,
 	}
 
 	return (

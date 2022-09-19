@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import { Container, Row, Col, Form, Button, Card, Alert, Image } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
-// import { useAuthContext } from '../contexts/AuthContext'
+import { useAuthContext } from '../contexts/AuthContext'
 // import logo from '../assets/images/logo.png'
 
 const LoginPage = () => {
@@ -9,7 +9,7 @@ const LoginPage = () => {
 	const passwordRef = useRef()
 	const [error, setError] = useState(null)
 	const [loading, setLoading] = useState(false)
-	// const { login } = useAuthContext()
+	const { login } = useAuthContext()
 	const navigate = useNavigate()
 
 	const handleSubmit = async (e) => {
@@ -17,15 +17,14 @@ const LoginPage = () => {
 		setError(null);
 
 		// try to log in the user with the specified credentials
-		// try {
-		// 	setLoading(true)
-		// 	await login(emailRef.current.value, passwordRef.current.value)
-		// 	navigate('/')
-
-		// } catch (err) {
-		// 	setError(err.message)
-		// 	setLoading(false)
-		// }
+		try {
+			setLoading(true)
+			await login(emailRef.current.value, passwordRef.current.value)
+			navigate('/')
+		} catch (err) {
+			setError(err.message)
+			setLoading(false)
+		}
 	}
 
 	return (
