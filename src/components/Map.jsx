@@ -2,6 +2,7 @@ import React from "react";
 import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import { Marker, InfoWindow } from "@react-google-maps/api";
 import { useState } from "react";
+import Resturant from "./Resturant";
 
 const containerStyle = {
     width: "400px",
@@ -15,9 +16,9 @@ const center = {
 const position = { lat: 33.872, lng: -117.214 };
 
 const positions = [
-    { lat: 33.772, lng: -117.214 },
-    { lat: 33.672, lng: -117.214 },
-    { lat: 33.572, lng: -117.214 },
+    { lat: 33.772, lng: -117.214, title: "Small Shanghai" },
+    { lat: 33.672, lng: -117.214, title: "Japanese samurai special" },
+    { lat: 33.572, lng: -117.214, title: "Swedish meatballs" },
 ];
 const Map = () => {
     const [resturant, setResturant] = useState(null);
@@ -49,39 +50,40 @@ const Map = () => {
         setMap(null);
     }, []);
 
-    console.log(resturant);
-
     return isLoaded ? (
-        <GoogleMap
-            mapContainerStyle={containerStyle}
-            center={center}
-            zoom={10}
-            onLoad={onLoad}
-            onUnmount={onUnmount}
-        >
-            {/* Child components, such as markers, info windows, etc. */}
-            <InfoWindow
-                id="marker-example"
-                mapContainerStyle={mapContainerStyle}
-                zoom={2}
+        <div className="flex">
+            <Resturant resturant={resturant}></Resturant>
+            <GoogleMap
+                mapContainerStyle={containerStyle}
                 center={center}
-                position={position}
+                zoom={100}
+                onLoad={onLoad}
+                onUnmount={onUnmount}
             >
-                <div style={divStyle}>
-                    <h3>InfoWindow</h3>
-                </div>
-                {/* <Marker position={position} /> */}
-            </InfoWindow>
-            {positions.map((position, key) => (
-                <Marker
-                    key={key}
+                {/* Child components, such as markers, info windows, etc. */}
+                <InfoWindow
+                    id="marker-example"
+                    mapContainerStyle={mapContainerStyle}
+                    zoom={2}
+                    center={center}
                     position={position}
-                    onClick={() => setResturant(position)}
-                />
-            ))}
+                >
+                    <div style={divStyle}>
+                        <h3>InfoWindow</h3>
+                    </div>
+                    {/* <Marker position={position} /> */}
+                </InfoWindow>
+                {positions.map((position, key) => (
+                    <Marker
+                        key={key}
+                        position={position}
+                        onClick={() => setResturant(position)}
+                    />
+                ))}
 
-            <></>
-        </GoogleMap>
+                <></>
+            </GoogleMap>
+        </div>
     ) : (
         <></>
     );
