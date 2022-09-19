@@ -9,6 +9,14 @@
     position: relative;
 }
 
+
+#initial-loader {
+	display: flex;
+	min-height: 100vh;
+	justify-content: center;
+	align-items: center;
+}
+
 .center-y {
 	flex-grow: 1;
 	display: flex;
