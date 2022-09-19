@@ -2,7 +2,7 @@ import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 
 export default function Resturant({ resturant }) {
-    console.log(resturant);
+    //console.log(resturant);
     if (!resturant) {
         return <div></div>;
     }

@@ -14,7 +14,7 @@ const center = {
     lat: -3.745,
     lng: -38.523,
 };
-
+const defaultZoom = 75;
 const position = { lat: 33.872, lng: -117.214 };
 
 // const positions = [
@@ -39,6 +39,8 @@ const position = { lat: 33.872, lng: -117.214 };
 // ];
 const Map = () => {
     const [resturant, setResturant] = useState(null);
+    const [currentLocation, setCurrentLocation] = useState(position);
+    const [currentZoom, setCurrentZoom] = useState(defaultZoom);
     const { isLoaded } = useJsApiLoader({
         id: "google-map-script",
         googleMapsApiKey: import.meta.env.VITE_MAPS_KEY,
@@ -69,9 +71,26 @@ const Map = () => {
     };
     useEffect(() => {
         getUserLocation();
-    });
+    }, []);
 
     const mapContainerStyle = {};
+
+    const handleCenterChanged = () => {
+        if (map) {
+            const newCenter = map.getCenter();
+            //console.log(newCenter.lat(), newCenter.lng());
+            setCurrentLocation({ lat: newCenter.lat(), lng: newCenter.lng() });
+        }
+    };
+    const handleZoomChanged = () => {
+        if (map) {
+            const newZoom = map.getZoom();
+            //console.log(newZoom);
+            setCurrentZoom(newZoom);
+        }
+    };
+
+    console.log(currentLocation, currentZoom);
 
     const onLoad = React.useCallback(function callback(map) {
         const bounds = new window.google.maps.LatLngBounds(center);
@@ -89,10 +108,11 @@ const Map = () => {
             <GoogleMap
                 mapContainerStyle={containerStyle}
                 center={center}
-                zoom={100}
+                zoom={defaultZoom}
                 onLoad={onLoad}
                 onUnmount={onUnmount}
-                onZoomChanged={(test) => console.log(test)}
+                onZoomChanged={handleZoomChanged}
+                onCenterChanged={handleCenterChanged}
             >
                 {/* Child components, such as markers, info windows, etc. */}
 
