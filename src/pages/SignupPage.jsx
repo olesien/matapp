@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import { Container, Row, Col, Form, Button, Card, Alert, Image } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
-// import { useAuthContext } from '../contexts/AuthContext'
+import { useAuthContext } from '../contexts/AuthContext'
 // import logo from '../assets/images/logo.png'
 
 const SignupPage = () => {
@@ -11,8 +11,7 @@ const SignupPage = () => {
 	const passwordConfirmRef = useRef()
 	const [error, setError] = useState(null)
 	const [loading, setLoading] = useState(false)
-	const [photo, setPhoto] = useState(false)
-	// const { signup, setDisplayNameAndPhoto, reloadUser } = useAuthContext()
+	const { signup } = useAuthContext()
 	const navigate = useNavigate()
 
 	// const handleFileChange = (e) => {
@@ -30,22 +29,22 @@ const SignupPage = () => {
 
 		// make sure user has entered the same password in both input fields
 		if (passwordRef.current.value !== passwordConfirmRef.current.value) {
-			return setError("The passwords does not match")
+			return setError("Passwords do not match")
 		}
 
 		setError(null);
 
 		// try to sign up the user with the specified credentials
-		// try {
-		// 	setLoading(true)
+		try {
+			setLoading(true)
 
-		// 	await signup(emailRef.current.value, passwordRef.current.value, displayNameRef.current.value, photo)
+			await signup(emailRef.current.value, passwordRef.current.value)
 
-		// 	navigate('/')
-		// } catch (err) {
-		// 	setError(err.message)
-		// 	setLoading(false)
-		// }
+			navigate('/')
+		} catch (err) {
+			setError(err.message)
+			setLoading(false)
+		}
 	}
 
 	return (
