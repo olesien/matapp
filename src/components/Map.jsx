@@ -15,12 +15,8 @@ const containerStyle = {
     height: "400px",
 };
 
-const center = {
-    lat: -3.745,
-    lng: -38.523,
-};
-const defaultZoom = 75;
-const position = { lat: 33.872, lng: -117.214 };
+const defaultZoom = 100;
+//const position = { lat: 33.872, lng: -117.214 };
 
 // const positions = [
 //     {
@@ -42,38 +38,31 @@ const position = { lat: 33.872, lng: -117.214 };
 //         url: "https://www.recipetineats.com/wp-content/uploads/2017/01/Swedish-Meatballs_2-SQ.jpg",
 //     },
 // ];
+
+const userLocation = { lat: 55.612, lng: 13.011 };
+//const userLocation = { lat: 33.872, lng: -117.214 };
+//const userLocation = { lat: 55.872, lng: -13.214 };
 const Map = () => {
+    console.log(userLocation);
     const [resturant, setResturant] = useState(null);
-    const [currentLocation, setCurrentLocation] = useState(position);
+
     const [currentZoom, setCurrentZoom] = useState(defaultZoom);
     const { isLoaded } = useJsApiLoader({
         id: "google-map-script",
         googleMapsApiKey: import.meta.env.VITE_MAPS_KEY,
     });
+
+    const [currentLocation, setCurrentLocation] = useState(userLocation);
+    //const [center, setCenter] = useState(userLocation);
     const restaurants = useStreamRestaurants();
-    console.log(restaurants);
+    //console.log(restaurants);
     const [map, setMap] = React.useState(null);
-    console.log(map);
+    //console.log(map);
 
     const divStyle = {
         background: `white`,
         border: `1px solid #ccc`,
         padding: 15,
-    };
-
-    const getUserLocation = (map) => {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition((position) => {
-                const userLocation = {
-                    lat: position.coords.latitude,
-                    lng: position.coords.longitude,
-                };
-                console.log(userLocation);
-                map.setCenter(userLocation); // ADDED
-            });
-        } else {
-            // code for legacy browsers
-        }
     };
 
     const mapContainerStyle = {};
@@ -93,12 +82,11 @@ const Map = () => {
         }
     };
 
-    console.log(currentLocation, currentZoom);
+    console.log(currentLocation, userLocation, currentZoom);
 
-    const onLoad = React.useCallback(function callback(map) {
-        const bounds = new window.google.maps.LatLngBounds(center);
-        map.fitBounds(bounds);
-        getUserLocation(map);
+    const onLoad = React.useCallback(async function callback(map) {
+        const bounds = new window.google.maps.LatLngBounds(userLocation);
+        await map.fitBounds(bounds);
         setMap(map);
     }, []);
 
@@ -111,7 +99,7 @@ const Map = () => {
             <Resturant resturant={resturant}></Resturant>
             <GoogleMap
                 mapContainerStyle={containerStyle}
-                center={center}
+                center={userLocation}
                 zoom={defaultZoom}
                 onLoad={onLoad}
                 onUnmount={onUnmount}
