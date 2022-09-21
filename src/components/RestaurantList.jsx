@@ -5,7 +5,7 @@ const RestaurantList = () => {
     const restaurants = useStreamRestaurants();
     console.log(restaurants);
     return (
-        <Container>
+        <div>
             <h2>Restaurant list</h2>
             {restaurants &&
                 restaurants.length > 0 &&
@@ -15,7 +15,7 @@ const RestaurantList = () => {
                         <p>{restaurant.description}</p>
                     </div>
                 ))}
-        </Container>
+        </div>
     );
 };
 
