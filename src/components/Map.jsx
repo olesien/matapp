@@ -106,6 +106,18 @@ const Map = () => {
         setMap(null);
     }, []);
 
+    // Search functionality within map
+
+    // Gain access to the searchBox property from Search Box component
+    const [searchBox, setSearchBox] = useState(null)
+    const onSearchBoxLoad = ref => setSearchBox(ref)
+
+    // Pan the map to the new location after search
+    const onPlaceChanged = () => {
+        const res = searchBox.getPlaces()
+        map.panTo({ lat: res[0].geometry.location.lat(), lng: res[0].geometry.location.lng() })
+    };
+
     return isLoaded ? (
         <div className="flex">
             <Resturant resturant={resturant}></Resturant>
@@ -119,10 +131,11 @@ const Map = () => {
                 onCenterChanged={handleCenterChanged}
             >
                 <StandaloneSearchBox
-                    onLoad={onLoad}
                     onPlacesChanged={onPlaceChanged}
+                    onLoad={onSearchBoxLoad}
                 >
                     <input
+                        id="map-search-box"
                         type="text"
                         placeholder="Enter a search query"
                     />
