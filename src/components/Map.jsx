@@ -14,8 +14,8 @@ import useStreamRestaurants from "../hooks/useStreamRestaurants";
 const libraries = ["places"];
 
 const containerStyle = {
-    width: "400px",
-    height: "400px",
+    width: "100%",
+    height: "600px",
 };
 
 const defaultZoom = 10;
