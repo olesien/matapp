@@ -15,7 +15,7 @@ const containerStyle = {
     height: "400px",
 };
 
-const defaultZoom = 100;
+const defaultZoom = 10;
 //const position = { lat: 33.872, lng: -117.214 };
 
 // const positions = [
@@ -39,10 +39,10 @@ const defaultZoom = 100;
 //     },
 // ];
 
-const userLocation = { lat: 55.612, lng: 13.011 };
+//const userLocation = { lat: 55.612, lng: 13.011 };
 //const userLocation = { lat: 33.872, lng: -117.214 };
 //const userLocation = { lat: 55.872, lng: -13.214 };
-const Map = () => {
+const Map = ({ userLocation }) => {
     console.log(userLocation);
     const [resturant, setResturant] = useState(null);
 
@@ -85,8 +85,8 @@ const Map = () => {
     console.log(currentLocation, userLocation, currentZoom);
 
     const onLoad = React.useCallback(async function callback(map) {
-        const bounds = new window.google.maps.LatLngBounds(userLocation);
-        await map.fitBounds(bounds);
+        // const bounds = new window.google.maps.LatLngBounds(userLocation);
+        // await map.fitBounds(bounds);
         setMap(map);
     }, []);
 
@@ -123,7 +123,7 @@ const Map = () => {
                                 title={resturant.name}
                                 // label={resturant.name}
                             />
-                            <InfoBox
+                            {/* <InfoBox
                                 options={options}
                                 onClick={() => setResturant(resturant)}
                                 position={position}
@@ -143,7 +143,7 @@ const Map = () => {
                                         {resturant.name}
                                     </div>
                                 </div>
-                            </InfoBox>
+                            </InfoBox> */}
                         </div>
                     );
                 })}
