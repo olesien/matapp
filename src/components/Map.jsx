@@ -1,22 +1,34 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
     GoogleMap,
-    useJsApiLoader,
+    useLoadScript,
     Marker,
     InfoWindow,
     InfoBox,
 } from "@react-google-maps/api";
-import { useState } from "react";
 import Resturant from "./Resturant";
 import useStreamRestaurants from "../hooks/useStreamRestaurants";
+const options = {
+    // zoomControlOptions: {
+    //     position: window.google.maps.ControlPosition.RIGHT_CENTER, // ,
+    //     // ...otherOptions
+    // },
+};
 
 const containerStyle = {
     width: "400px",
     height: "400px",
 };
 
-const defaultZoom = 100;
-//const position = { lat: 33.872, lng: -117.214 };
+const defaultZoom = 10;
+
+const divStyle = {
+    background: `white`,
+    border: `1px solid #ccc`,
+    padding: 15,
+};
+
+// const userLocation = { lat: 55.612, lng: 13.011 };
 
 // const positions = [
 //     {
@@ -39,33 +51,22 @@ const defaultZoom = 100;
 //     },
 // ];
 
-const userLocation = { lat: 55.612, lng: 13.011 };
-//const userLocation = { lat: 33.872, lng: -117.214 };
-//const userLocation = { lat: 55.872, lng: -13.214 };
-const Map = () => {
+function Map({ userLocation }) {
     console.log(userLocation);
+    const { isLoaded, loadError } = useLoadScript({
+        googleMapsApiKey: import.meta.env.VITE_MAPS_KEY, // ,
+        // ...otherOptions
+    });
+    const [currentLocation, setCurrentLocation] = useState(userLocation);
     const [resturant, setResturant] = useState(null);
 
-    const [currentZoom, setCurrentZoom] = useState(defaultZoom);
-    const { isLoaded } = useJsApiLoader({
-        id: "google-map-script",
-        googleMapsApiKey: import.meta.env.VITE_MAPS_KEY,
-    });
-
-    const [currentLocation, setCurrentLocation] = useState(userLocation);
-    //const [center, setCenter] = useState(userLocation);
     const restaurants = useStreamRestaurants();
-    //console.log(restaurants);
-    const [map, setMap] = React.useState(null);
-    //console.log(map);
-
-    const divStyle = {
-        background: `white`,
-        border: `1px solid #ccc`,
-        padding: 15,
-    };
-
-    const mapContainerStyle = {};
+    const [currentZoom, setCurrentZoom] = useState(defaultZoom);
+    const [map, setMap] = useState();
+    const onLoad = React.useCallback(function onLoad(mapInstance) {
+        // do something with map Instance
+        setMap(mapInstance);
+    });
 
     const handleCenterChanged = () => {
         if (map) {
@@ -82,78 +83,73 @@ const Map = () => {
         }
     };
 
-    console.log(currentLocation, userLocation, currentZoom);
+    const renderMap = () => {
+        // wrapping to a function is useful in case you want to access `window.google`
+        // to eg. setup options or create latLng object, it won't be available otherwise
+        // feel free to render directly if you don't need that
 
-    const onLoad = React.useCallback(async function callback(map) {
-        const bounds = new window.google.maps.LatLngBounds(userLocation);
-        await map.fitBounds(bounds);
-        setMap(map);
-    }, []);
+        return (
+            <>
+                {" "}
+                <Resturant resturant={resturant}></Resturant>
+                <GoogleMap
+                    options={options}
+                    onLoad={onLoad}
+                    zoom={defaultZoom}
+                    mapContainerStyle={containerStyle}
+                    center={userLocation}
+                    onZoomChanged={handleZoomChanged}
+                    onCenterChanged={handleCenterChanged}
+                >
+                    {/* {restaurants.map((resturant, key) => {
+                        const position = {
+                            lat: resturant.position._lat,
+                            lng: resturant.position._long,
+                        };
 
-    const onUnmount = React.useCallback(function callback(map) {
-        setMap(null);
-    }, []);
-    const options = { closeBoxURL: "", enableEventPropagation: true };
-    return isLoaded ? (
-        <div className="flex">
-            <Resturant resturant={resturant}></Resturant>
-            <GoogleMap
-                mapContainerStyle={containerStyle}
-                center={userLocation}
-                zoom={defaultZoom}
-                onLoad={onLoad}
-                onUnmount={onUnmount}
-                onZoomChanged={handleZoomChanged}
-                onCenterChanged={handleCenterChanged}
-            >
-                {/* Child components, such as markers, info windows, etc. */}
-
-                {restaurants.map((resturant, key) => {
-                    const position = {
-                        lat: resturant.position._lat,
-                        lng: resturant.position._long,
-                    };
-
-                    return (
-                        <div key={key}>
-                            <Marker
-                                key={key}
-                                position={position}
-                                onClick={() => setResturant(resturant)}
-                                title={resturant.name}
-                                // label={resturant.name}
-                            />
-                            <InfoBox
-                                options={options}
-                                onClick={() => setResturant(resturant)}
-                                position={position}
-                            >
-                                <div
-                                    style={{
-                                        opacity: 1,
-                                        marginBottom: 10,
-                                    }}
+                        return (
+                            <div key={key}>
+                                <Marker
+                                    key={key}
+                                    position={position}
+                                    onClick={() => setResturant(resturant)}
+                                    title={resturant.name}
+                                    // label={resturant.name}
+                                />
+                                <InfoBox
+                                    options={options}
+                                    onClick={() => setResturant(resturant)}
+                                    position={position}
                                 >
                                     <div
                                         style={{
-                                            fontSize: 16,
-                                            fontColor: `#08233B`,
+                                            opacity: 1,
+                                            marginBottom: 10,
                                         }}
                                     >
-                                        {resturant.name}
+                                        <div
+                                            style={{
+                                                fontSize: 16,
+                                                fontColor: `#08233B`,
+                                            }}
+                                        >
+                                            {resturant.name}
+                                        </div>
                                     </div>
-                                </div>
-                            </InfoBox>
-                        </div>
-                    );
-                })}
+                                </InfoBox>
+                            </div>
+                        );
+                    })} */}
+                </GoogleMap>
+            </>
+        );
+    };
 
-                <></>
-            </GoogleMap>
-        </div>
-    ) : (
-        <></>
-    );
-};
+    if (loadError) {
+        return <div>Map cannot be loaded right now, sorry.</div>;
+    }
 
-export default React.memo(Map);
+    return isLoaded ? renderMap() : <p>Loading..</p>;
+}
+
+export default Map;

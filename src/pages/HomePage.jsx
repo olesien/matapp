@@ -14,21 +14,17 @@ const HomePage = () => {
         };
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition((position) => {
-                const userLocation = {
+                setUserLocation({
                     lat: position.coords.latitude,
                     lng: position.coords.longitude,
-                };
-                console.log(userLocation);
-                center = userLocation;
-                console.log(center);
-                setUserLocation(center);
+                });
             });
         } else {
             // code for legacy browsers
             setUserLocation(center);
         }
     }, []);
-
+    console.log(userLocation);
     return (
         <Container className="py-3">
             <h1>Welcome!</h1>
