@@ -1,7 +1,13 @@
 
 import React, { useEffect } from "react";
-import { GoogleMap, useJsApiLoader, StandaloneSearchBox } from "@react-google-maps/api";
-import { Marker, InfoWindow } from "@react-google-maps/api";
+import {
+    GoogleMap,
+    useJsApiLoader,
+    Marker,
+    InfoWindow,
+    InfoBox,
+    StandaloneSearchBox
+} from "@react-google-maps/api";
 import { useState } from "react";
 import Resturant from "./Resturant";
 import useStreamRestaurants from "../hooks/useStreamRestaurants";
@@ -106,6 +112,8 @@ const Map = () => {
         setMap(null);
     }, []);
 
+    const options = { closeBoxURL: "", enableEventPropagation: true };
+    
     // Search functionality within map
 
     // Gain access to the searchBox property from Search Box component
@@ -120,7 +128,6 @@ const Map = () => {
             map.panTo({ lat: res[0].geometry.location.lat(), lng: res[0].geometry.location.lng() })
         }
     };
-
     return isLoaded ? (
         <div className="flex">
             <Resturant resturant={resturant}></Resturant>
@@ -151,14 +158,38 @@ const Map = () => {
                         lat: resturant.position._lat,
                         lng: resturant.position._long,
                     };
+
                     return (
-                        <Marker
-                            key={key}
-                            position={position}
-                            onClick={() => setResturant(resturant)}
-                            title={resturant.name}
-                            label={resturant.name}
-                        />
+                        <>
+                            <Marker
+                                key={key}
+                                position={position}
+                                onClick={() => setResturant(resturant)}
+                                title={resturant.name}
+                                // label={resturant.name}
+                            />
+                            <InfoBox
+                                options={options}
+                                onClick={() => setResturant(resturant)}
+                                position={position}
+                            >
+                                <div
+                                    style={{
+                                        opacity: 1,
+                                        marginBottom: 10,
+                                    }}
+                                >
+                                    <div
+                                        style={{
+                                            fontSize: 16,
+                                            fontColor: `#08233B`,
+                                        }}
+                                    >
+                                        {resturant.name}
+                                    </div>
+                                </div>
+                            </InfoBox>
+                        </>
                     );
                 })}
 
