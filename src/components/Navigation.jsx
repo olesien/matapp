@@ -3,6 +3,7 @@ import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import { Link, NavLink } from "react-router-dom";
 import { useAuthContext } from "../contexts/AuthContext";
+import { NavDropdown } from "react-bootstrap";
 
 const Navigation = () => {
     const { currentUser } = useAuthContext()
@@ -27,8 +28,14 @@ const Navigation = () => {
                             currentUser ? (
                                 <>
                                     {/* User is logged in */}
-                                    <Nav.Link as={NavLink} end to="/my-restaurants">My Restaurants</Nav.Link>
-                                    <Nav.Link as={NavLink} end to="logout">Log Out</Nav.Link>
+
+                                    <Nav.Link as={NavLink} to="/my-restaurants">My Restaurants</Nav.Link>
+
+                                    <NavDropdown title={currentUser.email}>
+                                        <NavLink to="/update-profile" className="dropdown-item">Update Profile</NavLink>
+                                        <NavDropdown.Divider />
+                                        <NavLink to="/logout" className="dropdown-item">Log Out</NavLink>
+                                    </NavDropdown>
                                 </>
                             ) : (
                                 <>
