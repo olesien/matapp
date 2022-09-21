@@ -114,8 +114,11 @@ const Map = () => {
 
     // Pan the map to the new location after search
     const onPlaceChanged = () => {
-        const res = searchBox.getPlaces()
-        map.panTo({ lat: res[0].geometry.location.lat(), lng: res[0].geometry.location.lng() })
+        // SearchBox is sometimes null even after having been set in the onSearchBoxLoad function.
+        if (searchBox) {
+            const res = searchBox.getPlaces()
+            map.panTo({ lat: res[0].geometry.location.lat(), lng: res[0].geometry.location.lng() })
+        }
     };
 
     return isLoaded ? (
