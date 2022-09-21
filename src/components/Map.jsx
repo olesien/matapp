@@ -5,10 +5,13 @@ import {
     Marker,
     InfoWindow,
     InfoBox,
+    StandaloneSearchBox,
 } from "@react-google-maps/api";
 import { useState } from "react";
 import Resturant from "./Resturant";
 import useStreamRestaurants from "../hooks/useStreamRestaurants";
+
+const libraries = ["places"];
 
 const containerStyle = {
     width: "400px",
@@ -50,6 +53,7 @@ const Map = ({ userLocation }) => {
     const { isLoaded } = useJsApiLoader({
         id: "google-map-script",
         googleMapsApiKey: import.meta.env.VITE_MAPS_KEY,
+        libraries,
     });
 
     const [currentLocation, setCurrentLocation] = useState(userLocation);
@@ -84,16 +88,35 @@ const Map = ({ userLocation }) => {
 
     console.log(currentLocation, userLocation, currentZoom);
 
-    const onLoad = React.useCallback(async function callback(map) {
-        // const bounds = new window.google.maps.LatLngBounds(userLocation);
-        // await map.fitBounds(bounds);
+    const onLoad = React.useCallback(function callback(map) {
+        //const bounds = new window.google.maps.LatLngBounds(center);
+        // map.fitBounds(bounds);
         setMap(map);
     }, []);
 
     const onUnmount = React.useCallback(function callback(map) {
         setMap(null);
     }, []);
+
     const options = { closeBoxURL: "", enableEventPropagation: true };
+
+    // Search functionality within map
+
+    // Gain access to the searchBox property from Search Box component
+    const [searchBox, setSearchBox] = useState(null);
+    const onSearchBoxLoad = (ref) => setSearchBox(ref);
+
+    // Pan the map to the new location after search
+    const onPlaceChanged = () => {
+        // SearchBox is sometimes null even after having been set in the onSearchBoxLoad function.
+        if (searchBox) {
+            const res = searchBox.getPlaces();
+            map.panTo({
+                lat: res[0].geometry.location.lat(),
+                lng: res[0].geometry.location.lng(),
+            });
+        }
+    };
     return isLoaded ? (
         <div className="flex">
             <Resturant resturant={resturant}></Resturant>
@@ -106,6 +129,17 @@ const Map = ({ userLocation }) => {
                 onZoomChanged={handleZoomChanged}
                 onCenterChanged={handleCenterChanged}
             >
+                <StandaloneSearchBox
+                    onPlacesChanged={onPlaceChanged}
+                    onLoad={onSearchBoxLoad}
+                >
+                    <input
+                        id="map-search-box"
+                        type="text"
+                        placeholder="Enter a search query"
+                    />
+                </StandaloneSearchBox>
+
                 {/* Child components, such as markers, info windows, etc. */}
 
                 {restaurants.map((resturant, key) => {

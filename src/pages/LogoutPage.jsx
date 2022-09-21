@@ -1,18 +1,18 @@
 import { useEffect } from 'react'
 import { Container, Row, Col, Card } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
-// import { useAuthContext } from '../contexts/AuthContext'
+import { useAuthContext } from '../contexts/AuthContext'
 
 const LogoutPage = () => {
 	const navigate = useNavigate()
-	// const { logout } = useAuthContext()
+	const { logout } = useAuthContext()
 
 	useEffect(() => {
-		// const logoutUser = async () => {
-		// 	await logout()
-		// 	navigate('/')
-		// }
-		// logoutUser()
+		const logoutUser = async () => {
+			await logout()
+			navigate('/')
+		}
+		logoutUser()
 	}, [])
 
 	return (
@@ -23,7 +23,7 @@ const LogoutPage = () => {
 						<Card.Body>
 							<Card.Title>Log Out</Card.Title>
 
-							<Card.Text>Please wait while you're being logged out...</Card.Text>
+							<Card.Text>You are being logged out...</Card.Text>
 						</Card.Body>
 					</Card>
 				</Col>
