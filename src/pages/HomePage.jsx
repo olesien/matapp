@@ -46,7 +46,7 @@ const HomePage = () => {
 
             <Button className="mt-2" onClick={() => { setShowFilter(!showFilter) }}>Filter</Button>
             {showFilter && (<FilterRestaurants handleSetFilterOptions={handleSetFilterOptions} />)}
-            <RestaurantList />
+            <RestaurantList filterOptions={filterOptions} />
         </Container>
     );
 };

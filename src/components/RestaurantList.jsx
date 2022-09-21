@@ -1,8 +1,7 @@
-import Container from "react-bootstrap/Container";
 import useStreamRestaurants from "../hooks/useStreamRestaurants";
 
-const RestaurantList = () => {
-    const restaurants = useStreamRestaurants();
+const RestaurantList = ({ filterOptions }) => {
+    const restaurants = useStreamRestaurants(filterOptions);
     console.log(restaurants);
     return (
         <div>
