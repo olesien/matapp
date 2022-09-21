@@ -50,6 +50,7 @@ const Map = ({ userLocation }) => {
     const [resturant, setResturant] = useState(null);
 
     const [currentZoom, setCurrentZoom] = useState(defaultZoom);
+    // const [zoom, setZoom] = useState(defaultZoom);
     const { isLoaded } = useJsApiLoader({
         id: "google-map-script",
         googleMapsApiKey: import.meta.env.VITE_MAPS_KEY,
@@ -89,8 +90,9 @@ const Map = ({ userLocation }) => {
     console.log(currentLocation, userLocation, currentZoom);
 
     const onLoad = React.useCallback(function callback(map) {
-        //const bounds = new window.google.maps.LatLngBounds(center);
+        // const bounds = new window.google.maps.LatLngBounds(center);
         // map.fitBounds(bounds);
+        map.setZoom(defaultZoom);
         setMap(map);
     }, []);
 
@@ -107,14 +109,15 @@ const Map = ({ userLocation }) => {
     const onSearchBoxLoad = (ref) => setSearchBox(ref);
 
     // Pan the map to the new location after search
-    const onPlaceChanged = () => {
+    const onPlaceChanged = async () => {
         // SearchBox is sometimes null even after having been set in the onSearchBoxLoad function.
         if (searchBox) {
             const res = searchBox.getPlaces();
-            map.panTo({
+            await map.panTo({
                 lat: res[0].geometry.location.lat(),
                 lng: res[0].geometry.location.lng(),
             });
+            await map.setZoom(10);
         }
     };
     return isLoaded ? (
@@ -123,7 +126,7 @@ const Map = ({ userLocation }) => {
             <GoogleMap
                 mapContainerStyle={containerStyle}
                 center={userLocation}
-                zoom={defaultZoom}
+                // zoom={defaultZoom}
                 onLoad={onLoad}
                 onUnmount={onUnmount}
                 onZoomChanged={handleZoomChanged}
