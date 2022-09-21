@@ -20,9 +20,9 @@ const FilterRestaurants = ({ handleSetFilterOptions }) => {
                     <Form.Select id='type-select'>
                         <option value={""}>Please select an option</option>
                         <option value={"restaurant"}>Restaurant</option>
-                        <option value={"café"}>Dinner</option>
+                        <option value={"café"}>Café</option>
                         <option value={"fast_food"}>Fast Food</option>
-                        <option value={"food_truck"}>Fast Food</option>
+                        <option value={"food_truck"}>Fast Truck</option>
                     </Form.Select>
                 </div>
                 <div className="my-2">
