@@ -4,6 +4,7 @@ import {
     onAuthStateChanged,
     signInWithEmailAndPassword,
     signOut,
+    sendPasswordResetEmail,
 } from 'firebase/auth'
 import { auth } from '../firebase'
 import SyncLoader from 'react-spinners/SyncLoader'
@@ -30,6 +31,10 @@ const AuthContextProvider = ({ children }) => {
         return signOut(auth)
     }
 
+    const resetPassword = (email) => {
+        return sendPasswordResetEmail(auth, email)
+    }
+
     useEffect(() => {
         // listen for changes in auth-state
         const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -46,6 +51,7 @@ const AuthContextProvider = ({ children }) => {
         login,
         logout,
         signup,
+        resetPassword,
     }
 
     return (
