@@ -1,4 +1,3 @@
-
 import React, { useEffect } from "react";
 import {
     GoogleMap,
@@ -6,25 +5,25 @@ import {
     Marker,
     InfoWindow,
     InfoBox,
-    StandaloneSearchBox
+    StandaloneSearchBox,
+    OverlayView,
 } from "@react-google-maps/api";
 import { useState } from "react";
 import Resturant from "./Resturant";
 import useStreamRestaurants from "../hooks/useStreamRestaurants";
+import { useQuery } from "react-query";
 
-const libraries = ["places"]
+import GeocodingAPI from "../services/GeocodingAPI";
+
+const libraries = ["places"];
 
 const containerStyle = {
-    width: "400px",
-    height: "400px",
+    width: "100%",
+    height: "600px",
 };
 
-const center = {
-    lat: -3.745,
-    lng: -38.523,
-};
-const defaultZoom = 75;
-const position = { lat: 33.872, lng: -117.214 };
+const defaultZoom = 10;
+//const position = { lat: 33.872, lng: -117.214 };
 
 // const positions = [
 //     {
@@ -46,42 +45,44 @@ const position = { lat: 33.872, lng: -117.214 };
 //         url: "https://www.recipetineats.com/wp-content/uploads/2017/01/Swedish-Meatballs_2-SQ.jpg",
 //     },
 // ];
-const Map = () => {
+
+//const userLocation = { lat: 55.612, lng: 13.011 };
+//const userLocation = { lat: 33.872, lng: -117.214 };
+//const userLocation = { lat: 55.872, lng: -13.214 };
+const Map = ({ userLocation }) => {
+    const location = useQuery(
+        ["location", 40.714224, -73.961452],
+        GeocodingAPI.getReverseGeocode
+    );
+    const latlng = useQuery(
+        ["latlng", "24%20Sussex%20Drive%20Ottawa%20ON"],
+        GeocodingAPI.getGeocode
+    );
+    console.log(location);
+    console.log(latlng);
+    console.log(userLocation);
     const [resturant, setResturant] = useState(null);
-    const [currentLocation, setCurrentLocation] = useState(position);
+
     const [currentZoom, setCurrentZoom] = useState(defaultZoom);
+    // const [zoom, setZoom] = useState(defaultZoom);
     const { isLoaded } = useJsApiLoader({
         id: "google-map-script",
         googleMapsApiKey: import.meta.env.VITE_MAPS_KEY,
         libraries,
     });
+
+    const [currentLocation, setCurrentLocation] = useState(userLocation);
+    //const [center, setCenter] = useState(userLocation);
     const restaurants = useStreamRestaurants();
-    console.log(restaurants);
+    //console.log(restaurants);
     const [map, setMap] = React.useState(null);
-    console.log(map);
+    //console.log(map);
 
     const divStyle = {
         background: `white`,
         border: `1px solid #ccc`,
         padding: 15,
     };
-
-    const getUserLocation = () => {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition((position) => {
-                const userLocation = {
-                    lat: position.coords.latitude,
-                    lng: position.coords.longitude,
-                };
-                map.setCenter(userLocation); // ADDED
-            });
-        } else {
-            // code for legacy browsers
-        }
-    };
-    useEffect(() => {
-        getUserLocation();
-    }, []);
 
     const mapContainerStyle = {};
 
@@ -100,11 +101,12 @@ const Map = () => {
         }
     };
 
-    console.log(currentLocation, currentZoom);
+    console.log(currentLocation, userLocation, currentZoom);
 
     const onLoad = React.useCallback(function callback(map) {
-        const bounds = new window.google.maps.LatLngBounds(center);
+        // const bounds = new window.google.maps.LatLngBounds(center);
         // map.fitBounds(bounds);
+        map.setZoom(defaultZoom);
         setMap(map);
     }, []);
 
@@ -113,19 +115,23 @@ const Map = () => {
     }, []);
 
     const options = { closeBoxURL: "", enableEventPropagation: true };
-    
+
     // Search functionality within map
 
     // Gain access to the searchBox property from Search Box component
-    const [searchBox, setSearchBox] = useState(null)
-    const onSearchBoxLoad = ref => setSearchBox(ref)
+    const [searchBox, setSearchBox] = useState(null);
+    const onSearchBoxLoad = (ref) => setSearchBox(ref);
 
     // Pan the map to the new location after search
-    const onPlaceChanged = () => {
+    const onPlaceChanged = async () => {
         // SearchBox is sometimes null even after having been set in the onSearchBoxLoad function.
         if (searchBox) {
-            const res = searchBox.getPlaces()
-            map.panTo({ lat: res[0].geometry.location.lat(), lng: res[0].geometry.location.lng() })
+            const res = searchBox.getPlaces();
+            await map.panTo({
+                lat: res[0].geometry.location.lat(),
+                lng: res[0].geometry.location.lng(),
+            });
+            await map.setZoom(10);
         }
     };
     return isLoaded ? (
@@ -133,8 +139,8 @@ const Map = () => {
             <Resturant resturant={resturant}></Resturant>
             <GoogleMap
                 mapContainerStyle={containerStyle}
-                center={center}
-                zoom={defaultZoom}
+                center={userLocation}
+                // zoom={defaultZoom}
                 onLoad={onLoad}
                 onUnmount={onUnmount}
                 onZoomChanged={handleZoomChanged}
@@ -153,22 +159,55 @@ const Map = () => {
 
                 {/* Child components, such as markers, info windows, etc. */}
 
-                {restaurants.map((resturant, key) => {
-                    const position = {
-                        lat: resturant.position._lat,
-                        lng: resturant.position._long,
-                    };
+                {currentZoom > 5 &&
+                    restaurants.map((resturant, key) => {
+                        const position = {
+                            lat: resturant.position._lat,
+                            lng: resturant.position._long,
+                        };
 
-                    return (
-                        <>
-                            <Marker
-                                key={key}
-                                position={position}
-                                onClick={() => setResturant(resturant)}
-                                title={resturant.name}
-                                // label={resturant.name}
-                            />
-                            <InfoBox
+                        return (
+                            <div key={key}>
+                                <Marker
+                                    // icon={{
+                                    //     path: "M8 12l-4.7023 2.4721.898-5.236L.3916 5.5279l5.2574-.764L8 0l2.3511 4.764 5.2574.7639-3.8043 3.7082.898 5.236z",
+                                    //     fillColor: "yellow",
+                                    //     fillOpacity: 0.9,
+                                    //     scale: 2,
+                                    //     strokeColor: "gold",
+                                    //     strokeWeight: 2,
+                                    // }}
+                                    key={key}
+                                    position={position}
+                                    onClick={() => setResturant(resturant)}
+                                />
+                                <OverlayView
+                                    key="mwl"
+                                    position={position}
+                                    mapPaneName={
+                                        OverlayView.OVERLAY_MOUSE_TARGET
+                                    }
+                                    getPixelPositionOffset={(x, y) =>
+                                        // getPixelPositionOffset(x, y, {
+                                        //     x: -30,
+                                        //     y: -15,
+                                        // })
+                                        ({ x: -50, y: 10 })
+                                    }
+                                >
+                                    <div
+                                        style={{
+                                            background: `#203254`,
+                                            padding: `7px 12px`,
+                                            fontSize: "11px",
+                                            color: `white`,
+                                            borderRadius: "4px",
+                                        }}
+                                    >
+                                        {resturant.name}
+                                    </div>
+                                </OverlayView>
+                                {/* <InfoBox
                                 options={options}
                                 onClick={() => setResturant(resturant)}
                                 position={position}
@@ -188,10 +227,10 @@ const Map = () => {
                                         {resturant.name}
                                     </div>
                                 </div>
-                            </InfoBox>
-                        </>
-                    );
-                })}
+                            </InfoBox> */}
+                            </div>
+                        );
+                    })}
 
                 <></>
             </GoogleMap>
