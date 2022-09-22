@@ -9,12 +9,17 @@ const get = async (params) => {
     return res.data;
 };
 
+const getGeocode = (data) => {
+    const address = data.queryKey[1];
+    return get(`address=${address}`);
+};
+
 const getReverseGeocode = (data) => {
     const lat = data.queryKey[1];
     const lng = data.queryKey[2];
     return get(`latlng=${lat},${lng}`);
 };
 
-const exports = { getReverseGeocode };
+const exports = { getGeocode, getReverseGeocode };
 
 export default exports;
