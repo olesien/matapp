@@ -13,6 +13,9 @@ import { useState } from "react";
 import Resturant from "./Resturant";
 import useStreamRestaurants from "../hooks/useStreamRestaurants";
 import MyLocation from "./MyLocation";
+import { useQuery } from "react-query";
+
+import GeocodingAPI from "../services/GeocodingAPI";
 
 const libraries = ["places"];
 
@@ -23,7 +26,7 @@ const containerStyle = {
 
 const defaultZoom = 10;
 //const position = { lat: 33.872, lng: -117.214 };
-d;
+
 // const positions = [
 //     {
 //         lat: 33.772,
@@ -49,6 +52,16 @@ d;
 //const userLocation = { lat: 33.872, lng: -117.214 };
 //const userLocation = { lat: 55.872, lng: -13.214 };
 const Map = ({ userLocation }) => {
+    // const location = useQuery(
+    //     ["location", 40.714224, -73.961452],
+    //     GeocodingAPI.getReverseGeocode
+    // );
+    // const latlng = useQuery(
+    //     ["latlng", "24%20Sussex%20Drive%20Ottawa%20ON"],
+    //     GeocodingAPI.getGeocode
+    // );
+    // console.log(location);
+    // console.log(latlng);
     console.log(userLocation);
     const [resturant, setResturant] = useState(null);
 
