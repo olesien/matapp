@@ -7,10 +7,12 @@ import {
     InfoBox,
     StandaloneSearchBox,
     OverlayView,
+    Circle,
 } from "@react-google-maps/api";
 import { useState } from "react";
 import Resturant from "./Resturant";
 import useStreamRestaurants from "../hooks/useStreamRestaurants";
+import MyLocation from "./MyLocation";
 
 const libraries = ["places"];
 
@@ -21,7 +23,7 @@ const containerStyle = {
 
 const defaultZoom = 10;
 //const position = { lat: 33.872, lng: -117.214 };
-
+d
 // const positions = [
 //     {
 //         lat: 33.772,
@@ -121,6 +123,7 @@ const Map = ({ userLocation }) => {
             await map.setZoom(10);
         }
     };
+
     return isLoaded ? (
         <div className="flex">
             <Resturant resturant={resturant}></Resturant>
@@ -133,6 +136,7 @@ const Map = ({ userLocation }) => {
                 onZoomChanged={handleZoomChanged}
                 onCenterChanged={handleCenterChanged}
             >
+                <MyLocation userLocation={userLocation} />
                 <StandaloneSearchBox
                     onPlacesChanged={onPlaceChanged}
                     onLoad={onSearchBoxLoad}
