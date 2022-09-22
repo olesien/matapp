@@ -45,7 +45,7 @@ const defaultZoom = 10;
 //const userLocation = { lat: 55.612, lng: 13.011 };
 //const userLocation = { lat: 33.872, lng: -117.214 };
 //const userLocation = { lat: 55.872, lng: -13.214 };
-const Map = ({ userLocation }) => {
+const Map = ({ restaurants, userLocation }) => {
     console.log(userLocation);
     const [resturant, setResturant] = useState(null);
 
@@ -59,7 +59,7 @@ const Map = ({ userLocation }) => {
 
     const [currentLocation, setCurrentLocation] = useState(userLocation);
     //const [center, setCenter] = useState(userLocation);
-    const restaurants = useGetRestaurants();
+    // const restaurants = useGetRestaurants();
     //console.log(restaurants);
     const [map, setMap] = React.useState(null);
     //console.log(map);

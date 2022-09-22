@@ -5,11 +5,13 @@ import { useState } from "react";
 import { useEffect } from "react";
 import FilterRestaurants from "../components/FilterRestaurants";
 import Button from "react-bootstrap/Button";
+import useGetRestaurants from "../hooks/useGetRestaurants";
 
 const HomePage = () => {
     const [userLocation, setUserLocation] = useState(false);
     const [showFilter, setShowFilter] = useState(false)
     const [filterOptions, setFilterOptions] = useState(null)
+    const restaurants = useGetRestaurants(filterOptions);
 
     console.log(filterOptions)
 
@@ -42,11 +44,11 @@ const HomePage = () => {
     return (
         <Container className="py-3">
             <h1>Welcome!</h1>
-            {userLocation ? <Map userLocation={userLocation} /> : <></>}
+            {userLocation ? <Map restaurants={restaurants} userLocation={userLocation} /> : <></>}
 
             <Button className="mt-2" onClick={() => { setShowFilter(!showFilter) }}>Filter</Button>
             {showFilter && (<FilterRestaurants handleSetFilterOptions={handleSetFilterOptions} />)}
-            <RestaurantList filterOptions={filterOptions} />
+            <RestaurantList restaurants={restaurants} />
         </Container>
     );
 };

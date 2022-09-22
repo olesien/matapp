@@ -1,7 +1,4 @@
-import useGetRestaurants from "../hooks/useGetRestaurants";
-
-const RestaurantList = ({ filterOptions }) => {
-    const restaurants = useGetRestaurants(filterOptions);
+const RestaurantList = ({ restaurants }) => {
     console.log(restaurants);
     return (
         <div>
