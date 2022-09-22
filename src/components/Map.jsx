@@ -7,10 +7,12 @@ import {
     InfoBox,
     StandaloneSearchBox,
     OverlayView,
+    Circle,
 } from "@react-google-maps/api";
 import { useState } from "react";
 import Resturant from "./Resturant";
 import useGetRestaurants from "../hooks/useGetRestaurants";
+import MyLocation from "./MyLocation";
 import { useQuery } from "react-query";
 import GeocodingAPI from "../services/GeocodingAPI";
 
@@ -50,17 +52,16 @@ const defaultZoom = 10;
 //const userLocation = { lat: 55.872, lng: -13.214 };
 
 const Map = ({ restaurants, userLocation }) => {
-    const location = useQuery(
-        ["location", 40.714224, -73.961452],
-        GeocodingAPI.getReverseGeocode
-    );
-    const latlng = useQuery(
-        ["latlng", "24%20Sussex%20Drive%20Ottawa%20ON"],
-        GeocodingAPI.getGeocode
-    );
-    console.log(location);
-    console.log(latlng);
-
+    // const location = useQuery(
+    //     ["location", 40.714224, -73.961452],
+    //     GeocodingAPI.getReverseGeocode
+    // );
+    // const latlng = useQuery(
+    //     ["latlng", "24%20Sussex%20Drive%20Ottawa%20ON"],
+    //     GeocodingAPI.getGeocode
+    // );
+    // console.log(location);
+    // console.log(latlng);
     console.log(userLocation);
     const [resturant, setResturant] = useState(null);
 
@@ -135,6 +136,7 @@ const Map = ({ restaurants, userLocation }) => {
             await map.setZoom(10);
         }
     };
+
     return isLoaded ? (
         <div className="flex">
             <Resturant resturant={resturant}></Resturant>
@@ -147,6 +149,7 @@ const Map = ({ restaurants, userLocation }) => {
                 onZoomChanged={handleZoomChanged}
                 onCenterChanged={handleCenterChanged}
             >
+                <MyLocation userLocation={userLocation} />
                 <StandaloneSearchBox
                     onPlacesChanged={onPlaceChanged}
                     onLoad={onSearchBoxLoad}
@@ -160,7 +163,7 @@ const Map = ({ restaurants, userLocation }) => {
 
                 {/* Child components, such as markers, info windows, etc. */}
 
-                {currentZoom > 5 &&
+                {currentZoom > -1 &&
                     restaurants.map((resturant, key) => {
                         const position = {
                             lat: resturant.position._lat,
