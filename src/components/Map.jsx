@@ -9,7 +9,7 @@ import {
 } from "@react-google-maps/api";
 import { useState } from "react";
 import Resturant from "./Resturant";
-import useStreamRestaurants from "../hooks/useStreamRestaurants";
+import useGetRestaurants from "../hooks/useGetRestaurants";
 
 const libraries = ["places"];
 
@@ -59,7 +59,7 @@ const Map = ({ userLocation }) => {
 
     const [currentLocation, setCurrentLocation] = useState(userLocation);
     //const [center, setCenter] = useState(userLocation);
-    const restaurants = useStreamRestaurants();
+    const restaurants = useGetRestaurants();
     //console.log(restaurants);
     const [map, setMap] = React.useState(null);
     //console.log(map);

@@ -1,7 +1,7 @@
-import useStreamRestaurants from "../hooks/useStreamRestaurants";
+import useGetRestaurants from "../hooks/useGetRestaurants";
 
 const RestaurantList = ({ filterOptions }) => {
-    const restaurants = useStreamRestaurants(filterOptions);
+    const restaurants = useGetRestaurants(filterOptions);
     console.log(restaurants);
     return (
         <div>
