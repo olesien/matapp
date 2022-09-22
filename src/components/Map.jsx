@@ -23,7 +23,7 @@ const containerStyle = {
 
 const defaultZoom = 10;
 //const position = { lat: 33.872, lng: -117.214 };
-d
+d;
 // const positions = [
 //     {
 //         lat: 33.772,
@@ -150,7 +150,7 @@ const Map = ({ userLocation }) => {
 
                 {/* Child components, such as markers, info windows, etc. */}
 
-                {currentZoom > 5 &&
+                {currentZoom > -1 &&
                     restaurants.map((resturant, key) => {
                         const position = {
                             lat: resturant.position._lat,
