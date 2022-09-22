@@ -11,6 +11,9 @@ import {
 import { useState } from "react";
 import Resturant from "./Resturant";
 import useStreamRestaurants from "../hooks/useStreamRestaurants";
+import { useQuery } from "react-query";
+
+import GeocodingAPI from "../services/GeocodingAPI";
 
 const libraries = ["places"];
 
@@ -47,6 +50,11 @@ const defaultZoom = 10;
 //const userLocation = { lat: 33.872, lng: -117.214 };
 //const userLocation = { lat: 55.872, lng: -13.214 };
 const Map = ({ userLocation }) => {
+    const location = useQuery(
+        ["location", 40.714224, -73.961452],
+        GeocodingAPI.getReverseGeocode
+    );
+    console.log(location);
     console.log(userLocation);
     const [resturant, setResturant] = useState(null);
 
