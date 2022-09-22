@@ -6,16 +6,19 @@ import {
     InfoWindow,
     InfoBox,
     StandaloneSearchBox,
+    OverlayView,
 } from "@react-google-maps/api";
 import { useState } from "react";
 import Resturant from "./Resturant";
 import useGetRestaurants from "../hooks/useGetRestaurants";
+import { useQuery } from "react-query";
+import GeocodingAPI from "../services/GeocodingAPI";
 
 const libraries = ["places"];
 
 const containerStyle = {
-    width: "400px",
-    height: "400px",
+    width: "100%",
+    height: "600px",
 };
 
 const defaultZoom = 10;
@@ -45,7 +48,19 @@ const defaultZoom = 10;
 //const userLocation = { lat: 55.612, lng: 13.011 };
 //const userLocation = { lat: 33.872, lng: -117.214 };
 //const userLocation = { lat: 55.872, lng: -13.214 };
+
 const Map = ({ restaurants, userLocation }) => {
+    const location = useQuery(
+        ["location", 40.714224, -73.961452],
+        GeocodingAPI.getReverseGeocode
+    );
+    const latlng = useQuery(
+        ["latlng", "24%20Sussex%20Drive%20Ottawa%20ON"],
+        GeocodingAPI.getGeocode
+    );
+    console.log(location);
+    console.log(latlng);
+
     console.log(userLocation);
     const [resturant, setResturant] = useState(null);
 
@@ -145,22 +160,55 @@ const Map = ({ restaurants, userLocation }) => {
 
                 {/* Child components, such as markers, info windows, etc. */}
 
-                {restaurants.map((resturant, key) => {
-                    const position = {
-                        lat: resturant.position._lat,
-                        lng: resturant.position._long,
-                    };
+                {currentZoom > 5 &&
+                    restaurants.map((resturant, key) => {
+                        const position = {
+                            lat: resturant.position._lat,
+                            lng: resturant.position._long,
+                        };
 
-                    return (
-                        <div key={key}>
-                            <Marker
-                                key={key}
-                                position={position}
-                                onClick={() => setResturant(resturant)}
-                                title={resturant.name}
-                                // label={resturant.name}
-                            />
-                            {/* <InfoBox
+                        return (
+                            <div key={key}>
+                                <Marker
+                                    // icon={{
+                                    //     path: "M8 12l-4.7023 2.4721.898-5.236L.3916 5.5279l5.2574-.764L8 0l2.3511 4.764 5.2574.7639-3.8043 3.7082.898 5.236z",
+                                    //     fillColor: "yellow",
+                                    //     fillOpacity: 0.9,
+                                    //     scale: 2,
+                                    //     strokeColor: "gold",
+                                    //     strokeWeight: 2,
+                                    // }}
+                                    key={key}
+                                    position={position}
+                                    onClick={() => setResturant(resturant)}
+                                />
+                                <OverlayView
+                                    key="mwl"
+                                    position={position}
+                                    mapPaneName={
+                                        OverlayView.OVERLAY_MOUSE_TARGET
+                                    }
+                                    getPixelPositionOffset={(x, y) =>
+                                        // getPixelPositionOffset(x, y, {
+                                        //     x: -30,
+                                        //     y: -15,
+                                        // })
+                                        ({ x: -50, y: 10 })
+                                    }
+                                >
+                                    <div
+                                        style={{
+                                            background: `#203254`,
+                                            padding: `7px 12px`,
+                                            fontSize: "11px",
+                                            color: `white`,
+                                            borderRadius: "4px",
+                                        }}
+                                    >
+                                        {resturant.name}
+                                    </div>
+                                </OverlayView>
+                                {/* <InfoBox
                                 options={options}
                                 onClick={() => setResturant(resturant)}
                                 position={position}
@@ -181,9 +229,9 @@ const Map = ({ restaurants, userLocation }) => {
                                     </div>
                                 </div>
                             </InfoBox> */}
-                        </div>
-                    );
-                })}
+                            </div>
+                        );
+                    })}
 
                 <></>
             </GoogleMap>
