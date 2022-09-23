@@ -1,21 +1,21 @@
-import Container from "react-bootstrap/Container";
-import useStreamRestaurants from "../hooks/useStreamRestaurants";
+import RestaurantCard from "./RestaurantCard";
 
-const RestaurantList = () => {
-    const restaurants = useStreamRestaurants();
+const RestaurantList = ({ restaurants }) => {
     console.log(restaurants);
     return (
-        <Container>
+        <div>
             <h2>Restaurant list</h2>
-            {restaurants &&
-                restaurants.length > 0 &&
-                restaurants.map((restaurant) => (
-                    <div key={restaurant.id}>
-                        <h4>{restaurant.name}</h4>
-                        <p>{restaurant.description}</p>
-                    </div>
-                ))}
-        </Container>
+            <div className="list">
+                {restaurants &&
+                    restaurants.length > 0 &&
+                    restaurants.map((restaurant) => (
+                        <RestaurantCard
+                            key={restaurant.id}
+                            restaurant={restaurant}
+                        />
+                    ))}
+            </div>
+        </div>
     );
 };
 
