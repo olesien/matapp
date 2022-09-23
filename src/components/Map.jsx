@@ -137,6 +137,29 @@ const Map = ({ userLocation }) => {
         }
     };
 
+    const defaultOptions = {
+        styles: [
+            {
+                featureType: "all",
+                elementType: "labels.text",
+                stylers: [
+                    {
+                        visibility: "off",
+                    },
+                ],
+            },
+            {
+                featureType: "poi",
+                elementType: "labels.icon",
+                stylers: [
+                    {
+                        visibility: "off",
+                    },
+                ],
+            },
+        ],
+    };
+
     return isLoaded ? (
         <div className="flex">
             <Resturant resturant={resturant}></Resturant>
@@ -148,6 +171,7 @@ const Map = ({ userLocation }) => {
                 onUnmount={onUnmount}
                 onZoomChanged={handleZoomChanged}
                 onCenterChanged={handleCenterChanged}
+                options={defaultOptions}
             >
                 <MyLocation userLocation={userLocation} />
                 <StandaloneSearchBox
