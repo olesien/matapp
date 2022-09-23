@@ -9,19 +9,18 @@
     position: relative;
 }
 
-
 #initial-loader {
-	display: flex;
-	min-height: 100vh;
-	justify-content: center;
-	align-items: center;
+    display: flex;
+    min-height: 100vh;
+    justify-content: center;
+    align-items: center;
 }
 
 .center-y {
-	flex-grow: 1;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .flex {
@@ -43,4 +42,9 @@
     position: absolute;
     left: 50%;
     margin-left: -120px;
+}
+
+.list {
+    display: flex;
+    flex-flow: row wrap;
 }

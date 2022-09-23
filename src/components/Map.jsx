@@ -10,11 +10,10 @@ import {
     Circle,
 } from "@react-google-maps/api";
 import { useState } from "react";
-import Resturant from "./Resturant";
-import useStreamRestaurants from "../hooks/useStreamRestaurants";
+import RestaurantCard from "./RestaurantCard";
+import useGetRestaurants from "../hooks/useGetRestaurants";
 import MyLocation from "./MyLocation";
 import { useQuery } from "react-query";
-
 import GeocodingAPI from "../services/GeocodingAPI";
 
 const libraries = ["places"];
@@ -51,7 +50,8 @@ const defaultZoom = 10;
 //const userLocation = { lat: 55.612, lng: 13.011 };
 //const userLocation = { lat: 33.872, lng: -117.214 };
 //const userLocation = { lat: 55.872, lng: -13.214 };
-const Map = ({ userLocation }) => {
+
+const Map = ({ restaurants, userLocation }) => {
     // const location = useQuery(
     //     ["location", 40.714224, -73.961452],
     //     GeocodingAPI.getReverseGeocode
@@ -63,7 +63,7 @@ const Map = ({ userLocation }) => {
     // console.log(location);
     // console.log(latlng);
     console.log(userLocation);
-    const [resturant, setResturant] = useState(null);
+    const [restaurant, setRestaurant] = useState(null);
 
     const [currentZoom, setCurrentZoom] = useState(defaultZoom);
     // const [zoom, setZoom] = useState(defaultZoom);
@@ -75,7 +75,7 @@ const Map = ({ userLocation }) => {
 
     const [currentLocation, setCurrentLocation] = useState(userLocation);
     //const [center, setCenter] = useState(userLocation);
-    const restaurants = useStreamRestaurants();
+    // const restaurants = useGetRestaurants();
     //console.log(restaurants);
     const [map, setMap] = React.useState(null);
     //console.log(map);
@@ -162,7 +162,7 @@ const Map = ({ userLocation }) => {
 
     return isLoaded ? (
         <div className="flex">
-            <Resturant resturant={resturant}></Resturant>
+            <RestaurantCard restaurant={restaurant}></RestaurantCard>
             <GoogleMap
                 mapContainerStyle={containerStyle}
                 center={userLocation}
@@ -207,7 +207,7 @@ const Map = ({ userLocation }) => {
                                     // }}
                                     key={key}
                                     position={position}
-                                    onClick={() => setResturant(resturant)}
+                                    onClick={() => setRestaurant(resturant)}
                                 />
                                 <OverlayView
                                     key="mwl"
@@ -235,27 +235,6 @@ const Map = ({ userLocation }) => {
                                         {resturant.name}
                                     </div>
                                 </OverlayView>
-                                {/* <InfoBox
-                                options={options}
-                                onClick={() => setResturant(resturant)}
-                                position={position}
-                            >
-                                <div
-                                    style={{
-                                        opacity: 1,
-                                        marginBottom: 10,
-                                    }}
-                                >
-                                    <div
-                                        style={{
-                                            fontSize: 16,
-                                            fontColor: `#08233B`,
-                                        }}
-                                    >
-                                        {resturant.name}
-                                    </div>
-                                </div>
-                            </InfoBox> */}
                             </div>
                         );
                     })}
