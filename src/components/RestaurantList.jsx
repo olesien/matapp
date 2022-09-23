@@ -1,7 +1,7 @@
 import RestaurantCard from "./RestaurantCard";
 
 const RestaurantList = ({ restaurants }) => {
-    console.log(restaurants);
+    // console.log(restaurants);
     return (
         <div>
             <h2>Restaurant list</h2>

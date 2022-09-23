@@ -15,7 +15,7 @@ const useGetCollection = (query, filterOptions) => {
                     ...doc.data()
                 })
             })
-            console.log(fetchedData)
+            // console.log(fetchedData)
             setData(fetchedData)
         }
         fetchData()

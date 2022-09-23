@@ -31,7 +31,7 @@ const HomePage = () => {
         setSearchParams({ tab });
     };
 
-    console.log(filterOptions);
+    // console.log(filterOptions);
 
     const handleSetFilterOptions = (options) => {
         setFilterOptions(options);
