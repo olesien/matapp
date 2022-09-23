@@ -11,7 +11,10 @@ import Tabs from "react-bootstrap/Tabs";
 import { useSearchParams } from "react-router-dom";
 
 const HomePage = () => {
-    const [userLocation, setUserLocation] = useState(false);
+    const [userLocation, setUserLocation] = useState({
+        lat: 33.872,
+        lng: -117.214,
+    });
     const [showFilter, setShowFilter] = useState(false);
     const [sortBy, setSortBy] = useState(false);
     const [filterOptions, setFilterOptions] = useState(null);
