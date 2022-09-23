@@ -6,6 +6,8 @@ import { useEffect } from "react";
 import FilterRestaurants from "../components/FilterRestaurants";
 import Button from "react-bootstrap/Button";
 import useGetRestaurants from "../hooks/useGetRestaurants";
+import Tab from "react-bootstrap/Tab";
+import Tabs from "react-bootstrap/Tabs";
 
 const HomePage = () => {
     const [userLocation, setUserLocation] = useState(false);
@@ -45,34 +47,42 @@ const HomePage = () => {
     return (
         <Container className="py-3">
             <h1>Welcome!</h1>
-            {userLocation ? (
-                <Map restaurants={restaurants} userLocation={userLocation} />
-            ) : (
-                <></>
-            )}
-
-            <Button
-                className="mt-2"
-                onClick={() => {
-                    setSortBy(!sortBy);
-                }}
-            >
-                Sort By Name
-            </Button>
-            <Button
-                className="mt-2"
-                onClick={() => {
-                    setShowFilter(!showFilter);
-                }}
-            >
-                Filter
-            </Button>
-            {showFilter && (
-                <FilterRestaurants
-                    handleSetFilterOptions={handleSetFilterOptions}
-                />
-            )}
-            <RestaurantList restaurants={restaurants} />
+            <Tabs defaultActiveKey="map" id="tabs" className="mb-3">
+                <Tab eventKey="map" title="Restaurant Map">
+                    {userLocation ? (
+                        <Map
+                            restaurants={restaurants}
+                            userLocation={userLocation}
+                        />
+                    ) : (
+                        <></>
+                    )}
+                </Tab>
+                <Tab eventKey="list" title="Restaurant List">
+                    <Button
+                        className="mt-2"
+                        onClick={() => {
+                            setSortBy(!sortBy);
+                        }}
+                    >
+                        Sort By Name
+                    </Button>
+                    <Button
+                        className="mt-2"
+                        onClick={() => {
+                            setShowFilter(!showFilter);
+                        }}
+                    >
+                        Filter
+                    </Button>
+                    {showFilter && (
+                        <FilterRestaurants
+                            handleSetFilterOptions={handleSetFilterOptions}
+                        />
+                    )}
+                    <RestaurantList restaurants={restaurants} />
+                </Tab>
+            </Tabs>
         </Container>
     );
 };
