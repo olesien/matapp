@@ -15,6 +15,7 @@ const HomePage = () => {
     const [sortBy, setSortBy] = useState(false);
     const [filterOptions, setFilterOptions] = useState(null);
     const restaurants = useGetRestaurants(filterOptions);
+    const [tab, setTab] = useState("map");
 
     console.log(filterOptions);
 
@@ -47,7 +48,12 @@ const HomePage = () => {
     return (
         <Container className="py-3">
             <h1>Welcome!</h1>
-            <Tabs defaultActiveKey="map" id="tabs" className="mb-3">
+            <Tabs
+                activeKey={tab}
+                onSelect={(tab) => setTab(tab)}
+                id="tabs"
+                className="mb-3"
+            >
                 <Tab eventKey="map" title="Restaurant Map">
                     {userLocation ? (
                         <Map
@@ -59,14 +65,14 @@ const HomePage = () => {
                     )}
                 </Tab>
                 <Tab eventKey="list" title="Restaurant List">
-                    <Button
+                    {/* <Button
                         className="mt-2"
                         onClick={() => {
                             setSortBy(!sortBy);
                         }}
                     >
                         Sort By Name
-                    </Button>
+                    </Button> */}
                     <Button
                         className="mt-2"
                         onClick={() => {
