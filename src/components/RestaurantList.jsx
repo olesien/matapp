@@ -1,3 +1,5 @@
+import Resturant from "./Resturant";
+
 const RestaurantList = ({ restaurants }) => {
     console.log(restaurants);
     return (
@@ -6,10 +8,7 @@ const RestaurantList = ({ restaurants }) => {
             {restaurants &&
                 restaurants.length > 0 &&
                 restaurants.map((restaurant) => (
-                    <div key={restaurant.id}>
-                        <h4>{restaurant.name}</h4>
-                        <p>{restaurant.description}</p>
-                    </div>
+                    <Resturant key={restaurant.id} restaurant={restaurant} />
                 ))}
         </div>
     );

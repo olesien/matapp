@@ -10,7 +10,7 @@ import {
     Circle,
 } from "@react-google-maps/api";
 import { useState } from "react";
-import Resturant from "./Resturant";
+import ResturantCard from "./ResturantCard";
 import useGetRestaurants from "../hooks/useGetRestaurants";
 import MyLocation from "./MyLocation";
 import { useQuery } from "react-query";
@@ -139,7 +139,7 @@ const Map = ({ restaurants, userLocation }) => {
 
     return isLoaded ? (
         <div className="flex">
-            <Resturant resturant={resturant}></Resturant>
+            <ResturantCard resturant={resturant}></ResturantCard>
             <GoogleMap
                 mapContainerStyle={containerStyle}
                 center={userLocation}
