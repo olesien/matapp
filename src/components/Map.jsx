@@ -10,7 +10,7 @@ import {
     Circle,
 } from "@react-google-maps/api";
 import { useState } from "react";
-import ResturantCard from "./ResturantCard";
+import RestaurantCard from "./RestaurantCard";
 import useGetRestaurants from "../hooks/useGetRestaurants";
 import MyLocation from "./MyLocation";
 import { useQuery } from "react-query";
@@ -63,7 +63,7 @@ const Map = ({ restaurants, userLocation }) => {
     // console.log(location);
     // console.log(latlng);
     console.log(userLocation);
-    const [resturant, setResturant] = useState(null);
+    const [restaurant, setRestaurant] = useState(null);
 
     const [currentZoom, setCurrentZoom] = useState(defaultZoom);
     // const [zoom, setZoom] = useState(defaultZoom);
@@ -139,7 +139,7 @@ const Map = ({ restaurants, userLocation }) => {
 
     return isLoaded ? (
         <div className="flex">
-            <ResturantCard resturant={resturant}></ResturantCard>
+            <RestaurantCard restaurant={restaurant}></RestaurantCard>
             <GoogleMap
                 mapContainerStyle={containerStyle}
                 center={userLocation}
@@ -183,7 +183,7 @@ const Map = ({ restaurants, userLocation }) => {
                                     // }}
                                     key={key}
                                     position={position}
-                                    onClick={() => setResturant(resturant)}
+                                    onClick={() => setRestaurant(resturant)}
                                 />
                                 <OverlayView
                                     key="mwl"
@@ -211,27 +211,6 @@ const Map = ({ restaurants, userLocation }) => {
                                         {resturant.name}
                                     </div>
                                 </OverlayView>
-                                {/* <InfoBox
-                                options={options}
-                                onClick={() => setResturant(resturant)}
-                                position={position}
-                            >
-                                <div
-                                    style={{
-                                        opacity: 1,
-                                        marginBottom: 10,
-                                    }}
-                                >
-                                    <div
-                                        style={{
-                                            fontSize: 16,
-                                            fontColor: `#08233B`,
-                                        }}
-                                    >
-                                        {resturant.name}
-                                    </div>
-                                </div>
-                            </InfoBox> */}
                             </div>
                         );
                     })}

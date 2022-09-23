@@ -8,6 +8,7 @@ import Button from "react-bootstrap/Button";
 import useGetRestaurants from "../hooks/useGetRestaurants";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
+import { useSearchParams } from "react-router-dom";
 
 const HomePage = () => {
     const [userLocation, setUserLocation] = useState(false);
@@ -15,7 +16,17 @@ const HomePage = () => {
     const [sortBy, setSortBy] = useState(false);
     const [filterOptions, setFilterOptions] = useState(null);
     const restaurants = useGetRestaurants(filterOptions);
-    const [tab, setTab] = useState("map");
+    //const [tab, setTab] = useState("map");
+
+    const [searchParams, setSearchParams] = useSearchParams();
+    let tab = searchParams.get("tab");
+    if (!tab) {
+        tab = "map";
+    }
+
+    const setTab = (tab) => {
+        setSearchParams({ tab });
+    };
 
     console.log(filterOptions);
 
