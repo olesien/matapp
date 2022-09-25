@@ -1,29 +1,7 @@
-import { doc, getDoc } from "firebase/firestore"
-import { useEffect } from "react"
-import { useState } from "react"
-import { db } from "../firebase"
+import useGetDocument from "./useGetDocument";
 
 const useGetRestaurant = (id) => {
-    const [data, setData] = useState([])
-
-    useEffect(() => {
-        const getDocSnapshot = async () => {
-            // get reference to document in collection 'restaurants'
-            const ref = doc(db, 'restaurants', id)
-            const snapshot = await getDoc(ref)
-
-            if(snapshot.exists()) {
-                setData(snapshot.data())
-            } else {
-                setData(false)
-            }
-        }
-        getDocSnapshot()
-    }, [])
-
-    return {
-        data,
-    }
+    return useGetDocument('restaurants', id)
 }
 
 export default useGetRestaurant
