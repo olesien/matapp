@@ -9,7 +9,7 @@ const useGetDocument = (collection, id) => {
     useEffect(() => {
         const getDocSnapshot = async () => {
             setLoading(true)
-            // get reference to document in collection 'restaurants'
+            // get reference to document in collection
             const ref = doc(db, collection, id)
             const snapshot = await getDoc(ref)
 
