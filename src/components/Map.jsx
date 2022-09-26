@@ -188,10 +188,10 @@ const Map = ({ restaurants, userLocation }) => {
                 {/* Child components, such as markers, info windows, etc. */}
 
                 {currentZoom > -1 &&
-                    restaurants.map((resturant, key) => {
+                    restaurants.map((restaurant, key) => {
                         const position = {
-                            lat: resturant.position._lat,
-                            lng: resturant.position._long,
+                            lat: restaurant.position._lat,
+                            lng: restaurant.position._long,
                         };
 
                         return (
@@ -207,7 +207,7 @@ const Map = ({ restaurants, userLocation }) => {
                                     // }}
                                     key={key}
                                     position={position}
-                                    onClick={() => setRestaurant(resturant)}
+                                    onClick={() => setRestaurant(restaurant)}
                                 />
                                 <OverlayView
                                     key="mwl"
@@ -232,7 +232,7 @@ const Map = ({ restaurants, userLocation }) => {
                                             borderRadius: "4px",
                                         }}
                                     >
-                                        {resturant.name}
+                                        {restaurant.name}
                                     </div>
                                 </OverlayView>
                             </div>
