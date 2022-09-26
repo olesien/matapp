@@ -9,7 +9,7 @@ import {
 } from "firebase/auth";
 import { auth, db, storage } from "../firebase";
 import SyncLoader from "react-spinners/SyncLoader";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc } from "firebase/firestore";
 import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
 
 const AuthContext = createContext();
@@ -21,6 +21,23 @@ const useAuthContext = () => {
 const AuthContextProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState(null);
     const [initialLoading, setInitialLoading] = useState(true);
+
+    const changeCurrentUser = async (user) => {
+        let data = {};
+        if (user) {
+            //Get related docs
+            console.log(user);
+            const ref = doc(db, "users", user.uid);
+            const snapshot = await getDoc(ref);
+
+            if (snapshot.exists()) {
+                data = snapshot.data();
+            } else {
+                //Add the details to user object
+            }
+        }
+        setCurrentUser({ ...user, ...data });
+    };
 
     const signup = async (email, password, photo) => {
         await createUserWithEmailAndPassword(auth, email, password);
@@ -42,7 +59,8 @@ const AuthContextProvider = ({ children }) => {
 
     const reloadUser = async () => {
         await auth.currentUser.reload();
-        setCurrentUser(auth.currentUser);
+
+        changeCurrentUser(auth.currentUser);
         return true;
     };
 
@@ -88,7 +106,7 @@ const AuthContextProvider = ({ children }) => {
     useEffect(() => {
         // listen for changes in auth-state
         const unsubscribe = onAuthStateChanged(auth, (user) => {
-            setCurrentUser(user);
+            changeCurrentUser(user);
             setInitialLoading(false);
         });
 
