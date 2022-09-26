@@ -12,7 +12,7 @@ const RestaurantPage = () => {
 
             {loading && <p>Loading...</p>}
 
-            {!restaurant && (
+            {!loading && !restaurant && (
                 <h1>Sorry, that restaurant could not be found 😔</h1>
             )}
 
