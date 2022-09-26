@@ -1,32 +1,40 @@
 import RestaurantCard from "./RestaurantCard";
 import getDistance from "geolib/es/getDistance";
+import { useState } from "react";
+import { useEffect } from "react";
 
 const RestaurantList = ({
     restaurants,
     userLocation,
-    sortbyDistance = true,
+    sortByName,
 }) => {
+    const [sortedRestaurants, setSortedRestaurants] = useState(null);
     // console.log(restaurants);
     const userLocationConverted = {
         latitude: userLocation.lat,
         longitude: userLocation.lng,
     };
-    let sortedRestaurants = restaurants?.map((restaurant) => {
-        const distance = getDistance(
-            {
-                latitude: restaurant.position._lat,
-                longitude: restaurant.position._long,
-            },
-            userLocationConverted
-        );
-        return { ...restaurant, distance };
-    });
 
-    if (sortbyDistance) {
-        sortedRestaurants = sortedRestaurants.sort(
-            (a, b) => a.distance - b.distance
-        );
-    }
+    useEffect(() => {
+        let restaurantsWithDistance = restaurants?.map((restaurant) => {
+            const distance = getDistance(
+                {
+                    latitude: restaurant.position._lat,
+                    longitude: restaurant.position._long,
+                },
+                userLocationConverted
+            );
+            return { ...restaurant, distance };
+        });
+
+        if (!sortByName) {
+            restaurantsWithDistance = restaurantsWithDistance.sort(
+                (a, b) => a.distance - b.distance
+            );
+        }
+        setSortedRestaurants(restaurantsWithDistance)
+    }, [restaurants, sortByName]);
+
     return (
         <div>
             <h2>Restaurant list</h2>
@@ -38,7 +46,8 @@ const RestaurantList = ({
                             key={restaurant.id}
                             restaurant={restaurant}
                         />
-                    ))}
+                    ))
+                }
             </div>
         </div>
     );

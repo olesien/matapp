@@ -79,14 +79,14 @@ const HomePage = () => {
                     )}
                 </Tab>
                 <Tab eventKey="list" title="Restaurant List">
-                    {/* <Button
-                        className="mt-2"
+                    <Button
+                        className="mt-2 me-2"
                         onClick={() => {
                             setSortBy(!sortBy);
                         }}
                     >
-                        Sort By Name
-                    </Button> */}
+                        {sortBy ? "Sort by distance" : "Sort by name"}
+                    </Button>
                     <Button
                         className="mt-2"
                         onClick={() => {
@@ -103,6 +103,7 @@ const HomePage = () => {
                     <RestaurantList
                         restaurants={restaurants}
                         userLocation={userLocation}
+                        sortByName={sortBy}
                     />
                 </Tab>
             </Tabs>

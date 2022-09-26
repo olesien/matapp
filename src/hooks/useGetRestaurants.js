@@ -1,4 +1,4 @@
-import { collection, query, where } from "firebase/firestore"
+import { collection, orderBy, query, where } from "firebase/firestore"
 import useGetCollection from "./useGetCollection"
 import { db } from "../firebase"
 
@@ -16,7 +16,7 @@ const useGetRestaurants = (filterOptions) => {
     }
   }
 
-  const q = query(collection(db, 'restaurants'), ...queryConstraints)
+  const q = query(collection(db, 'restaurants'), ...queryConstraints, orderBy("name", "asc"))
   return useGetCollection(q, filterOptions)
 }
 
