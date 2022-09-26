@@ -12,15 +12,15 @@ export default function RestaurantCard({ restaurant }) {
     if (!restaurant) {
         return <div></div>;
     }
-    const { isLoading, data: geocode } = useQuery(
-        [restaurant.id, restaurant.position._lat, restaurant.position._long],
-        GeocodingAPI.getReverseGeocode
-    );
+    // const { isLoading, data: geocode } = useQuery(
+    //     [restaurant.id, restaurant.position._lat, restaurant.position._long],
+    //     GeocodingAPI.getReverseGeocode
+    // );
 
-    if (isLoading) {
-        return <div></div>;
-    }
-    console.log(geocode);
+    // if (isLoading) {
+    //     return <div></div>;
+    // }
+    // console.log(geocode);
 
     const viewOnMap = () => {
         //Set new tab and map ID
@@ -31,7 +31,8 @@ export default function RestaurantCard({ restaurant }) {
             <Card.Img variant="top" src={restaurant.url} />
             <Card.Body>
                 <Card.Title>{restaurant.name}</Card.Title>
-                <Card.Text>{geocode.results[0]?.formatted_address}</Card.Text>
+                {/* <Card.Text>{geocode.results[0]?.formatted_address}</Card.Text> */}
+                <Card.Text>{restaurant.place}</Card.Text>
                 <Card.Text>{restaurant.description}</Card.Text>
                 <Card.Text>Offers: {restaurant.offers}</Card.Text>
                 <Card.Text>Type: {restaurant.type_of_establishment}</Card.Text>
