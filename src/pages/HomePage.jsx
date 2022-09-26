@@ -100,7 +100,10 @@ const HomePage = () => {
                             handleSetFilterOptions={handleSetFilterOptions}
                         />
                     )}
-                    <RestaurantList restaurants={restaurants} />
+                    <RestaurantList
+                        restaurants={restaurants}
+                        userLocation={userLocation}
+                    />
                 </Tab>
             </Tabs>
         </Container>

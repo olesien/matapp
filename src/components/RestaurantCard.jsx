@@ -5,6 +5,16 @@ import { useSearchParams } from "react-router-dom";
 import { useQuery } from "react-query";
 import GeocodingAPI from "../services/GeocodingAPI";
 
+const convertUnits = (distance) => {
+    if (distance >= 1000) {
+        //convert to KM
+        return `${Math.round(distance / 1000)}KM`;
+    } else {
+        //keep as is
+        return `${distance}M`;
+    }
+};
+
 export default function RestaurantCard({ restaurant }) {
     const [searchParams, setSearchParams] = useSearchParams();
 
@@ -33,6 +43,9 @@ export default function RestaurantCard({ restaurant }) {
                 <Card.Title>{restaurant.name}</Card.Title>
                 {/* <Card.Text>{geocode.results[0]?.formatted_address}</Card.Text> */}
                 <Card.Text>{restaurant.place}</Card.Text>
+                <Card.Text>
+                    Distance: {convertUnits(restaurant.distance)}
+                </Card.Text>
                 <Card.Text>{restaurant.description}</Card.Text>
                 <Card.Text>Offers: {restaurant.offers}</Card.Text>
                 <Card.Text>Type: {restaurant.type_of_establishment}</Card.Text>
