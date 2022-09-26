@@ -19,7 +19,7 @@ export default function RestaurantCard({ restaurant }) {
                 <Card.Title>{restaurant.name}</Card.Title>
                 <Card.Text>{restaurant.description}</Card.Text>
                 <Card.Text>Offers: {restaurant.offers}</Card.Text>
-                <Card.Text>Type: Restaurant</Card.Text>
+                <Card.Text>Type: {restaurant.type_of_establishment}</Card.Text>
                 <footer>
                     <Button variant="primary" onClick={() => viewOnMap()}>
                         View on Map
