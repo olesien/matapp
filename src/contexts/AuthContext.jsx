@@ -35,8 +35,10 @@ const AuthContextProvider = ({ children }) => {
             } else {
                 //Add the details to user object
             }
+            setCurrentUser({ ...user, ...data });
+        } else {
+            setCurrentUser(false);
         }
-        setCurrentUser({ ...user, ...data });
     };
 
     const signup = async (email, password, photo) => {
