@@ -37,7 +37,7 @@ export default function RestaurantCard({ restaurant }) {
         setSearchParams({ tab: "map", id: restaurant.id });
     };
     return (
-        <Card style={{ width: "18rem", margin: "1rem" }}>
+        <Card data-testid="card" style={{ width: "18rem", margin: "1rem" }}>
             <Card.Img variant="top" src={restaurant.url} />
             <Card.Body>
                 <Card.Title>{restaurant.name}</Card.Title>
