@@ -4,13 +4,20 @@ import CreateRestaurantForm from '../components/CreateRestaurantForm'
 import useGetRestaurants from '../hooks/useGetRestaurants'
 
 const MyRestaurantsPage = () => {
-	const restaurants = useGetRestaurants()
+	const { data: restaurants, loading } = useGetRestaurants()
 
 	return (
 		<Container className="py-3">
 			<h1>Your restaurants</h1>
 			<div className="list">
-				{restaurants &&
+
+				{loading && <p>Loading...</p>}
+
+				{!loading && !restaurants && (
+					<h1>Sorry, that restaurant could not be found 😔</h1>
+				)}
+
+				{!loading && restaurants &&
 					restaurants.length > 0 &&
 					restaurants.map((restaurant) => (
 						<Card style={{ width: "18rem", margin: "1rem" }} key={restaurant.id}>
