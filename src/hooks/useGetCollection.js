@@ -25,12 +25,10 @@ const useGetCollection = (query, filterOptions) => {
     }, [filterOptions])
 
 
-    return (
-        /**
-         * @todo fråga Eric hur man gör för att returnera loading state utan att ta sönder renderingen av restauranger i HomePage
-         */
-        data
-    )
+    return {
+        data,
+        loading,
+    }
 }
 
 export default useGetCollection

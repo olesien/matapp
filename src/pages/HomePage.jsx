@@ -18,7 +18,7 @@ const HomePage = () => {
     const [showFilter, setShowFilter] = useState(false);
     const [sortBy, setSortBy] = useState(false);
     const [filterOptions, setFilterOptions] = useState(null);
-    const restaurants = useGetRestaurants(filterOptions);
+    const {data: restaurants} = useGetRestaurants(filterOptions);
     //const [tab, setTab] = useState("map");
 
     const [searchParams, setSearchParams] = useSearchParams();
