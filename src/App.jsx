@@ -16,7 +16,8 @@ import SignupPage from "./pages/SignupPage";
 import SuggestionPage from "./pages/SuggestionPage";
 import UpdateProfilePage from "./pages/UpdateProfilePage";
 import "./assets/scss/App.scss";
-import AdminPage from "./pages/AdminPage";
+import AdminRestaurantsPage from "./pages/AdminRestaurants";
+import AdminUsersPage from "./pages/AdminUsersPage";
 
 function App() {
     return (
@@ -69,10 +70,18 @@ function App() {
 
                 {/* Admin routes */}
                 <Route
-                    path="/admin"
+                    path="/admin-restaurants"
                     element={
                         <RequireAdminAuth>
-                            <AdminPage />
+                            <AdminRestaurantsPage />
+                        </RequireAdminAuth>
+                    }
+                />
+                <Route
+                    path="/admin-users"
+                    element={
+                        <RequireAdminAuth>
+                            <AdminUsersPage />
                         </RequireAdminAuth>
                     }
                 />
