@@ -37,7 +37,7 @@ const CreateRestaurantForm = () => {
             postcode: data.postcode,
             type_of_establishment: "restaurant",
             url: "https://firebasestorage.googleapis.com/v0/b/fed21-matguiden.appspot.com/o/restaurants%2F1663942025-london-stock.jpg?alt=media&token=bc832727-0b00-41a2-ac98-4425bbd87102",
-            website: data.website,
+            website: data.website_url,
         });
 
         toast.success("Restaurant created");
@@ -114,6 +114,10 @@ const CreateRestaurantForm = () => {
                 <Form.Control
                     {...register("postcode", {
                         required: "Provide a postcode",
+                        pattern: {
+                            value: /[0-9]{5}/,
+                            message: "Invalid postcode",
+                        },
                     })}
                     placeholder="12345"
                     type="text"
@@ -226,7 +230,12 @@ const CreateRestaurantForm = () => {
             <Form.Group className="mb-3" controlId="email">
                 <Form.Label>Email</Form.Label>
                 <Form.Control
-                    {...register("email")}
+                    {...register("email", {
+                        pattern: {
+                            value: /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6})*$/gm,
+                            message: "Invalid email",
+                        },
+                    })}
                     placeholder="info@burgerqueenrestaurant.com"
                     type="email"
                 />
@@ -238,12 +247,12 @@ const CreateRestaurantForm = () => {
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="phone">
-                <Form.Label>Phone</Form.Label>
+                <Form.Label>Phone number</Form.Label>
                 <Form.Control
                     {...register("phone", {
-                        maxLength: {
-                            value: 9,
-                            message: "Phone can be maximum 9 characters long",
+                        pattern: {
+                            value: /[0-9]{9}/,
+                            message: "Invalid phone number",
                         },
                     })}
                     placeholder="070123456"
@@ -256,22 +265,27 @@ const CreateRestaurantForm = () => {
                 )}
             </Form.Group>
 
-            <Form.Group className="mb-3" controlId="website">
-                <Form.Label>Website</Form.Label>
+            <Form.Group className="mb-3" controlId="website_url">
+                <Form.Label>Website URL</Form.Label>
                 <Form.Control
-                    {...register("website")}
+                    {...register("website_url", {
+                        pattern: {
+                            value: /(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g,
+                            message: "Invalid URL",
+                        },
+                    })}
                     placeholder="www.burgerqueenrestaurant.com"
-                    type="text"
+                    type="url"
                 />
-                {errors.website && (
+                {errors.website_url && (
                     <Form.Text className="text-danger">
-                        {errors.website.message}
+                        {errors.website_url.message}
                     </Form.Text>
                 )}
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="facebook">
-                <Form.Label>Facebook</Form.Label>
+                <Form.Label>Facebook username</Form.Label>
                 <Form.Control
                     {...register("facebook")}
                     placeholder="burgerqueenrestaurant"
@@ -285,7 +299,7 @@ const CreateRestaurantForm = () => {
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="instagram">
-                <Form.Label>Instagram</Form.Label>
+                <Form.Label>Instagram username</Form.Label>
                 <Form.Control
                     {...register("instagram")}
                     placeholder="burgerqueenrestaurant"
