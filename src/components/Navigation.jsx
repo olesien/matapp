@@ -25,9 +25,21 @@ const Navigation = () => {
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="ms-auto align-items-center">
                         {currentUser?.admin ? (
-                            <Nav.Link as={NavLink} end to="/admin">
-                                Admin Panel
-                            </Nav.Link>
+                            <NavDropdown title={"Admin Panel"}>
+                                <NavLink
+                                    to="/admin-users"
+                                    className="dropdown-item"
+                                >
+                                    Users
+                                </NavLink>
+                                <NavDropdown.Divider />
+                                <NavLink
+                                    to="/admin-restaurants"
+                                    className="dropdown-item"
+                                >
+                                    Restaurants
+                                </NavLink>
+                            </NavDropdown>
                         ) : (
                             <></>
                         )}
