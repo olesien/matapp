@@ -3,9 +3,10 @@ import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import { Link, NavLink } from "react-router-dom";
 import { useAuthContext } from "../contexts/AuthContext";
+import { NavDropdown } from "react-bootstrap";
 
 const Navigation = () => {
-    const { currentUser } = useAuthContext()
+    const { currentUser } = useAuthContext();
     return (
         <Navbar bg="dark" variant="dark" expand="md">
             <Container>
@@ -23,22 +24,51 @@ const Navigation = () => {
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="ms-auto align-items-center">
-                        {
-                            currentUser ? (
-                                <>
-                                    {/* User is logged in */}
-                                    <Nav.Link as={NavLink} end to="/my-restaurants">My Restaurants</Nav.Link>
-                                    <Nav.Link as={NavLink} end to="logout">Log Out</Nav.Link>
-                                </>
-                            ) : (
-                                <>
-                                    {/* No user is logged in */}
-                                    <Nav.Link as={NavLink} end to="/suggestion">Suggestion</Nav.Link>
-                                    <Nav.Link as={NavLink} to="/login">Login</Nav.Link>
-                                    <Nav.Link as={NavLink} to="/signup">Signup</Nav.Link>
-                                </>
-                            )
-                        }
+                        {currentUser?.admin ? (
+                            <Nav.Link as={NavLink} end to="/admin">
+                                Admin Panel
+                            </Nav.Link>
+                        ) : (
+                            <></>
+                        )}
+                        {currentUser ? (
+                            <>
+                                {/* User is logged in */}
+
+                                <Nav.Link as={NavLink} to="/my-restaurants">
+                                    My Restaurants
+                                </Nav.Link>
+
+                                <NavDropdown title={currentUser.email}>
+                                    <NavLink
+                                        to="/update-profile"
+                                        className="dropdown-item"
+                                    >
+                                        Update Profile
+                                    </NavLink>
+                                    <NavDropdown.Divider />
+                                    <NavLink
+                                        to="/logout"
+                                        className="dropdown-item"
+                                    >
+                                        Log Out
+                                    </NavLink>
+                                </NavDropdown>
+                            </>
+                        ) : (
+                            <>
+                                {/* No user is logged in */}
+                                <Nav.Link as={NavLink} end to="/suggestion">
+                                    Suggestion
+                                </Nav.Link>
+                                <Nav.Link as={NavLink} to="/login">
+                                    Login
+                                </Nav.Link>
+                                <Nav.Link as={NavLink} to="/signup">
+                                    Signup
+                                </Nav.Link>
+                            </>
+                        )}
                     </Nav>
                 </Navbar.Collapse>
             </Container>

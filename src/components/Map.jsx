@@ -62,7 +62,7 @@ const Map = ({ restaurants, userLocation }) => {
     // );
     // console.log(location);
     // console.log(latlng);
-    console.log(userLocation);
+    // console.log(userLocation);
     const [restaurant, setRestaurant] = useState(null);
 
     const [currentZoom, setCurrentZoom] = useState(defaultZoom);
@@ -103,7 +103,7 @@ const Map = ({ restaurants, userLocation }) => {
         }
     };
 
-    console.log(currentLocation, userLocation, currentZoom);
+    // console.log(currentLocation, userLocation, currentZoom);
 
     const onLoad = React.useCallback(function callback(map) {
         // const bounds = new window.google.maps.LatLngBounds(center);
@@ -188,10 +188,10 @@ const Map = ({ restaurants, userLocation }) => {
                 {/* Child components, such as markers, info windows, etc. */}
 
                 {currentZoom > -1 &&
-                    restaurants.map((resturant, key) => {
+                    restaurants.map((restaurant, key) => {
                         const position = {
-                            lat: resturant.position._lat,
-                            lng: resturant.position._long,
+                            lat: restaurant.position._lat,
+                            lng: restaurant.position._long,
                         };
 
                         return (

@@ -18,7 +18,7 @@ const HomePage = () => {
     const [showFilter, setShowFilter] = useState(false);
     const [sortBy, setSortBy] = useState(false);
     const [filterOptions, setFilterOptions] = useState(null);
-    const restaurants = useGetRestaurants(filterOptions);
+    const {data: restaurants} = useGetRestaurants(filterOptions);
     //const [tab, setTab] = useState("map");
 
     const [searchParams, setSearchParams] = useSearchParams();
@@ -31,7 +31,7 @@ const HomePage = () => {
         setSearchParams({ tab });
     };
 
-    console.log(filterOptions);
+    // console.log(filterOptions);
 
     const handleSetFilterOptions = (options) => {
         setFilterOptions(options);
@@ -79,14 +79,14 @@ const HomePage = () => {
                     )}
                 </Tab>
                 <Tab eventKey="list" title="Restaurant List">
-                    {/* <Button
-                        className="mt-2"
+                    <Button
+                        className="mt-2 me-2"
                         onClick={() => {
                             setSortBy(!sortBy);
                         }}
                     >
-                        Sort By Name
-                    </Button> */}
+                        {sortBy ? "Sort by distance" : "Sort by name"}
+                    </Button>
                     <Button
                         className="mt-2"
                         onClick={() => {
@@ -100,7 +100,11 @@ const HomePage = () => {
                             handleSetFilterOptions={handleSetFilterOptions}
                         />
                     )}
-                    <RestaurantList restaurants={restaurants} />
+                    <RestaurantList
+                        restaurants={restaurants}
+                        userLocation={userLocation}
+                        sortByName={sortBy}
+                    />
                 </Tab>
             </Tabs>
         </Container>

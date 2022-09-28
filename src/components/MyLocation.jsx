@@ -3,10 +3,10 @@ import { Circle } from "@react-google-maps/api";
 
 export default function MyLocation({ userLocation }) {
     const onCircleLoad = (circle) => {
-        console.log("Circle onLoad circle: ", circle);
+        // console.log("Circle onLoad circle: ", circle);
     };
     const onCircleUnmount = (circle) => {
-        console.log("Circle onUnmount circle: ", circle);
+        // console.log("Circle onUnmount circle: ", circle);
     };
     const circleOptions = {
         strokeColor: "#FF0000",

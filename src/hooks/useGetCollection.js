@@ -4,9 +4,11 @@ import { useEffect } from "react"
 
 const useGetCollection = (query, filterOptions) => {
     const [data, setData] = useState([])
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         const fetchData = async () => {
+            setLoading(true)
             const fetchedData = []
             const querySnapshot = await getDocs(query)
             querySnapshot.forEach(doc => {
@@ -15,16 +17,18 @@ const useGetCollection = (query, filterOptions) => {
                     ...doc.data()
                 })
             })
-            console.log(fetchedData)
+            // console.log(fetchedData)
             setData(fetchedData)
+            setLoading(false)
         }
         fetchData()
     }, [filterOptions])
 
 
-    return (
-        data
-    )
+    return {
+        data,
+        loading,
+    }
 }
 
 export default useGetCollection
