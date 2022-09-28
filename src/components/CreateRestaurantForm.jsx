@@ -17,7 +17,7 @@ const CreateRestaurantForm = () => {
     const onCreateRestaurant = async (data) => {
         // make firestore doc
         await addDoc(collection(db, "restaurants"), {
-            address: `${data.streetName} ${data.streetNumber}`,
+            address: `${data.street_name} ${data.street_number}`,
             category: data.category,
             city: data.city,
             createdBy: currentUser ? currentUser.uid : 0,
@@ -67,10 +67,10 @@ const CreateRestaurantForm = () => {
                 )}
             </Form.Group>
 
-            <Form.Group className="mb-3" controlId="streetName">
+            <Form.Group className="mb-3" controlId="street_name">
                 <Form.Label>Street name</Form.Label>
                 <Form.Control
-                    {...register("streetName", {
+                    {...register("street_name", {
                         required: "Provide a street name",
                         minLength: {
                             value: 3,
@@ -81,17 +81,17 @@ const CreateRestaurantForm = () => {
                     placeholder="Queen Street"
                     type="text"
                 />
-                {errors.streetName && (
+                {errors.street_name && (
                     <Form.Text className="text-danger">
-                        {errors.streetName.message}
+                        {errors.street_name.message}
                     </Form.Text>
                 )}
             </Form.Group>
 
-            <Form.Group className="mb-3" controlId="streetNumber">
+            <Form.Group className="mb-3" controlId="street_number">
                 <Form.Label>Street number</Form.Label>
                 <Form.Control
-                    {...register("streetNumber", {
+                    {...register("street_number", {
                         required: "Provide a street number",
                         minLength: {
                             value: 1,
@@ -102,9 +102,9 @@ const CreateRestaurantForm = () => {
                     placeholder="4B"
                     type="text"
                 />
-                {errors.streetNumber && (
+                {errors.street_number && (
                     <Form.Text className="text-danger">
-                        {errors.streetNumber.message}
+                        {errors.street_number.message}
                     </Form.Text>
                 )}
             </Form.Group>
@@ -191,18 +191,15 @@ const CreateRestaurantForm = () => {
 
             <Form.Group className="mb-3" controlId="category">
                 <Form.Label>Category</Form.Label>
-                <Form.Control
+                <Form.Select
                     {...register("category", {
-                        required: "Provide a category",
-                        minLength: {
-                            value: 3,
-                            message:
-                                "Restaurant category must be at least 3 characters long",
-                        },
-                    })}
-                    placeholder="Bar"
-                    type="text"
-                />
+                        required: "Select a category"
+                    })}>
+                    <option value="restaurant">Restaurant</option>
+                    <option value="café">Café</option>
+                    <option value="fast_food">Fast Food</option>
+                    <option value="food_truck">Food Truck</option>
+                </Form.Select>
                 {errors.category && (
                     <Form.Text className="text-danger">
                         {errors.category.message}
@@ -212,18 +209,13 @@ const CreateRestaurantForm = () => {
 
             <Form.Group className="mb-3" controlId="offer">
                 <Form.Label>Offer</Form.Label>
-                <Form.Control
+                <Form.Select
                     {...register("offer", {
-                        required: "Provide an offer",
-                        minLength: {
-                            value: 3,
-                            message:
-                                "Restaurant offer must be at least 3 characters long",
-                        },
-                    })}
-                    placeholder="Lunch"
-                    type="text"
-                />
+                        required: "Select an offer"
+                    })}>
+                    <option value="lunch">Lunch</option>
+                    <option value="dinner">Dinner</option>
+                </Form.Select>
                 {errors.offer && (
                     <Form.Text className="text-danger">
                         {errors.offer.message}
