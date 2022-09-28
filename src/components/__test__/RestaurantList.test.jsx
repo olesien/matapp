@@ -2,7 +2,6 @@ import { render, screen } from "@testing-library/react";
 import RestaurantList from "../RestaurantList";
 import { BrowserRouter } from 'react-router-dom'
 import { restaurants, sortBy, userLocation } from './test_data.json'
-import HomePage from "../../pages/HomePage";
 
 test("restaurants are rendered in cards", async () => {
     // render
