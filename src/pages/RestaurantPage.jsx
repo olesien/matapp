@@ -5,16 +5,18 @@ import useGetRestaurant from '../hooks/useGetRestaurant'
 
 const RestaurantPage = () => {
     const { id } = useParams()
-    const { data: restaurant } = useGetRestaurant(id)
+    const { data: restaurant, loading } = useGetRestaurant(id)
 
     return (
         <Container className="py-3">
 
-            {!restaurant && (
-                 <h1>Sorry, that restaurant could not be found 😔</h1>
+            {loading && <p>Loading...</p>}
+
+            {!loading && !restaurant && (
+                <h1>Sorry, that restaurant could not be found 😔</h1>
             )}
 
-            {restaurant && (
+            {!loading && restaurant && (
                 <>
                     <h1>{restaurant.name}</h1>
                     <h3>Address</h3>
@@ -22,29 +24,11 @@ const RestaurantPage = () => {
                     <h3>Description</h3>
                     <p>{restaurant.description}</p>
                     <h3>Cuisine</h3>
-                    <ul>
-                        {restaurant.cuisine &&
-                            restaurant.cuisine.map((cuisine, index) => (
-                                <li key={index}>{cuisine}</li>
-                            ))
-                        }
-                    </ul>
-                    <h3>Restaurant type</h3>
-                    <ul>
-                        {restaurant.category &&
-                            restaurant.category.map((category, index) => (
-                                <li key={index}>{category}</li>
-                            ))
-                        }
-                    </ul>
-                    <p>Offer</p>
-                    <ul>
-                        {restaurant.offer &&
-                            restaurant.offer.map((offer, index) => (
-                                <li key={index}>{offer}</li>
-                            ))
-                        }
-                    </ul>
+                    <p>{restaurant.cuisine}</p>
+                    <h3>Category</h3>
+                    <p>{restaurant.category}</p>
+                    <h3>Offer</h3>
+                    <p>{restaurant.offer}</p>
                     <h2>Contact details</h2>
                     <h3>Email</h3>
                     <a href={`mailto:${restaurant.email}`}>{restaurant.email}</a>
