@@ -34,9 +34,13 @@ const MyRestaurantsPage = () => {
 						</Card>
 					))}
 			</div>
-			<h2>Create a new restaurant</h2>
-			<CreateRestaurantForm />
-		</Container>
+			<Card>
+				<Card.Body>
+					<Card.Title>Create a new restaurant</Card.Title>
+					<CreateRestaurantForm />
+				</Card.Body>
+			</Card>
+		</Container >
 	)
 }
 
