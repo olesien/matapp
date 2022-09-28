@@ -9,16 +9,18 @@ import useGetRestaurants from "../hooks/useGetRestaurants";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import { useSearchParams } from "react-router-dom";
+import { useAuthContext } from "../contexts/AuthContext";
 
 const HomePage = () => {
     const [userLocation, setUserLocation] = useState({
         lat: 33.872,
         lng: -117.214,
     });
+    const { initialLoading } = useAuthContext();
     const [showFilter, setShowFilter] = useState(false);
     const [sortBy, setSortBy] = useState(false);
     const [filterOptions, setFilterOptions] = useState(null);
-    const {data: restaurants} = useGetRestaurants(filterOptions);
+    const { data: restaurants } = useGetRestaurants(filterOptions);
     //const [tab, setTab] = useState("map");
 
     const [searchParams, setSearchParams] = useSearchParams();
@@ -26,6 +28,8 @@ const HomePage = () => {
     if (!tab) {
         tab = "map";
     }
+
+    if (initialLoading) return <></>;
 
     const setTab = (tab) => {
         setSearchParams({ tab });
