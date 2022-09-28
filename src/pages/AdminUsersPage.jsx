@@ -6,14 +6,27 @@ import Image from "react-bootstrap/Image";
 import Button from "react-bootstrap/Button";
 import { useAuthContext } from "../contexts/AuthContext";
 import useGetUsers from "../hooks/useGetUsers";
+import { doc, updateDoc } from "firebase/firestore";
+import { db } from "../firebase";
 
 export default function AdminUsersPage() {
     console.log("rendering");
     const { currentUser, initialLoading } = useAuthContext();
     const { data: users, loading } = useGetUsers();
+    console.log(users);
+    const setAdmin = async (mail, admin) => {
+        const user = users.find((user) => user.email === mail);
+        const uid = user.id;
+        const userRef = doc(db, "users", uid);
 
-    const setAdmin = (mail, admin) => {
-        console.log(mail, admin);
+        try {
+            await updateDoc(userRef, {
+                admin: !admin,
+            });
+            console.log("Succesfully updated");
+        } catch (err) {
+            console.log(err);
+        }
     };
     // const data = React.useMemo(
     //     () => [
@@ -34,7 +47,7 @@ export default function AdminUsersPage() {
                       mail: user.email,
                       admin: user.admin,
                   })),
-        [loading]
+        [users]
     );
     const columns = React.useMemo(
         () => [
@@ -63,6 +76,11 @@ export default function AdminUsersPage() {
                     <div>
                         <Button
                             className="mt-2"
+                            variant={
+                                tableProps.row.original.admin
+                                    ? "danger"
+                                    : "primary"
+                            }
                             onClick={() => {
                                 setAdmin(
                                     tableProps.row.original.mail,
@@ -78,7 +96,7 @@ export default function AdminUsersPage() {
                 ),
             },
         ],
-        []
+        [users]
     );
     // if (initialLoading || loading) return <></>;
 
