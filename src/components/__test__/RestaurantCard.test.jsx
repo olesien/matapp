@@ -11,7 +11,6 @@ it("renders information about restaurant in card", () => {
     )
 
     const cardTitleEl = screen.getByText(restaurants[1].name)
-    console.log(cardTitleEl)
 
     expect(cardTitleEl).toBeInTheDocument()
 })
