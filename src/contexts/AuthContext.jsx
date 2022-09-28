@@ -39,6 +39,7 @@ const AuthContextProvider = ({ children }) => {
         } else {
             setCurrentUser(false);
         }
+        setInitialLoading(false);
     };
 
     const signup = async (email, password, photo) => {
@@ -109,7 +110,6 @@ const AuthContextProvider = ({ children }) => {
         // listen for changes in auth-state
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             changeCurrentUser(user);
-            setInitialLoading(false);
         });
 
         return unsubscribe;
@@ -118,6 +118,7 @@ const AuthContextProvider = ({ children }) => {
     const contextValues = {
         // here be everything the children needs/should be able to use
         currentUser,
+        initialLoading,
         login,
         logout,
         signup,

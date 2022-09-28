@@ -195,7 +195,7 @@ const Map = ({ restaurants, userLocation }) => {
                         };
 
                         return (
-                            <>
+                            <div key={key}>
                                 {key == 1 && (
                                     //Loaded
                                     <div>
@@ -204,7 +204,7 @@ const Map = ({ restaurants, userLocation }) => {
                                         />
                                     </div>
                                 )}
-                                <div key={key}>
+                                <div>
                                     <Marker
                                         // icon={{
                                         //     path: "M8 12l-4.7023 2.4721.898-5.236L.3916 5.5279l5.2574-.764L8 0l2.3511 4.764 5.2574.7639-3.8043 3.7082.898 5.236z",
@@ -216,7 +216,9 @@ const Map = ({ restaurants, userLocation }) => {
                                         // }}
                                         key={key}
                                         position={position}
-                                        onClick={() => setRestaurant(resturant)}
+                                        onClick={() =>
+                                            setRestaurant(restaurant)
+                                        }
                                     />
                                     <OverlayView
                                         key="mwl"
@@ -241,11 +243,11 @@ const Map = ({ restaurants, userLocation }) => {
                                                 borderRadius: "4px",
                                             }}
                                         >
-                                            {resturant.name}
+                                            {restaurant.name}
                                         </div>
                                     </OverlayView>
                                 </div>
-                            </>
+                            </div>
                         );
                     })}
 
