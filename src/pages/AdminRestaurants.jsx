@@ -61,6 +61,9 @@ export default function AdminRestaurantsPage() {
                 : restaurants.map((restaurant) => ({
                       id: restaurant.id,
                       name: restaurant.name,
+                      street_address: restaurant?.address,
+                      city: restaurant?.city,
+                      category: restaurant?.category,
                       approved: restaurant?.approved,
                   })),
         [restaurants]
@@ -72,12 +75,25 @@ export default function AdminRestaurantsPage() {
                 accessor: "name",
             },
             {
-                Header: "View",
-                accessor: "view",
+                Header: "Street Address",
+                accessor: "street_address",
+            },
+            {
+                Header: "City",
+                accessor: "city",
+            },
+            {
+                Header: "Category",
+                accessor: "category",
+            },
+            {
+                Header: "Actions",
+                accessor: "actions",
                 Cell: (tableProps) => (
                     <div>
                         <Button
                             className="mt-2"
+                            style={{ marginRight: 10 }}
                             variant="primary"
                             onClick={() => {
                                 toggleRestaurant(tableProps.row.original.id);
@@ -85,14 +101,6 @@ export default function AdminRestaurantsPage() {
                         >
                             {"View"}
                         </Button>
-                    </div>
-                ),
-            },
-            {
-                Header: "Approve",
-                accessor: "approve",
-                Cell: (tableProps) => (
-                    <div>
                         <Button
                             className="mt-2"
                             variant={
