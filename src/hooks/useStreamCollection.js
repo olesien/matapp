@@ -1,33 +1,34 @@
-import { getDocs } from "firebase/firestore";
-import { useState } from "react";
-import { useEffect } from "react";
+import { collection, query, onSnapshot } from "firebase/firestore";
+import { useEffect, useState } from "react";
+import { db } from "../firebase";
 
-const useGetCollection = (query, filterOptions) => {
+const useStreamCollection = (col) => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const fetchData = async () => {
+        const q = query(collection(db, col));
+        const unsub = onSnapshot(q, async (querySnapshot) => {
             setLoading(true);
+
             const fetchedData = [];
-            const querySnapshot = await getDocs(query);
             querySnapshot.forEach((doc) => {
                 fetchedData.push({
                     id: doc.id,
                     ...doc.data(),
                 });
             });
-            // console.log(fetchedData)
+
             setData(fetchedData);
             setLoading(false);
-        };
-        fetchData();
-    }, [filterOptions]);
+        });
 
+        return unsub;
+    }, []);
     return {
         data,
         loading,
     };
 };
 
-export default useGetCollection;
+export default useStreamCollection;
