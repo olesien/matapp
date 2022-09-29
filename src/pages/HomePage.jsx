@@ -30,11 +30,11 @@ const HomePage = () => {
         }
         getCityName()
     }, [userLocation])
-    
+
     const { initialLoading } = useAuthContext();
     const [showFilter, setShowFilter] = useState(false);
     const [sortBy, setSortBy] = useState(false);
-    const [filterOptions, setFilterOptions] = useState(null);
+    const [filterOptions, setFilterOptions] = useState({option3: true});
     const { data: restaurants } = useGetRestaurants(filterOptions, cityName);
     //const [tab, setTab] = useState("map");
 
@@ -114,8 +114,20 @@ const HomePage = () => {
                     >
                         Filter
                     </Button>
+                    <Button
+                        className="mt-2 ms-2"
+                        onClick={() => {
+                            setFilterOptions({
+                                ...filterOptions,
+                                option3: !filterOptions.option3,
+                            })
+                        }}
+                    >
+                        Show all
+                    </Button>
                     {showFilter && (
                         <FilterRestaurants
+                            filterOptions={filterOptions}
                             handleSetFilterOptions={handleSetFilterOptions}
                         />
                     )}

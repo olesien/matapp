@@ -17,12 +17,12 @@ const useGetRestaurants = (filterOptions, cityName) => {
             // If the second filter option is truthy, add the query constraint
             queryConstraints.push(where("offers", "==", filterOptions.option2));
         }
+        if (filterOptions.option3) {
+            console.log(cityName)
+            queryConstraints.push(where("place", "==", cityName));
+        }
     }
 
-    if (cityName) {
-        console.log(cityName)
-        queryConstraints.push(where("place", "==", cityName));
-    }
 
     const q = query(
         collection(db, "restaurants"),
