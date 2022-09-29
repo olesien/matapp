@@ -5,7 +5,7 @@ import RenderTable from "../components/RenderTable";
 import Image from "react-bootstrap/Image";
 import Button from "react-bootstrap/Button";
 import { useAuthContext } from "../contexts/AuthContext";
-import useGetUsers from "../hooks/useGetUsers";
+import useGetUsers from "../hooks/useStreamUsers";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase";
 

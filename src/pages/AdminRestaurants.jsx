@@ -5,7 +5,7 @@ import RenderTable from "../components/RenderTable";
 import Image from "react-bootstrap/Image";
 import Button from "react-bootstrap/Button";
 import { useAuthContext } from "../contexts/AuthContext";
-import useGetRestaurants from "../hooks/useGetRestaurants";
+import useStreamRestaurants from "../hooks/useStreamRestaurants";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import { useState } from "react";
@@ -14,7 +14,7 @@ import RestaurantOverlay from "../components/RestaurantOverlay";
 export default function AdminRestaurantsPage() {
     console.log("rendering");
     const { currentUser, initialLoading } = useAuthContext();
-    const { data: restaurants, loading } = useGetRestaurants();
+    const { data: restaurants, loading } = useStreamRestaurants();
     const [restaurant, setRestaurant] = useState(null);
     console.log(restaurants);
     const toggleRestaurant = (id) => {
@@ -23,6 +23,21 @@ export default function AdminRestaurantsPage() {
             (restaurant) => restaurant.id == id
         );
         setRestaurant(restaurant);
+    };
+
+    const toggleApproved = async (id, approved) => {
+        console.log(id);
+
+        const restaurantRef = doc(db, "restaurants", id);
+
+        try {
+            await updateDoc(restaurantRef, {
+                approved: !approved,
+            });
+            console.log("Succesfully updated");
+        } catch (err) {
+            console.log(err);
+        }
     };
     // const setAdmin = async (mail, admin) => {
     //     const user = users.find((user) => user.email === mail);
@@ -80,9 +95,16 @@ export default function AdminRestaurantsPage() {
                     <div>
                         <Button
                             className="mt-2"
-                            variant="primary"
+                            variant={
+                                tableProps.row.original.approved
+                                    ? "danger"
+                                    : "success"
+                            }
                             onClick={() => {
-                                console.log("approve");
+                                toggleApproved(
+                                    tableProps.row.original.id,
+                                    tableProps.row.original.approved
+                                );
                             }}
                         >
                             {tableProps.row.original.approved
