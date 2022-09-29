@@ -44,7 +44,7 @@ const CreateRestaurantForm = () => {
             website: data.website_url,
         });
 
-        toast.success("Restaurant created");
+        toast.success("Restaurant sent for admin approval");
         reset();
     };
 
