@@ -10,17 +10,32 @@ import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import { useSearchParams } from "react-router-dom";
 import { useAuthContext } from "../contexts/AuthContext";
+import GeocodingAPI from "../services/GeocodingAPI"
+import { useMemo } from "react";
 
 const HomePage = () => {
     const [userLocation, setUserLocation] = useState({
         lat: 33.872,
         lng: -117.214,
     });
+    const [cityName, setCityName] = useState(null)
+    console.log(cityName)
+
+    useEffect(() => {
+        const getCityName = async () => {
+            const res = await GeocodingAPI.getReverseGeocode1(userLocation)
+            if (res) {
+                setCityName(res.results[0].address_components[0].long_name)
+            }
+        }
+        getCityName()
+    }, [userLocation])
+    
     const { initialLoading } = useAuthContext();
     const [showFilter, setShowFilter] = useState(false);
     const [sortBy, setSortBy] = useState(false);
     const [filterOptions, setFilterOptions] = useState(null);
-    const { data: restaurants } = useGetRestaurants(filterOptions);
+    const { data: restaurants } = useGetRestaurants(filterOptions, cityName);
     //const [tab, setTab] = useState("map");
 
     const [searchParams, setSearchParams] = useSearchParams();
