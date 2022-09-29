@@ -17,24 +17,28 @@ const CreateRestaurantForm = () => {
     const onCreateRestaurant = async (data) => {
         // make firestore doc
         await addDoc(collection(db, "restaurants"), {
+            /**
+             * @todo ändra namnet på fälten i databasen
+             */
+            ...data,
             address: `${data.street_name} ${data.street_number}`,
-            category: data.category,
-            city: data.city,
+            // category: data.category,
+            // city: data.city,
             createdBy: currentUser ? currentUser.uid : 0,
-            cuisine: data.cuisine,
-            description: data.description,
-            email: data.email,
+            // cuisine: data.cuisine,
+            // description: data.description,
+            // email: data.email,
             facebook: `www.facebook.com/${data.facebook}`,
             instagram: `www.instagram.com/${data.instagram}`,
             location: new GeoPoint(12, 34),
-            name: data.name,
-            offer: data.offer,
+            // name: data.name,
+            // offer: data.offer,
             offers: "lunch",
-            phone: data.phone,
+            // phone: data.phone,
             photoURL:
                 "https://firebasestorage.googleapis.com/v0/b/fed21-matguiden.appspot.com/o/restaurants%2F1663942025-london-stock.jpg?alt=media&token=bc832727-0b00-41a2-ac98-4425bbd87102",
             position: new GeoPoint(12, 34),
-            postcode: data.postcode,
+            // postcode: data.postcode,
             type_of_establishment: "restaurant",
             url: "https://firebasestorage.googleapis.com/v0/b/fed21-matguiden.appspot.com/o/restaurants%2F1663942025-london-stock.jpg?alt=media&token=bc832727-0b00-41a2-ac98-4425bbd87102",
             website: data.website_url,
@@ -52,9 +56,9 @@ const CreateRestaurantForm = () => {
                     {...register("name", {
                         required: "Provide a name",
                         minLength: {
-                            value: 1,
+                            value: 3,
                             message:
-                                "Restaurant name must be at least 1 character long",
+                                "Name must be at least 3 characters long",
                         },
                     })}
                     placeholder="Burger Queen"
@@ -135,9 +139,9 @@ const CreateRestaurantForm = () => {
                     {...register("city", {
                         required: "Provide a city",
                         minLength: {
-                            value: 1,
+                            value: 3,
                             message:
-                                "Restaurant city must be at least 1 character long",
+                                "City must be at least 3 characters long",
                         },
                     })}
                     placeholder="Royaltown"
@@ -159,7 +163,7 @@ const CreateRestaurantForm = () => {
                         minLength: {
                             value: 5,
                             message:
-                                "Restaurant description must be at least 5 characters long",
+                                "Description must be at least 5 characters long",
                         },
                     })}
                     placeholder="Fine dining for friends and family"
@@ -180,7 +184,7 @@ const CreateRestaurantForm = () => {
                         minLength: {
                             value: 3,
                             message:
-                                "Restaurant cuisine must be at least 3 characters long",
+                                "Cuisine must be at least 3 characters long",
                         },
                     })}
                     placeholder="Italian"
