@@ -3,20 +3,25 @@ import Button from "react-bootstrap/Button";
 import { Form, Image } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import InputField from "./InputField";
+import { doc, updateDoc } from "firebase/firestore";
+import { db } from "../firebase";
+import { toast } from "react-toastify";
 
 export default function RestaurantOverlay({ restaurant, handleClose }) {
     console.log(restaurant);
     const [title, setTitle] = useState(restaurant?.title);
+    const [url, setUrl] = useState(restaurant?.url);
     const [description, setDescription] = useState(restaurant?.description);
     const [category, setCategory] = useState(restaurant?.category);
     const [email, setEmail] = useState(restaurant?.email);
-    const [phone, setPhone] = useState(restaurant?.email);
+    const [phone, setPhone] = useState(restaurant?.phone);
     const [site, setSite] = useState(restaurant?.website);
     const [facebook, setFacebook] = useState(restaurant?.facebook);
     const [instagram, setInstagram] = useState(restaurant?.instagram);
 
     useEffect(() => {
         setTitle(restaurant?.name);
+        setUrl(restaurant?.url);
         setDescription(restaurant?.description);
         setEmail(restaurant?.email);
         setCategory(restaurant?.category);
@@ -25,6 +30,28 @@ export default function RestaurantOverlay({ restaurant, handleClose }) {
         setFacebook(restaurant?.facebook);
         setInstagram(restaurant?.instagram);
     }, [restaurant]);
+
+    const submit = async () => {
+        const restaurantRef = doc(db, "restaurants", restaurant.id);
+
+        try {
+            await updateDoc(restaurantRef, {
+                title,
+                description,
+                category,
+                email,
+                phone,
+                website: site,
+                facebook,
+                instagram,
+            });
+            console.log("Succesfully updated");
+            toast.success("Restaurant Edited!");
+            handleClose();
+        } catch (err) {
+            console.log(err);
+        }
+    };
     return (
         <Modal
             show={restaurant}
@@ -45,7 +72,14 @@ export default function RestaurantOverlay({ restaurant, handleClose }) {
                                 type="text"
                                 isTitle
                             />
-                            <Image src={restaurant?.url} />
+                            {/* <Image src={restaurant?.url} /> */}
+                            <InputField
+                                divClassName="option-card"
+                                value={url}
+                                onChange={setUrl}
+                                type="text"
+                                isImage
+                            />
 
                             <InputField
                                 divClassName="option-card"
@@ -118,7 +152,7 @@ export default function RestaurantOverlay({ restaurant, handleClose }) {
                 <Button variant="secondary" onClick={handleClose}>
                     Close
                 </Button>
-                <Button variant="primary" onClick={handleClose}>
+                <Button variant="primary" onClick={submit}>
                     Save Changes
                 </Button>
             </Modal.Footer>
