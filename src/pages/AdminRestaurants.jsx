@@ -1,7 +1,7 @@
 import React from "react";
 import Container from "react-bootstrap/Container";
 import { useTable } from "react-table";
-import RenderTable from "../components/RenderTable";
+import RenderSortedTable from "../components/RenderSortedTable";
 import Image from "react-bootstrap/Image";
 import Button from "react-bootstrap/Button";
 import { useAuthContext } from "../contexts/AuthContext";
@@ -10,6 +10,7 @@ import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import { useState } from "react";
 import RestaurantOverlay from "../components/RestaurantOverlay";
+import { useSortBy } from "react-table";
 
 export default function AdminRestaurantsPage() {
     console.log("rendering");
@@ -127,11 +128,11 @@ export default function AdminRestaurantsPage() {
     );
     // if (initialLoading || loading) return <></>;
 
-    const tableInstance = useTable({ columns, data });
+    const tableInstance = useTable({ columns, data }, useSortBy);
     return (
         <Container>
             <h2>Restaurants</h2>
-            <RenderTable tableInstance={tableInstance} />
+            <RenderSortedTable tableInstance={tableInstance} />
             <RestaurantOverlay
                 restaurant={restaurant}
                 handleClose={() => setRestaurant(null)}
