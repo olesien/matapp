@@ -30,23 +30,34 @@ const HomePage = () => {
         getCityName()
     }, [userLocation])
 
-    const { initialLoading } = useAuthContext();
-    const [showFilter, setShowFilter] = useState(false);
-    const [sortBy, setSortBy] = useState(false);
-    const [filterOptions, setFilterOptions] = useState({ option3: true });
-    const { data: restaurants } = useGetRestaurants(filterOptions, cityName);
-    //const [tab, setTab] = useState("map");
-
     const [searchParams, setSearchParams] = useSearchParams();
+
     let tab = searchParams.get("tab");
     if (!tab) {
         tab = "map";
     }
 
+    const [filterOptions, setFilterOptions] = useState({
+        option1: searchParams.get("option1"),
+        option2: searchParams.get("option2"),
+        option3: searchParams.get("option3")
+            ? searchParams.get("option3")
+            : true,
+    });
+    const { initialLoading } = useAuthContext();
+    const [showFilter, setShowFilter] = useState(false);
+    const [sortBy, setSortBy] = useState(false);
+    const { data: restaurants } = useGetRestaurants(filterOptions, cityName);
+    //const [tab, setTab] = useState("map");
+
     if (initialLoading) return <></>;
 
     const setTab = (tab) => {
-        setSearchParams({ tab });
+        const oldParams = {}
+        searchParams.forEach((value, key) => {
+            oldParams[key] = value
+        })
+        setSearchParams({ ...oldParams, tab });
     };
 
     // console.log(filterOptions);
