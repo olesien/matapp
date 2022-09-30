@@ -3,7 +3,7 @@ import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 
 
-const FilterRestaurants = ({ filterOptions, handleSetFilterOptions }) => {
+const FilterRestaurants = ({ handleSetFilterOptions }) => {
     const [selectedType, setSelectedType] = useState("")
     const [selectedServing, setSelectedServing] = useState("")
 

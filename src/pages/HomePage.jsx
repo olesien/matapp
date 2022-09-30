@@ -21,6 +21,7 @@ const HomePage = () => {
     console.log(cityName)
 
     useEffect(() => {
+        console.log("Recalculating city name from userLocation")
         const getCityName = async () => {
             const res = await GeocodingAPI.getCityName(userLocation)
             if (res) {
@@ -40,9 +41,11 @@ const HomePage = () => {
     const [filterOptions, setFilterOptions] = useState({
         option1: searchParams.get("option1"),
         option2: searchParams.get("option2"),
-        option3: searchParams.get("option3") === "false"
-            ? true
-            : false
+        option3: searchParams.get("option3")
+            ? searchParams.get("option3") === "false"
+                ? false
+                : true
+            : true
     });
     const { initialLoading } = useAuthContext();
     const [showFilter, setShowFilter] = useState(false);
@@ -54,9 +57,11 @@ const HomePage = () => {
         setFilterOptions({
             option1: searchParams.get("option1") ? searchParams.get("option1") : "",
             option2: searchParams.get("option2") ? searchParams.get("option2") : "",
-            option3: searchParams.get("option3") === "false"
-                ? true
-                : false
+            option3: searchParams.get("option3")
+                ? searchParams.get("option3") === "false"
+                    ? false
+                    : true
+                : true
         })
     }, [searchParams])
 
@@ -71,7 +76,6 @@ const HomePage = () => {
         })
         setSearchParams({ ...oldParams, tab });
     };
-    console.log(searchParams)
     // console.log(filterOptions);
 
     const handleSetFilterOptions = (options) => {
@@ -79,7 +83,6 @@ const HomePage = () => {
         searchParams.forEach((value, key) => {
             oldParams[key] = value
         })
-        console.log({ ...oldParams, ...options })
         // setFilterOptions(options);
         setSearchParams({ ...oldParams, ...options })
     };
@@ -156,7 +159,6 @@ const HomePage = () => {
                     </Button>
                     {showFilter && (
                         <FilterRestaurants
-                            filterOptions={filterOptions}
                             handleSetFilterOptions={handleSetFilterOptions}
                         />
                     )}
@@ -165,8 +167,7 @@ const HomePage = () => {
                         userLocation={userLocation}
                         sortByName={sortBy}
                         cityName={cityName}
-                        showingByCity={filterOptions.option3 ? true : false}
-                        searchParams
+                        showingByCity={filterOptions.option3}
                     />
                 </Tab>
             </Tabs>
