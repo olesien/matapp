@@ -2,8 +2,9 @@ import { collection, orderBy, query, where } from "firebase/firestore";
 import useGetCollection from "./useGetCollection";
 import { db } from "../firebase";
 
-const useGetRestaurants = (filterOptions) => {
+const useGetRestaurants = (filterOptions, cityName) => {
     // filterOptions is passed along to useGetCollection so that the restaurants are refetched when the filter options change.
+
     const queryConstraints = [];
     if (filterOptions) {
         // If the first filter option is truthy, add the query constraint
@@ -16,14 +17,19 @@ const useGetRestaurants = (filterOptions) => {
             // If the second filter option is truthy, add the query constraint
             queryConstraints.push(where("offers", "==", filterOptions.option2));
         }
+        if (filterOptions.option3) {
+            console.log(cityName)
+            queryConstraints.push(where("place", "==", cityName));
+        }
     }
+
 
     const q = query(
         collection(db, "restaurants"),
         ...queryConstraints,
-        orderBy("name", "asc")
+        orderBy("name", "asc"),
     );
-    return useGetCollection(q, filterOptions);
+    return useGetCollection(q, filterOptions, cityName);
 };
 
 export default useGetRestaurants;

@@ -10,17 +10,31 @@ import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import { useSearchParams } from "react-router-dom";
 import { useAuthContext } from "../contexts/AuthContext";
+import GeocodingAPI from "../services/GeocodingAPI"
 
 const HomePage = () => {
     const [userLocation, setUserLocation] = useState({
         lat: 33.872,
         lng: -117.214,
     });
+    const [cityName, setCityName] = useState(null)
+    console.log(cityName)
+
+    useEffect(() => {
+        const getCityName = async () => {
+            const res = await GeocodingAPI.getCityName(userLocation)
+            if (res) {
+                setCityName(res.results[0].address_components[0].long_name)
+            }
+        }
+        getCityName()
+    }, [userLocation])
+
     const { initialLoading } = useAuthContext();
     const [showFilter, setShowFilter] = useState(false);
     const [sortBy, setSortBy] = useState(false);
-    const [filterOptions, setFilterOptions] = useState(null);
-    const { data: restaurants } = useGetRestaurants(filterOptions);
+    const [filterOptions, setFilterOptions] = useState({ option3: true });
+    const { data: restaurants } = useGetRestaurants(filterOptions, cityName);
     //const [tab, setTab] = useState("map");
 
     const [searchParams, setSearchParams] = useSearchParams();
@@ -99,8 +113,20 @@ const HomePage = () => {
                     >
                         Filter
                     </Button>
+                    <Button
+                        className="mt-2 ms-2"
+                        onClick={() => {
+                            setFilterOptions({
+                                ...filterOptions,
+                                option3: !filterOptions.option3,
+                            })
+                        }}
+                    >
+                        {filterOptions.option3 ? "Show all restaurants" : `Show in ${cityName}`}
+                    </Button>
                     {showFilter && (
                         <FilterRestaurants
+                            filterOptions={filterOptions}
                             handleSetFilterOptions={handleSetFilterOptions}
                         />
                     )}
@@ -108,6 +134,8 @@ const HomePage = () => {
                         restaurants={restaurants}
                         userLocation={userLocation}
                         sortByName={sortBy}
+                        cityName={cityName}
+                        showingByCity={filterOptions.option3 ? true : false}
                     />
                 </Tab>
             </Tabs>
