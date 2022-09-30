@@ -52,7 +52,7 @@ const RestaurantList = ({
                     ))
                 }
                 {sortedRestaurants && sortedRestaurants.length === 0 && (
-                    <p>No restaurants were found</p>
+                    <p>No results were found</p>
                 )}
 
             </div>
