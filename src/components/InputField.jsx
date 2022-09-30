@@ -86,6 +86,7 @@ export default function InputField({
                             <FontAwesomeIcon
                                 onClick={() => toggleShow()}
                                 icon={faEyeSlash}
+                                data-testid="close-name"
                             />
                         </div>
                     ) : (
