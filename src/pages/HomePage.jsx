@@ -40,14 +40,26 @@ const HomePage = () => {
     const [filterOptions, setFilterOptions] = useState({
         option1: searchParams.get("option1"),
         option2: searchParams.get("option2"),
-        option3: searchParams.get("option3")
-            ? searchParams.get("option3")
-            : true,
+        option3: searchParams.get("option3") === "false"
+            ? true
+            : false
     });
     const { initialLoading } = useAuthContext();
     const [showFilter, setShowFilter] = useState(false);
     const [sortBy, setSortBy] = useState(false);
+
     const { data: restaurants } = useGetRestaurants(filterOptions, cityName);
+
+    useEffect(() => {
+        setFilterOptions({
+            option1: searchParams.get("option1") ? searchParams.get("option1") : "",
+            option2: searchParams.get("option2") ? searchParams.get("option2") : "",
+            option3: searchParams.get("option3") === "false"
+                ? true
+                : false
+        })
+    }, [searchParams])
+
     //const [tab, setTab] = useState("map");
 
     if (initialLoading) return <></>;
@@ -59,7 +71,7 @@ const HomePage = () => {
         })
         setSearchParams({ ...oldParams, tab });
     };
-
+    console.log(searchParams)
     // console.log(filterOptions);
 
     const handleSetFilterOptions = (options) => {
@@ -68,7 +80,7 @@ const HomePage = () => {
             oldParams[key] = value
         })
         console.log({ ...oldParams, ...options })
-        setFilterOptions(options);
+        // setFilterOptions(options);
         setSearchParams({ ...oldParams, ...options })
     };
 
@@ -134,8 +146,9 @@ const HomePage = () => {
                         className="mt-2 ms-2"
                         onClick={() => {
                             handleSetFilterOptions({
-                                ...filterOptions,
-                                option3: !filterOptions.option3,
+                                option3: searchParams.get("option3") === "false"
+                                    ? true
+                                    : false
                             })
                         }}
                     >
@@ -153,6 +166,7 @@ const HomePage = () => {
                         sortByName={sortBy}
                         cityName={cityName}
                         showingByCity={filterOptions.option3 ? true : false}
+                        searchParams
                     />
                 </Tab>
             </Tabs>

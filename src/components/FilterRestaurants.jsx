@@ -10,7 +10,7 @@ const FilterRestaurants = ({ filterOptions, handleSetFilterOptions }) => {
     const handleSubmit = (e) => {
         e.preventDefault()
         handleSetFilterOptions({
-            ...filterOptions,
+            // ...filterOptions,
             option1: selectedType,
             option2: selectedServing
         })
