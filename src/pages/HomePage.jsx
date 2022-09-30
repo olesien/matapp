@@ -11,7 +11,6 @@ import Tabs from "react-bootstrap/Tabs";
 import { useSearchParams } from "react-router-dom";
 import { useAuthContext } from "../contexts/AuthContext";
 import GeocodingAPI from "../services/GeocodingAPI"
-import { useMemo } from "react";
 
 const HomePage = () => {
     const [userLocation, setUserLocation] = useState({
@@ -23,7 +22,7 @@ const HomePage = () => {
 
     useEffect(() => {
         const getCityName = async () => {
-            const res = await GeocodingAPI.getReverseGeocode1(userLocation)
+            const res = await GeocodingAPI.getCityName(userLocation)
             if (res) {
                 setCityName(res.results[0].address_components[0].long_name)
             }
@@ -123,7 +122,7 @@ const HomePage = () => {
                             })
                         }}
                     >
-                        Show all
+                        {filterOptions.option3 ? "Show all restaurants" : `Show in ${cityName}`}
                     </Button>
                     {showFilter && (
                         <FilterRestaurants

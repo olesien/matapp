@@ -20,10 +20,10 @@ const getReverseGeocode = (data) => {
     return get(`latlng=${lat},${lng}`);
 };
 
-const getReverseGeocode1 = (location) => {
+const getCityName = (location) => {
     return get(`latlng=${location.lat},${location.lng}&result_type=locality`);
 };
 
-const exports = { getGeocode, getReverseGeocode, getReverseGeocode1 };
+const exports = { getGeocode, getReverseGeocode, getCityName };
 
 export default exports;
