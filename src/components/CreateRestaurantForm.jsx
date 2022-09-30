@@ -17,27 +17,32 @@ const CreateRestaurantForm = () => {
     const onCreateRestaurant = async (data) => {
         // make firestore doc
         await addDoc(collection(db, "restaurants"), {
-            address: `${data.streetName} ${data.streetNumber}`,
-            category: data.category,
-            city: data.city,
+            /**
+             * @todo ändra namnet på fälten i databasen
+             */
+            ...data,
+            address: `${data.street_name} ${data.street_number}`,
+            // category: data.category,
+            // city: data.city,
             createdBy: currentUser ? currentUser.uid : 0,
-            cuisine: data.cuisine,
-            description: data.description,
-            email: data.email,
+            // cuisine: data.cuisine,
+            // description: data.description,
+            // email: data.email,
             facebook: `www.facebook.com/${data.facebook}`,
             instagram: `www.instagram.com/${data.instagram}`,
             location: new GeoPoint(12, 34),
-            name: data.name,
-            offer: data.offer,
+            // name: data.name,
+            // offer: data.offer,
             offers: "lunch",
-            phone: data.phone,
+            // phone: data.phone,
             photoURL:
                 "https://firebasestorage.googleapis.com/v0/b/fed21-matguiden.appspot.com/o/restaurants%2F1663942025-london-stock.jpg?alt=media&token=bc832727-0b00-41a2-ac98-4425bbd87102",
             position: new GeoPoint(12, 34),
-            postcode: data.postcode,
+            // postcode: data.postcode,
             type_of_establishment: "restaurant",
             url: "https://firebasestorage.googleapis.com/v0/b/fed21-matguiden.appspot.com/o/restaurants%2F1663942025-london-stock.jpg?alt=media&token=bc832727-0b00-41a2-ac98-4425bbd87102",
             website: data.website,
+            approved: false,
         });
 
         toast.success("Restaurant created");
@@ -52,9 +57,8 @@ const CreateRestaurantForm = () => {
                     {...register("name", {
                         required: "Provide a name",
                         minLength: {
-                            value: 1,
-                            message:
-                                "Restaurant name must be at least 1 character long",
+                            value: 3,
+                            message: "Name must be at least 3 characters long",
                         },
                     })}
                     placeholder="Burger Queen"
@@ -67,10 +71,10 @@ const CreateRestaurantForm = () => {
                 )}
             </Form.Group>
 
-            <Form.Group className="mb-3" controlId="streetName">
+            <Form.Group className="mb-3" controlId="street_name">
                 <Form.Label>Street name</Form.Label>
                 <Form.Control
-                    {...register("streetName", {
+                    {...register("street_name", {
                         required: "Provide a street name",
                         minLength: {
                             value: 3,
@@ -81,17 +85,17 @@ const CreateRestaurantForm = () => {
                     placeholder="Queen Street"
                     type="text"
                 />
-                {errors.streetName && (
+                {errors.street_name && (
                     <Form.Text className="text-danger">
-                        {errors.streetName.message}
+                        {errors.street_name.message}
                     </Form.Text>
                 )}
             </Form.Group>
 
-            <Form.Group className="mb-3" controlId="streetNumber">
+            <Form.Group className="mb-3" controlId="street_number">
                 <Form.Label>Street number</Form.Label>
                 <Form.Control
-                    {...register("streetNumber", {
+                    {...register("street_number", {
                         required: "Provide a street number",
                         minLength: {
                             value: 1,
@@ -102,9 +106,9 @@ const CreateRestaurantForm = () => {
                     placeholder="4B"
                     type="text"
                 />
-                {errors.streetNumber && (
+                {errors.street_number && (
                     <Form.Text className="text-danger">
-                        {errors.streetNumber.message}
+                        {errors.street_number.message}
                     </Form.Text>
                 )}
             </Form.Group>
@@ -114,6 +118,10 @@ const CreateRestaurantForm = () => {
                 <Form.Control
                     {...register("postcode", {
                         required: "Provide a postcode",
+                        pattern: {
+                            value: /[0-9]{5}/,
+                            message: "Invalid postcode",
+                        },
                     })}
                     placeholder="12345"
                     type="text"
@@ -131,9 +139,8 @@ const CreateRestaurantForm = () => {
                     {...register("city", {
                         required: "Provide a city",
                         minLength: {
-                            value: 1,
-                            message:
-                                "Restaurant city must be at least 1 character long",
+                            value: 3,
+                            message: "City must be at least 3 characters long",
                         },
                     })}
                     placeholder="Royaltown"
@@ -155,7 +162,7 @@ const CreateRestaurantForm = () => {
                         minLength: {
                             value: 5,
                             message:
-                                "Restaurant description must be at least 5 characters long",
+                                "Description must be at least 5 characters long",
                         },
                     })}
                     placeholder="Fine dining for friends and family"
@@ -176,7 +183,7 @@ const CreateRestaurantForm = () => {
                         minLength: {
                             value: 3,
                             message:
-                                "Restaurant cuisine must be at least 3 characters long",
+                                "Cuisine must be at least 3 characters long",
                         },
                     })}
                     placeholder="Italian"
@@ -191,18 +198,16 @@ const CreateRestaurantForm = () => {
 
             <Form.Group className="mb-3" controlId="category">
                 <Form.Label>Category</Form.Label>
-                <Form.Control
+                <Form.Select
                     {...register("category", {
-                        required: "Provide a category",
-                        minLength: {
-                            value: 3,
-                            message:
-                                "Restaurant category must be at least 3 characters long",
-                        },
+                        required: "Select a category",
                     })}
-                    placeholder="Bar"
-                    type="text"
-                />
+                >
+                    <option value="restaurant">Restaurant</option>
+                    <option value="café">Café</option>
+                    <option value="fast_food">Fast Food</option>
+                    <option value="food_truck">Food Truck</option>
+                </Form.Select>
                 {errors.category && (
                     <Form.Text className="text-danger">
                         {errors.category.message}
@@ -212,18 +217,14 @@ const CreateRestaurantForm = () => {
 
             <Form.Group className="mb-3" controlId="offer">
                 <Form.Label>Offer</Form.Label>
-                <Form.Control
+                <Form.Select
                     {...register("offer", {
-                        required: "Provide an offer",
-                        minLength: {
-                            value: 3,
-                            message:
-                                "Restaurant offer must be at least 3 characters long",
-                        },
+                        required: "Select an offer",
                     })}
-                    placeholder="Lunch"
-                    type="text"
-                />
+                >
+                    <option value="lunch">Lunch</option>
+                    <option value="dinner">Dinner</option>
+                </Form.Select>
                 {errors.offer && (
                     <Form.Text className="text-danger">
                         {errors.offer.message}
@@ -234,7 +235,12 @@ const CreateRestaurantForm = () => {
             <Form.Group className="mb-3" controlId="email">
                 <Form.Label>Email</Form.Label>
                 <Form.Control
-                    {...register("email")}
+                    {...register("email", {
+                        pattern: {
+                            value: /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6})*$/gm,
+                            message: "Invalid email",
+                        },
+                    })}
                     placeholder="info@burgerqueenrestaurant.com"
                     type="email"
                 />
@@ -246,12 +252,12 @@ const CreateRestaurantForm = () => {
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="phone">
-                <Form.Label>Phone</Form.Label>
+                <Form.Label>Phone number</Form.Label>
                 <Form.Control
                     {...register("phone", {
-                        maxLength: {
-                            value: 9,
-                            message: "Phone can be maximum 9 characters long",
+                        pattern: {
+                            value: /[0-9]{9}/,
+                            message: "Invalid phone number",
                         },
                     })}
                     placeholder="070123456"
@@ -264,22 +270,27 @@ const CreateRestaurantForm = () => {
                 )}
             </Form.Group>
 
-            <Form.Group className="mb-3" controlId="website">
-                <Form.Label>Website</Form.Label>
+            <Form.Group className="mb-3" controlId="website_url">
+                <Form.Label>Website URL</Form.Label>
                 <Form.Control
-                    {...register("website")}
+                    {...register("website_url", {
+                        pattern: {
+                            value: /(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g,
+                            message: "Invalid URL",
+                        },
+                    })}
                     placeholder="www.burgerqueenrestaurant.com"
-                    type="text"
+                    type="url"
                 />
-                {errors.website && (
+                {errors.website_url && (
                     <Form.Text className="text-danger">
-                        {errors.website.message}
+                        {errors.website_url.message}
                     </Form.Text>
                 )}
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="facebook">
-                <Form.Label>Facebook</Form.Label>
+                <Form.Label>Facebook username</Form.Label>
                 <Form.Control
                     {...register("facebook")}
                     placeholder="burgerqueenrestaurant"
@@ -293,7 +304,7 @@ const CreateRestaurantForm = () => {
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="instagram">
-                <Form.Label>Instagram</Form.Label>
+                <Form.Label>Instagram username</Form.Label>
                 <Form.Control
                     {...register("instagram")}
                     placeholder="burgerqueenrestaurant"
