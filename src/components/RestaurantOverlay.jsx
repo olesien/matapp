@@ -6,14 +6,24 @@ import InputField from "./InputField";
 
 export default function RestaurantOverlay({ restaurant, handleClose }) {
     console.log(restaurant);
+    const [title, setTitle] = useState(restaurant?.title);
     const [description, setDescription] = useState(restaurant?.description);
     const [category, setCategory] = useState(restaurant?.category);
     const [email, setEmail] = useState(restaurant?.email);
+    const [phone, setPhone] = useState(restaurant?.email);
+    const [site, setSite] = useState(restaurant?.website);
+    const [facebook, setFacebook] = useState(restaurant?.facebook);
+    const [instagram, setInstagram] = useState(restaurant?.instagram);
 
     useEffect(() => {
+        setTitle(restaurant?.name);
         setDescription(restaurant?.description);
         setEmail(restaurant?.email);
         setCategory(restaurant?.category);
+        setPhone(restaurant?.phone);
+        setSite(restaurant?.website);
+        setFacebook(restaurant?.facebook);
+        setInstagram(restaurant?.instagram);
     }, [restaurant]);
     return (
         <Modal
@@ -28,7 +38,13 @@ export default function RestaurantOverlay({ restaurant, handleClose }) {
                 <Form className="restaurant-overlay-card">
                     <div className="restaurant-row">
                         <div className="option-card">
-                            <h2>{restaurant?.name}</h2>
+                            <InputField
+                                divClassName="option-card"
+                                value={title}
+                                onChange={setTitle}
+                                type="text"
+                                isTitle
+                            />
                             <Image src={restaurant?.url} />
 
                             <InputField
@@ -63,6 +79,36 @@ export default function RestaurantOverlay({ restaurant, handleClose }) {
                             onChange={setEmail}
                             type="email"
                             title="Email"
+                        />
+                        <InputField
+                            divClassName="option-card"
+                            value={phone}
+                            onChange={setPhone}
+                            type="text"
+                            title="Phone Number"
+                        />
+                    </div>
+                    <div className="restaurant-row">
+                        <InputField
+                            divClassName="option-card"
+                            value={site}
+                            onChange={setSite}
+                            type="text"
+                            title="Website"
+                        />
+                        <InputField
+                            divClassName="option-card"
+                            value={facebook}
+                            onChange={setFacebook}
+                            type="text"
+                            title="Facebook"
+                        />
+                        <InputField
+                            divClassName="option-card"
+                            value={instagram}
+                            onChange={setInstagram}
+                            type="text"
+                            title="Instagram"
                         />
                     </div>
                 </Form>

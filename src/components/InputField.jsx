@@ -11,26 +11,33 @@ export default function InputField({
     onChange,
     type,
     title = false,
+    isTitle = false,
 }) {
     const [show, setShow] = useState(false);
     const toggleShow = () => {
         setShow((show) => !show);
+    };
+    const changeField = (e) => {
+        onChange(e.target.value);
     };
     return (
         <Form.Group className={divClassName}>
             {title ? (
                 <>
                     {/* Normal input type */}
-                    <Button
-                        variant="light"
+                    <h4
                         style={{ marginBottom: 10 }}
                         onClick={() => toggleShow()}
                     >
                         {title}{" "}
                         <FontAwesomeIcon icon={show ? faEyeSlash : faGear} />
-                    </Button>
+                    </h4>
                     {show ? (
-                        <Form.Control type={type} placeholder={value} />
+                        <Form.Control
+                            type={type}
+                            value={value}
+                            onChange={changeField}
+                        />
                     ) : (
                         <p>{value}</p>
                     )}
@@ -40,16 +47,28 @@ export default function InputField({
                     {/* Special for headings etc */}
                     {show ? (
                         <div>
-                            <Form.Control type={type} placeholder={value} />
+                            <Form.Control
+                                type={type}
+                                value={value}
+                                onChange={changeField}
+                            />
                             <FontAwesomeIcon
                                 onClick={() => toggleShow()}
                                 icon={faEyeSlash}
                             />
                         </div>
                     ) : (
-                        <p onClick={() => toggleShow()}>
-                            {value} <FontAwesomeIcon icon={faGear} />
-                        </p>
+                        <>
+                            {isTitle ? (
+                                <h2 onClick={() => toggleShow()}>
+                                    {value} <FontAwesomeIcon icon={faGear} />
+                                </h2>
+                            ) : (
+                                <p onClick={() => toggleShow()}>
+                                    {value} <FontAwesomeIcon icon={faGear} />
+                                </p>
+                            )}
+                        </>
                     )}
                 </div>
             )}
