@@ -48,3 +48,41 @@
     display: flex;
     flex-flow: row wrap;
 }
+
+.modal-size {
+    width: 100%;
+    height: 100%;
+    max-width: none !important;
+}
+
+.restaurant-overlay-card {
+    display: flex;
+    flex-flow: column wrap;
+
+    .restaurant-row {
+        // flex: 1;
+        padding: 10px;
+    }
+    .option-card {
+        max-width: 400px;
+        // padding: 10px;
+        height: fit-content;
+        > img {
+            height: auto;
+        }
+        > * {
+            max-width: 100%;
+        }
+    }
+}
+
+@media (min-width: 1000px) {
+    .modal-size {
+        width: 80%;
+        height: 80%;
+    }
+
+    .restaurant-overlay-card {
+        flex-flow: row nowrap;
+    }
+}
