@@ -33,7 +33,7 @@ const HomePage = () => {
     const { initialLoading } = useAuthContext();
     const [showFilter, setShowFilter] = useState(false);
     const [sortBy, setSortBy] = useState(false);
-    const [filterOptions, setFilterOptions] = useState({option3: true});
+    const [filterOptions, setFilterOptions] = useState({ option3: true });
     const { data: restaurants } = useGetRestaurants(filterOptions, cityName);
     //const [tab, setTab] = useState("map");
 
@@ -134,6 +134,8 @@ const HomePage = () => {
                         restaurants={restaurants}
                         userLocation={userLocation}
                         sortByName={sortBy}
+                        cityName={cityName}
+                        showingByCity={filterOptions.option3 ? true : false}
                     />
                 </Tab>
             </Tabs>

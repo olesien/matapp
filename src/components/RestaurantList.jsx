@@ -7,6 +7,8 @@ const RestaurantList = ({
     restaurants,
     userLocation,
     sortByName,
+    cityName,
+    showingByCity
 }) => {
     const [sortedRestaurants, setSortedRestaurants] = useState(null);
     // console.log(restaurants);
@@ -38,6 +40,7 @@ const RestaurantList = ({
     return (
         <div>
             <h2>Restaurant list</h2>
+            <h3>{showingByCity ? `Showing results for: ${cityName}` : "Showing all restaurants:"}</h3>
             <div className="list">
                 {sortedRestaurants &&
                     sortedRestaurants.length > 0 &&
