@@ -52,7 +52,13 @@ const HomePage = () => {
     // console.log(filterOptions);
 
     const handleSetFilterOptions = (options) => {
+        const oldParams = {}
+        searchParams.forEach((value, key) => {
+            oldParams[key] = value
+        })
+        console.log({ ...oldParams, ...options })
         setFilterOptions(options);
+        setSearchParams({ ...oldParams, ...options })
     };
 
     useEffect(() => {
@@ -116,7 +122,7 @@ const HomePage = () => {
                     <Button
                         className="mt-2 ms-2"
                         onClick={() => {
-                            setFilterOptions({
+                            handleSetFilterOptions({
                                 ...filterOptions,
                                 option3: !filterOptions.option3,
                             })
