@@ -20,6 +20,7 @@ const getReverseGeocode = (data) => {
     return get(`latlng=${lat},${lng}`);
 };
 
+// get the city/town (or similar) based on the user's current position
 const getCityName = (location) => {
     return get(`latlng=${location.lat},${location.lng}&result_type=locality`);
 };

@@ -6,6 +6,7 @@ const useGetCollection = (query, filterOptions, cityName) => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
 
+    // refetches when filterOptions or cityName changes.
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);

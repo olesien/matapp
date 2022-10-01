@@ -7,14 +7,13 @@ const useGetRestaurants = (filterOptions, cityName) => {
 
     const queryConstraints = [];
     if (filterOptions) {
-        // If the first filter option is truthy, add the query constraint
+        // If the respective options are truthy, add them to the array of query constraints.
         if (filterOptions.type) {
             queryConstraints.push(
                 where("type_of_establishment", "==", filterOptions.type)
             );
         }
         if (filterOptions.offering) {
-            // If the second filter option is truthy, add the query constraint
             queryConstraints.push(where("offers", "==", filterOptions.offering));
         }
         if (!filterOptions.listAll) {
@@ -23,7 +22,7 @@ const useGetRestaurants = (filterOptions, cityName) => {
         }
     }
 
-
+    // fetch the collection based on the constraints that passed (ordering by name is always included)
     const q = query(
         collection(db, "restaurants"),
         ...queryConstraints,
