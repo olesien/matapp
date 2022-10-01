@@ -12,12 +12,15 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { useAuthContext } from "../contexts/AuthContext";
 // import logo from '../assets/images/logo.png'
+import { useForm } from 'react-hook-form';
 
 const SignupPage = () => {
-    const emailRef = useRef();
-    // const displayNameRef = useRef()
-    const passwordRef = useRef();
-    const passwordConfirmRef = useRef();
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+        watch
+    } = useForm();
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
     const { signup } = useAuthContext();
@@ -25,7 +28,7 @@ const SignupPage = () => {
     const [image, setImage] = useState(false);
     const handleFileChange = (img) => {
         if (!img.target.files.length) {
-            setImage(null);
+            setImage('https://via.placeholder.com/225');
             return;
         }
 
@@ -33,13 +36,7 @@ const SignupPage = () => {
         console.log("File changed!", img.target.files[0]);
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        // make sure user has entered the same password in both input fields
-        if (passwordRef.current.value !== passwordConfirmRef.current.value) {
-            return setError("Passwords do not match");
-        }
+    const onHandleSubmit = async (data) => {
 
         setError(null);
 
@@ -48,8 +45,8 @@ const SignupPage = () => {
             setLoading(true);
 
             await signup(
-                emailRef.current.value,
-                passwordRef.current.value,
+                data.email,
+                data.password,
                 image
             );
 
@@ -70,19 +67,25 @@ const SignupPage = () => {
 
                             {error && <Alert variant="danger">{error}</Alert>}
 
-                            <Form onSubmit={handleSubmit}>
-                                {/* <Form.Group id="displayName" className="mb-3">
-									<Form.Label>Username</Form.Label>
-									<Form.Control type="text" ref={displayNameRef} required />
-								</Form.Group> */}
+                            <Form onSubmit={handleSubmit(onHandleSubmit)} noValidate>
 
-                                <Form.Group id="email" className="mb-3">
+                                <Form.Group className="mb-3" controlId="email">
                                     <Form.Label>Email</Form.Label>
                                     <Form.Control
+                                        {...register("email", {
+                                            pattern: {
+                                                value: /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6})*$/gm,
+                                                message: "Invalid email",
+                                            },
+                                        })}
+                                        placeholder="info@burgerqueenrestaurant.com"
                                         type="email"
-                                        ref={emailRef}
-                                        required
                                     />
+                                    {errors.email && (
+                                        <Form.Text className="text-danger">
+                                            {errors.email.message}
+                                        </Form.Text>
+                                    )}
                                 </Form.Group>
 
                                 <Form.Group id="image" className="mb-3">
@@ -94,33 +97,44 @@ const SignupPage = () => {
                                     <Form.Text>
                                         {image
                                             ? `${image.name} (${Math.round(
-                                                  image.size / 1024
-                                              )} kB)`
+                                                image.size / 1024
+                                            )} kB)`
                                             : "No photo selected"}
                                     </Form.Text>
                                 </Form.Group>
 
-                                <Form.Group id="password" className="mb-3">
+                                <Form.Group className="mb-3" controlId="password">
                                     <Form.Label>Password</Form.Label>
                                     <Form.Control
+                                        {...register("password", {
+                                            minLength: {
+                                                value: 6,
+                                                message: "Password must be at least 6 characters"
+                                            },
+                                        })}
                                         type="password"
-                                        ref={passwordRef}
-                                        required
                                     />
+                                    {errors.password && (
+                                        <Form.Text className="text-danger">
+                                            {errors.password.message}
+                                        </Form.Text>
+                                    )}
                                 </Form.Group>
 
-                                <Form.Group
-                                    id="password-confirm"
-                                    className="mb-3"
-                                >
-                                    <Form.Label>
-                                        Password Confirmation
-                                    </Form.Label>
+                                <Form.Group className="mb-3" controlId="password_confirm">
+                                    <Form.Label>Password Confirmation</Form.Label>
                                     <Form.Control
+                                        {...register("password_confirm", {
+                                            validate: value =>
+                                                value === watch("password", "") || "Passwords do not match"
+                                        })}
                                         type="password"
-                                        ref={passwordConfirmRef}
-                                        required
                                     />
+                                    {errors.password_confirm && (
+                                        <Form.Text className="text-danger">
+                                            {errors.password_confirm.message}
+                                        </Form.Text>
+                                    )}
                                 </Form.Group>
 
                                 <Button disabled={loading} type="submit">
