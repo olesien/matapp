@@ -181,7 +181,7 @@ const Map = ({ restaurants, userLocation }) => {
                     <input
                         id="map-search-box"
                         type="text"
-                        placeholder="Enter a search query"
+                        placeholder="Search for location"
                     />
                 </StandaloneSearchBox>
 
