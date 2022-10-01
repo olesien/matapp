@@ -38,17 +38,14 @@ export default function RestaurantCard({ restaurant }) {
     };
     return (
         <Card data-testid="card" style={{ width: "18rem", margin: "1rem" }}>
+            <Card.Header>Distance: {convertUnits(restaurant.distance)}</Card.Header>
             <Card.Img variant="top" src={restaurant.url} />
             <Card.Body>
-                <Card.Title>{restaurant.name}</Card.Title>
+                <Card.Title>{restaurant.name}</Card.Title><Card.Text>📍 {restaurant.place}</Card.Text>
+                <Card.Subtitle className="mb-2 text-muted">{restaurant.cuisine}</Card.Subtitle>
+                <Card.Text>{restaurant.type_of_establishment} offering {restaurant.offers}</Card.Text>
                 {/* <Card.Text>{geocode.results[0]?.formatted_address}</Card.Text> */}
-                <Card.Text>{restaurant.place}</Card.Text>
-                <Card.Text>
-                    Distance: {convertUnits(restaurant.distance)}
-                </Card.Text>
-                <Card.Text>{restaurant.description}</Card.Text>
-                <Card.Text>Offers: {restaurant.offers}</Card.Text>
-                <Card.Text>Type: {restaurant.type_of_establishment}</Card.Text>
+                <Card.Text>"{restaurant.description}"</Card.Text>
                 <footer>
                     <Button variant="primary" onClick={() => viewOnMap()}>
                         View on Map

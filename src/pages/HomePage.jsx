@@ -163,7 +163,7 @@ const HomePage = () => {
                             })
                         }}
                     >
-                        {filterOptions.listAll ? `Show in ${cityName}` : "Show all restaurants"}
+                        {filterOptions.listAll ? `Show in ${cityName}` : "Show all"}
                     </Button>
                     {showFilter && (
                         <FilterRestaurants
