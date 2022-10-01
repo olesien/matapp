@@ -49,7 +49,12 @@ const HomePage = () => {
     });
     const { initialLoading } = useAuthContext();
     const [showFilter, setShowFilter] = useState(false);
-    const [sortBy, setSortBy] = useState(false);
+    // const [sortBy, setSortBy] = useState(false);
+    const sortBy = searchParams.get("sortByName")
+        ? searchParams.get("sortByName") === "true"
+            ? true
+            : false
+        : false
 
     const { data: restaurants } = useGetRestaurants(filterOptions, cityName);
 
@@ -78,7 +83,7 @@ const HomePage = () => {
     };
     // console.log(filterOptions);
 
-    const handleSetFilterOptions = (options) => {
+    const handleSetSearchParams = (options) => {
         const oldParams = {}
         searchParams.forEach((value, key) => {
             oldParams[key] = value
@@ -132,7 +137,9 @@ const HomePage = () => {
                     <Button
                         className="mt-2 me-2"
                         onClick={() => {
-                            setSortBy(!sortBy);
+                            handleSetSearchParams({
+                                sortByName: !sortBy
+                            })
                         }}
                     >
                         {sortBy ? "Sort by distance" : "Sort by name"}
@@ -148,7 +155,7 @@ const HomePage = () => {
                     <Button
                         className="mt-2 ms-2"
                         onClick={() => {
-                            handleSetFilterOptions({
+                            handleSetSearchParams({
                                 option3: searchParams.get("option3") === "false"
                                     ? true
                                     : false
@@ -159,7 +166,7 @@ const HomePage = () => {
                     </Button>
                     {showFilter && (
                         <FilterRestaurants
-                            handleSetFilterOptions={handleSetFilterOptions}
+                            handleSetSearchParams={handleSetSearchParams}
                         />
                     )}
                     <RestaurantList

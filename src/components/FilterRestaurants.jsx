@@ -3,13 +3,13 @@ import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 
 
-const FilterRestaurants = ({ handleSetFilterOptions }) => {
+const FilterRestaurants = ({ handleSetSearchParams }) => {
     const [selectedType, setSelectedType] = useState("")
     const [selectedServing, setSelectedServing] = useState("")
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        handleSetFilterOptions({
+        handleSetSearchParams({
             // ...filterOptions,
             option1: selectedType,
             option2: selectedServing
