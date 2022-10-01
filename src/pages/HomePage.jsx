@@ -116,7 +116,6 @@ const HomePage = () => {
 
     return (
         <Container className="py-3">
-            <h1>Welcome!</h1>
             <Tabs
                 activeKey={tab}
                 onSelect={(tab) => setTab(tab)}
