@@ -13,7 +13,7 @@ import MyRestaurantsPage from "./pages/MyRestaurantsPage";
 import NotFound from "./pages/NotFound";
 import RestaurantPage from "./pages/RestaurantPage";
 import SignupPage from "./pages/SignupPage";
-import SuggestionPage from "./pages/SuggestionPage";
+import CreateRestaurantPage from "./pages/CreateRestaurantPage";
 import UpdateProfilePage from "./pages/UpdateProfilePage";
 import "./assets/scss/App.scss";
 import AdminRestaurantsPage from "./pages/AdminRestaurants";
@@ -37,7 +37,7 @@ function App() {
                 <Route path="/logout" element={<LogoutPage />} />
                 <Route path="/signup" element={<SignupPage />} />
 
-                <Route path="/suggestion" element={<SuggestionPage />} />
+                <Route path="/create-restaurant" element={<CreateRestaurantPage />} />
 
                 {/* Protected routes */}
 

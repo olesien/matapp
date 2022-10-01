@@ -1,13 +1,13 @@
 import { Container } from "react-bootstrap";
 import CreateRestaurantForm from "../components/CreateRestaurantForm";
 
-const SuggestionPage = () => {
+const CreateRestaurantPage = () => {
     return (
         <Container className="py-3">
-            <h1>Suggest a restaurant</h1>
+            <h1>Create a new restaurant</h1>
             <CreateRestaurantForm />
         </Container>
     );
 };
 
-export default SuggestionPage;
+export default CreateRestaurantPage;

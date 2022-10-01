@@ -1,6 +1,5 @@
 import { Container, Button, Card } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
-import CreateRestaurantForm from '../components/CreateRestaurantForm'
 import useGetRestaurants from '../hooks/useGetRestaurants'
 
 const MyRestaurantsPage = () => {
@@ -34,12 +33,6 @@ const MyRestaurantsPage = () => {
 						</Card>
 					))}
 			</div>
-			<Card>
-				<Card.Body>
-					<Card.Title>Create a new restaurant</Card.Title>
-					<CreateRestaurantForm />
-				</Card.Body>
-			</Card>
 		</Container >
 	)
 }
