@@ -8,18 +8,18 @@ const useGetRestaurants = (filterOptions, cityName) => {
     const queryConstraints = [];
     if (filterOptions) {
         // If the first filter option is truthy, add the query constraint
-        if (filterOptions.option1) {
+        if (filterOptions.type) {
             queryConstraints.push(
-                where("type_of_establishment", "==", filterOptions.option1)
+                where("type_of_establishment", "==", filterOptions.type)
             );
         }
-        if (filterOptions.option2) {
+        if (filterOptions.offering) {
             // If the second filter option is truthy, add the query constraint
-            queryConstraints.push(where("offers", "==", filterOptions.option2));
+            queryConstraints.push(where("offers", "==", filterOptions.offering));
         }
-        if (filterOptions.option3) {
+        if (!filterOptions.listAll) {
             console.log(cityName)
-            queryConstraints.push(where("place", "==", cityName));
+            queryConstraints.push(where("place", "==", filterOptions.listAll));
         }
     }
 

@@ -11,8 +11,8 @@ const FilterRestaurants = ({ handleSetSearchParams }) => {
         e.preventDefault()
         handleSetSearchParams({
             // ...filterOptions,
-            option1: selectedType,
-            option2: selectedServing
+            type: selectedType,
+            offering: selectedServing
         })
     }
 

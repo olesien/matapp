@@ -39,10 +39,10 @@ const HomePage = () => {
     }
 
     const [filterOptions, setFilterOptions] = useState({
-        option1: searchParams.get("option1"),
-        option2: searchParams.get("option2"),
-        option3: searchParams.get("option3")
-            ? searchParams.get("option3") === "false"
+        type: searchParams.get("type"),
+        offering: searchParams.get("offering"),
+        listAll: searchParams.get("listAll")
+            ? searchParams.get("listAll") === "false"
                 ? false
                 : true
             : true
@@ -60,10 +60,10 @@ const HomePage = () => {
 
     useEffect(() => {
         setFilterOptions({
-            option1: searchParams.get("option1") ? searchParams.get("option1") : "",
-            option2: searchParams.get("option2") ? searchParams.get("option2") : "",
-            option3: searchParams.get("option3")
-                ? searchParams.get("option3") === "false"
+            type: searchParams.get("type") ? searchParams.get("type") : "",
+            offering: searchParams.get("offering") ? searchParams.get("offering") : "",
+            listAll: searchParams.get("listAll")
+                ? searchParams.get("listAll") === "false"
                     ? false
                     : true
                 : true
@@ -156,13 +156,13 @@ const HomePage = () => {
                         className="mt-2 ms-2"
                         onClick={() => {
                             handleSetSearchParams({
-                                option3: searchParams.get("option3") === "false"
+                                listAll: searchParams.get("listAll") === "false"
                                     ? true
                                     : false
                             })
                         }}
                     >
-                        {filterOptions.option3 ? "Show all restaurants" : `Show in ${cityName}`}
+                        {filterOptions.listAll ? `Show in ${cityName}` : "Show all restaurants"}
                     </Button>
                     {showFilter && (
                         <FilterRestaurants
@@ -174,7 +174,7 @@ const HomePage = () => {
                         userLocation={userLocation}
                         sortByName={sortBy}
                         cityName={cityName}
-                        showingByCity={filterOptions.option3}
+                        listingAll={filterOptions.listAll}
                     />
                 </Tab>
             </Tabs>
