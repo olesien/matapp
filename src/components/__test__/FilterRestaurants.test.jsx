@@ -2,9 +2,15 @@ import { render, screen } from "@testing-library/react";
 import FilterRestaurants from "../FilterRestaurants"
 import userEvent from '@testing-library/user-event'
 
+const filterOptions = {
+    type: "",
+    offering: "",
+    listAll: false
+}
+
 test("The current values of the dropdown forms can be changed", async () => {
     // render
-    render(<FilterRestaurants />)
+    render(<FilterRestaurants filterOptions={filterOptions} />)
 
     // find
     const typeDropdown = screen.getByLabelText(/type of restaurant/i)
@@ -22,7 +28,7 @@ test("The current values of the dropdown forms can be changed", async () => {
 
 test("The form has the corresponding values from the input fields", async () => {
     // render
-    render(<FilterRestaurants />)
+    render(<FilterRestaurants filterOptions={filterOptions} />)
 
     // find
     const typeDropdown = screen.getByLabelText(/type of restaurant/i)
