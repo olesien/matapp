@@ -12,13 +12,13 @@ const Navigation = () => {
             <Container>
                 <Navbar.Brand as={Link} to="/">
                     <img
-                        src="/src/assets/icons/favicon.svg"
+                        src="/src/assets/icons/favicon.ico"
                         width="30"
                         height="30"
                         className="d-inline-block align-top"
                         alt="React Bootstrap logo"
                     />{" "}
-                    Matapp
+                    The Best Food Guide
                 </Navbar.Brand>
 
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
