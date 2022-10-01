@@ -1,19 +1,30 @@
+import { useEffect } from 'react'
 import { useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 
 
-const FilterRestaurants = ({ handleSetFilterOptions }) => {
-    const [selectedType, setSelectedType] = useState("")
-    const [selectedServing, setSelectedServing] = useState("")
+const FilterRestaurants = ({ handleSetSearchParams, filterOptions }) => {
+    // state for controlled form input
+    const [selectedType, setSelectedType] = useState(filterOptions.type ? filterOptions.type : "")
+    const [selectedServing, setSelectedServing] = useState(filterOptions.offering ? filterOptions.offering : "")
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        handleSetFilterOptions({
-            option1: selectedType,
-            option2: selectedServing
+
+        // Set filter options based on input from user
+        handleSetSearchParams({
+            type: selectedType,
+            offering: selectedServing
         })
     }
+
+    // Make sure the dropdown inputs have the correct values if the user navigates to the page 
+    // via url or using the browser history buttons.
+    useEffect(() => {
+        setSelectedType(filterOptions.type ? filterOptions.type : "")
+        setSelectedServing(filterOptions.offering ? filterOptions.offering : "")
+    }, [filterOptions])
 
     return (
         <div className="mt-3 mb-2">

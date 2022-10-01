@@ -5,7 +5,7 @@ import RenderTable from "../components/RenderTable";
 import Image from "react-bootstrap/Image";
 import Button from "react-bootstrap/Button";
 import { useAuthContext } from "../contexts/AuthContext";
-import useGetUsers from "../hooks/useGetUsers";
+import useGetUsers from "../hooks/useStreamUsers";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase";
 
@@ -28,16 +28,7 @@ export default function AdminUsersPage() {
             console.log(err);
         }
     };
-    // const data = React.useMemo(
-    //     () => [
-    //         {
-    //             avatar: "https://media.istockphoto.com/photos/black-box-levitation-on-black-background-3d-rendering-picture-id610655646?k=20&m=610655646&s=612x612&w=0&h=8i8ylFj_zaVeQ_YggU07pVTQhPtZzntqxFN9qGFjPRM=",
-    //             mail: "somemail@gmail.com",
-    //             admin: true,
-    //         },
-    //     ],
-    //     []
-    // );
+
     const data = React.useMemo(
         () =>
             loading

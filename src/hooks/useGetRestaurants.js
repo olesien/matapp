@@ -2,28 +2,33 @@ import { collection, orderBy, query, where } from "firebase/firestore";
 import useGetCollection from "./useGetCollection";
 import { db } from "../firebase";
 
-const useGetRestaurants = (filterOptions) => {
+const useGetRestaurants = (filterOptions, cityName) => {
     // filterOptions is passed along to useGetCollection so that the restaurants are refetched when the filter options change.
+
     const queryConstraints = [];
     if (filterOptions) {
-        // If the first filter option is truthy, add the query constraint
-        if (filterOptions.option1) {
+        // If the respective options are truthy, add them to the array of query constraints.
+        if (filterOptions.type) {
             queryConstraints.push(
-                where("type_of_establishment", "==", filterOptions.option1)
+                where("type_of_establishment", "==", filterOptions.type)
             );
         }
-        if (filterOptions.option2) {
-            // If the second filter option is truthy, add the query constraint
-            queryConstraints.push(where("offers", "==", filterOptions.option2));
+        if (filterOptions.offering) {
+            queryConstraints.push(where("offers", "==", filterOptions.offering));
+        }
+        if (!filterOptions.listAll) {
+            console.log(cityName)
+            queryConstraints.push(where("place", "==", cityName));
         }
     }
 
+    // fetch the collection based on the constraints that passed (ordering by name is always included)
     const q = query(
         collection(db, "restaurants"),
         ...queryConstraints,
-        orderBy("name", "asc")
+        orderBy("name", "asc"),
     );
-    return useGetCollection(q, filterOptions);
+    return useGetCollection(q, filterOptions, cityName);
 };
 
 export default useGetRestaurants;

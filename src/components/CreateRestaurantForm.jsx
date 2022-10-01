@@ -41,7 +41,8 @@ const CreateRestaurantForm = () => {
             // postcode: data.postcode,
             type_of_establishment: "restaurant",
             url: "https://firebasestorage.googleapis.com/v0/b/fed21-matguiden.appspot.com/o/restaurants%2F1663942025-london-stock.jpg?alt=media&token=bc832727-0b00-41a2-ac98-4425bbd87102",
-            website: data.website_url,
+            website: data.website,
+            approved: false,
         });
 
         toast.success("Restaurant sent for admin approval");
@@ -57,8 +58,7 @@ const CreateRestaurantForm = () => {
                         required: "Provide a name",
                         minLength: {
                             value: 3,
-                            message:
-                                "Name must be at least 3 characters long",
+                            message: "Name must be at least 3 characters long",
                         },
                     })}
                     placeholder="Burger Queen"
@@ -140,8 +140,7 @@ const CreateRestaurantForm = () => {
                         required: "Provide a city",
                         minLength: {
                             value: 3,
-                            message:
-                                "City must be at least 3 characters long",
+                            message: "City must be at least 3 characters long",
                         },
                     })}
                     placeholder="Royaltown"
@@ -201,8 +200,9 @@ const CreateRestaurantForm = () => {
                 <Form.Label>Category</Form.Label>
                 <Form.Select
                     {...register("category", {
-                        required: "Select a category"
-                    })}>
+                        required: "Select a category",
+                    })}
+                >
                     <option value="restaurant">Restaurant</option>
                     <option value="café">Café</option>
                     <option value="fast_food">Fast Food</option>
@@ -219,8 +219,9 @@ const CreateRestaurantForm = () => {
                 <Form.Label>Offer</Form.Label>
                 <Form.Select
                     {...register("offer", {
-                        required: "Select an offer"
-                    })}>
+                        required: "Select an offer",
+                    })}
+                >
                     <option value="lunch">Lunch</option>
                     <option value="dinner">Dinner</option>
                 </Form.Select>

@@ -10,35 +10,86 @@ import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import { useSearchParams } from "react-router-dom";
 import { useAuthContext } from "../contexts/AuthContext";
+import GeocodingAPI from "../services/GeocodingAPI"
 
 const HomePage = () => {
     const [userLocation, setUserLocation] = useState({
         lat: 33.872,
         lng: -117.214,
     });
-    const { initialLoading } = useAuthContext();
-    const [showFilter, setShowFilter] = useState(false);
-    const [sortBy, setSortBy] = useState(false);
-    const [filterOptions, setFilterOptions] = useState(null);
-    const { data: restaurants } = useGetRestaurants(filterOptions);
-    //const [tab, setTab] = useState("map");
+    const [cityName, setCityName] = useState(null)
+    console.log(cityName)
+
+    useEffect(() => {
+        console.log("Recalculating city name from userLocation")
+        const getCityName = async () => {
+            const res = await GeocodingAPI.getCityName(userLocation)
+            if (res) {
+                setCityName(res.results[0].address_components[0].long_name)
+            }
+        }
+        getCityName()
+    }, [userLocation])
 
     const [searchParams, setSearchParams] = useSearchParams();
+
     let tab = searchParams.get("tab");
     if (!tab) {
         tab = "map";
     }
 
+    const [filterOptions, setFilterOptions] = useState({
+        type: searchParams.get("type"),
+        offering: searchParams.get("offering"),
+        listAll: searchParams.get("listAll")
+            ? searchParams.get("listAll") === "false"
+                ? false
+                : true
+            : false
+    });
+    const { initialLoading } = useAuthContext();
+    const [showFilter, setShowFilter] = useState(false);
+    // const [sortBy, setSortBy] = useState(false);
+    const sortBy = searchParams.get("sortByName")
+        ? searchParams.get("sortByName") === "true"
+            ? true
+            : false
+        : false
+
+    const { data: restaurants } = useGetRestaurants(filterOptions, cityName);
+
+    useEffect(() => {
+        setFilterOptions({
+            type: searchParams.get("type") ? searchParams.get("type") : "",
+            offering: searchParams.get("offering") ? searchParams.get("offering") : "",
+            listAll: searchParams.get("listAll")
+                ? searchParams.get("listAll") === "false"
+                    ? false
+                    : true
+                : false
+        })
+    }, [searchParams])
+
+    //const [tab, setTab] = useState("map");
+
     if (initialLoading) return <></>;
 
     const setTab = (tab) => {
-        setSearchParams({ tab });
+        const oldParams = {}
+        searchParams.forEach((value, key) => {
+            oldParams[key] = value
+        })
+        setSearchParams({ ...oldParams, tab });
     };
-
     // console.log(filterOptions);
 
-    const handleSetFilterOptions = (options) => {
-        setFilterOptions(options);
+    const handleSetSearchParams = (options) => {
+        const oldParams = {}
+        searchParams.forEach((value, key) => {
+            oldParams[key] = value
+        })
+        // setFilterOptions(options);
+        setSearchParams({ ...oldParams, ...options })
     };
 
     useEffect(() => {
@@ -86,7 +137,9 @@ const HomePage = () => {
                     <Button
                         className="mt-2 me-2"
                         onClick={() => {
-                            setSortBy(!sortBy);
+                            handleSetSearchParams({
+                                sortByName: !sortBy
+                            })
                         }}
                     >
                         {sortBy ? "Sort by distance" : "Sort by name"}
@@ -99,15 +152,33 @@ const HomePage = () => {
                     >
                         Filter
                     </Button>
+                    <Button
+                        className="mt-2 ms-2"
+                        onClick={() => {
+                            handleSetSearchParams({
+                                listAll: searchParams.get("listAll")
+                                    ? searchParams.get("listAll") === "false"
+                                        ? true
+                                        : false
+                                    : true
+                            })
+                        }}
+                    >
+                        {filterOptions.listAll ? `Show in ${cityName}` : "Show all restaurants"}
+                    </Button>
                     {showFilter && (
                         <FilterRestaurants
-                            handleSetFilterOptions={handleSetFilterOptions}
+                            handleSetSearchParams={handleSetSearchParams}
+                            filterOptions={filterOptions}
+                            searchParams={searchParams}
                         />
                     )}
                     <RestaurantList
                         restaurants={restaurants}
                         userLocation={userLocation}
                         sortByName={sortBy}
+                        cityName={cityName}
+                        listingAll={filterOptions.listAll}
                     />
                 </Tab>
             </Tabs>

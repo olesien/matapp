@@ -7,15 +7,18 @@ const RestaurantList = ({
     restaurants,
     userLocation,
     sortByName,
+    cityName,
+    listingAll
 }) => {
     const [sortedRestaurants, setSortedRestaurants] = useState(null);
-    // console.log(restaurants);
     const userLocationConverted = {
         latitude: userLocation.lat,
         longitude: userLocation.lng,
     };
 
     useEffect(() => {
+        // This is recalculated whenever sortByName or restaurants changes.
+        // Calculate the distance between the user and the restaurants
         let restaurantsWithDistance = restaurants?.map((restaurant) => {
             const distance = getDistance(
                 {
@@ -24,20 +27,23 @@ const RestaurantList = ({
                 },
                 userLocationConverted
             );
+            // return a new object with the restaurant + distance
             return { ...restaurant, distance };
         });
-
+        // sort the list by distance if sortByName is falsy
         if (!sortByName) {
             restaurantsWithDistance = restaurantsWithDistance.sort(
                 (a, b) => a.distance - b.distance
             );
         }
+        // set the newly created array of restaurants to state
         setSortedRestaurants(restaurantsWithDistance)
     }, [restaurants, sortByName]);
 
     return (
         <div>
             <h2>Restaurant list</h2>
+            <h3>{listingAll ? "Showing all restaurants:" : `Showing results for: ${cityName}`}</h3>
             <div className="list">
                 {sortedRestaurants &&
                     sortedRestaurants.length > 0 &&
@@ -48,6 +54,10 @@ const RestaurantList = ({
                         />
                     ))
                 }
+                {sortedRestaurants && sortedRestaurants.length === 0 && (
+                    <p>No results were found</p>
+                )}
+
             </div>
         </div>
     );

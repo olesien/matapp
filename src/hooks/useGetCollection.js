@@ -2,10 +2,11 @@ import { getDocs } from "firebase/firestore";
 import { useState } from "react";
 import { useEffect } from "react";
 
-const useGetCollection = (query, filterOptions) => {
+const useGetCollection = (query, filterOptions, cityName) => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
 
+    // refetches when filterOptions or cityName changes.
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
@@ -22,7 +23,7 @@ const useGetCollection = (query, filterOptions) => {
             setLoading(false);
         };
         fetchData();
-    }, [filterOptions]);
+    }, [filterOptions, cityName]);
 
     return {
         data,
