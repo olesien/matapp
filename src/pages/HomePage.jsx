@@ -45,7 +45,7 @@ const HomePage = () => {
             ? searchParams.get("listAll") === "false"
                 ? false
                 : true
-            : true
+            : false
     });
     const { initialLoading } = useAuthContext();
     const [showFilter, setShowFilter] = useState(false);
@@ -66,7 +66,7 @@ const HomePage = () => {
                 ? searchParams.get("listAll") === "false"
                     ? false
                     : true
-                : true
+                : false
         })
     }, [searchParams])
 
@@ -156,9 +156,11 @@ const HomePage = () => {
                         className="mt-2 ms-2"
                         onClick={() => {
                             handleSetSearchParams({
-                                listAll: searchParams.get("listAll") === "false"
-                                    ? true
-                                    : false
+                                listAll: searchParams.get("listAll")
+                                    ? searchParams.get("listAll") === "false"
+                                        ? true
+                                        : false
+                                    : true
                             })
                         }}
                     >
@@ -167,6 +169,8 @@ const HomePage = () => {
                     {showFilter && (
                         <FilterRestaurants
                             handleSetSearchParams={handleSetSearchParams}
+                            filterOptions={filterOptions}
+                            searchParams={searchParams}
                         />
                     )}
                     <RestaurantList

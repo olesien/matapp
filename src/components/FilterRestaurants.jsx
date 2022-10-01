@@ -1,11 +1,12 @@
+import { useEffect } from 'react'
 import { useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 
 
-const FilterRestaurants = ({ handleSetSearchParams }) => {
-    const [selectedType, setSelectedType] = useState("")
-    const [selectedServing, setSelectedServing] = useState("")
+const FilterRestaurants = ({ handleSetSearchParams, filterOptions }) => {
+    const [selectedType, setSelectedType] = useState(filterOptions.type ? filterOptions.type : "")
+    const [selectedServing, setSelectedServing] = useState(filterOptions.offering ? filterOptions.offering : "")
 
     const handleSubmit = (e) => {
         e.preventDefault()
@@ -15,6 +16,11 @@ const FilterRestaurants = ({ handleSetSearchParams }) => {
             offering: selectedServing
         })
     }
+
+    useEffect(() => {
+        setSelectedType(filterOptions.type ? filterOptions.type : "")
+        setSelectedServing(filterOptions.offering ? filterOptions.offering : "")
+    }, [filterOptions])
 
     return (
         <div className="mt-3 mb-2">
