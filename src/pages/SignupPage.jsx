@@ -37,8 +37,6 @@ const SignupPage = () => {
 
     const onHandleSubmit = async (data) => {
 
-        setError(null);
-
         // try to sign up the user with the specified credentials
         try {
             setLoading(true);
