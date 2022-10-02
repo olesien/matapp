@@ -11,6 +11,7 @@ import Tabs from "react-bootstrap/Tabs";
 import { useSearchParams } from "react-router-dom";
 import { useAuthContext } from "../contexts/AuthContext";
 import GeocodingAPI from "../services/GeocodingAPI"
+import LocationSearch from "../components/LocationSearch";
 
 const HomePage = () => {
     const [userLocation, setUserLocation] = useState({
@@ -165,6 +166,9 @@ const HomePage = () => {
                     >
                         {filterOptions.listAll ? `Show in ${cityName}` : "Show all"}
                     </Button>
+
+                    <LocationSearch restaurants={restaurants} />
+
                     {showFilter && (
                         <FilterRestaurants
                             handleSetSearchParams={handleSetSearchParams}
