@@ -32,6 +32,8 @@ const LocationSearch = ({ handleSetCityName }) => {
         // Set the state to the value of the search input.
         // This causes a refetch of the restaurant list in HomePage.
         handleSetCityName(searchedLocation)
+        setSearchedLocation("")
+        setFilteredSuggestions([])
     }
 
     const onInputChanged = (e) => {
