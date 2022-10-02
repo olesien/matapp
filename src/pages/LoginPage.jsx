@@ -22,7 +22,7 @@ const LoginPage = () => {
 			await login(emailRef.current.value, passwordRef.current.value)
 			navigate('/')
 		} catch (err) {
-			setError(err.message)
+			setError("Something went wrong. Please try again.")
 			setLoading(false)
 		}
 	}
