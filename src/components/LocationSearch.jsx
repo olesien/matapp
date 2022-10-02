@@ -2,28 +2,37 @@ import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 
-const LocationSearch = ({ restaurants }) => {
+const LocationSearch = ({ restaurants, handleSetCityName }) => {
     const [searchedLocation, setSearchedLocation] = useState("")
     const inputSuggestions = []
     const [filteredSuggestions, setFilteredSuggestions] = useState([])
-    console.log("inputSuggestions:", inputSuggestions)
-    console.log("filteredSuggestions:", filteredSuggestions)
+    // console.log("inputSuggestions:", inputSuggestions)
+    // console.log("filteredSuggestions:", filteredSuggestions)
 
     restaurants.forEach(restaurant => {
         if (restaurant?.place) {
-            inputSuggestions.push({
-                place: restaurant.place,
-                id: restaurant.id
-            })
+            // Check if the location already exists in the list
+            const index = inputSuggestions.findIndex(item => restaurant.place === item.place)
+            // If not, add it to the array
+            if (index === -1) {
+                inputSuggestions.push({
+                    place: restaurant.place,
+                    id: restaurant.id
+                })
+            }
         }
     });
 
     const onSearchFormSubmit = (e) => {
         e.preventDefault()
+        handleSetCityName(searchedLocation)
     }
 
     const onInputChanged = (e) => {
         setSearchedLocation(e.target.value)
+        // If the user has started typing, check if the any of the location
+        // names starts with the input.
+        // If so, add it to the list of filtered suggestions
         const filtered = e.target.value !== ""
             ? inputSuggestions.filter(suggestion => (
                 suggestion.place.startsWith(e.target.value)

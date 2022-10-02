@@ -19,7 +19,11 @@ const HomePage = () => {
         lng: -117.214,
     });
     const [cityName, setCityName] = useState(null)
-    console.log(cityName)
+    // console.log(cityName)
+
+    const handleSetCityName = (name) => {
+        setCityName(name)
+    }
 
     useEffect(() => {
         console.log("Recalculating city name from userLocation")
@@ -167,7 +171,7 @@ const HomePage = () => {
                         {filterOptions.listAll ? `Show in ${cityName}` : "Show all"}
                     </Button>
 
-                    <LocationSearch restaurants={restaurants} />
+                    <LocationSearch restaurants={restaurants} handleSetCityName={handleSetCityName} />
 
                     {showFilter && (
                         <FilterRestaurants
