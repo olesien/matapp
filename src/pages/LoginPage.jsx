@@ -3,23 +3,32 @@ import { Container, Row, Col, Form, Button, Card, Alert, Image } from 'react-boo
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuthContext } from '../contexts/AuthContext'
 // import logo from '../assets/images/logo.png'
+import { useForm } from 'react-hook-form';
 
 const LoginPage = () => {
-	const emailRef = useRef()
-	const passwordRef = useRef()
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm();
 	const [error, setError] = useState(null)
 	const [loading, setLoading] = useState(false)
 	const { login } = useAuthContext()
 	const navigate = useNavigate()
 
-	const handleSubmit = async (e) => {
-		e.preventDefault()
+	const onHandleSubmit = async (data) => {
+
 		setError(null);
 
 		// try to log in the user with the specified credentials
 		try {
 			setLoading(true)
-			await login(emailRef.current.value, passwordRef.current.value)
+
+			await login(
+				data.email,
+				data.password
+			)
+
 			navigate('/')
 		} catch (err) {
 			setError("Something went wrong. Please try again.")
@@ -43,16 +52,36 @@ const LoginPage = () => {
 
 							{error && (<Alert variant="danger">{error}</Alert>)}
 
-							<Form onSubmit={handleSubmit}>
+							<Form onSubmit={handleSubmit(onHandleSubmit)} noValidate>
 
-								<Form.Group id="email" className="mb-3">
+								<Form.Group controlId="email" className="mb-3">
 									<Form.Label>Email</Form.Label>
-									<Form.Control type="email" ref={emailRef} required />
+									<Form.Control
+										{...register("email", {
+											required: "Provide an email"
+										})}
+										type="email"
+									/>
+									{errors.email && (
+										<Form.Text className="text-danger">
+											{errors.email.message}
+										</Form.Text>
+									)}
 								</Form.Group>
 
 								<Form.Group id="password" className="mb-3">
 									<Form.Label>Password</Form.Label>
-									<Form.Control type="password" ref={passwordRef} required />
+									<Form.Control
+										{...register("password", {
+											required: "Provide a password"
+										})}
+										type="password"
+									/>
+									{errors.password && (
+										<Form.Text className="text-danger">
+											{errors.password.message}
+										</Form.Text>
+									)}
 								</Form.Group>
 
 								<Button disabled={loading} type="submit">Log In</Button>
