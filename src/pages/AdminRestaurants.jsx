@@ -69,6 +69,16 @@ export default function AdminRestaurantsPage() {
                   })),
         [restaurants]
     );
+
+    const actionSortByFunction = React.useMemo(() => {
+        return (rowA, rowB, columnId, desc) => {
+            //Sort by approve / disapprove
+            console.log("rowA: ", rowA);
+            if (rowA.original.approved && !rowB.original.approved) return 1;
+            if (!rowA.original.approved && rowB.original.approved) return -1;
+            return 0;
+        };
+    }, []);
     const columns = React.useMemo(
         () => [
             {
@@ -122,9 +132,10 @@ export default function AdminRestaurantsPage() {
                         </Button>
                     </div>
                 ),
+                sortType: actionSortByFunction,
             },
         ],
-        [restaurants]
+        [restaurants, actionSortByFunction]
     );
     // if (initialLoading || loading) return <></>;
 
