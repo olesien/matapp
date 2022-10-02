@@ -38,17 +38,49 @@ const RestaurantPage = () => {
                                 <p>{restaurant.category}</p>
                                 <h5>Offer</h5>
                                 <p>{restaurant.offer}</p>
-                                <h4>Contact details</h4>
-                                <h5>Email</h5>
-                                <a href={`mailto:${restaurant.email}`}>{restaurant.email}</a>
-                                <h5>Phone</h5>
-                                <a href={`tel:${restaurant.tel}`}>{restaurant.tel}</a>
-                                <h5>Website</h5>
-                                <a href={`https://www.${restaurant.website}`}>{restaurant.website}</a>
-                                <h5>Facebook</h5>
-                                <a href={`https://www.${restaurant.facebook}`}>{restaurant.facebook}</a>
-                                <h5>Instagram</h5>
-                                <a href={`https://www.${restaurant.instagram}`}>{restaurant.instagram}</a>
+                                {
+                                    restaurant.email ||
+                                        restaurant.phone ||
+                                        restaurant.website ||
+                                        restaurant.facebook ||
+                                        restaurant.instagram
+                                        ? <h4>Contact details</h4> : ''
+                                }
+                                {restaurant.email &&
+                                    <>
+                                        <h5>Email</h5>
+                                        <div className='mb-2'>
+                                            <a href={`mailto:${restaurant.email}`}>{restaurant.email}</a>
+                                        </div>
+                                    </>}
+                                {restaurant.phone &&
+                                    <>
+                                        <h5>Phone</h5>
+                                        <div className="mb-2">
+                                            <a href={`tel:${restaurant.phone}`}>{restaurant.phone}</a>
+                                        </div>
+                                    </>}
+                                {restaurant.website &&
+                                    <>
+                                        <h5>Website</h5>
+                                        <div className="mb-2">
+                                            <a href={`https://www.${restaurant.website}`}>{restaurant.website}</a>
+                                        </div>
+                                    </>}
+                                {restaurant.facebook &&
+                                    <>
+                                        <h5>Facebook</h5>
+                                        <div className="mb-2">
+                                            <a href={`https://www.${restaurant.facebook}`}>{restaurant.facebook}</a>
+                                        </div>
+                                    </>}
+                                {restaurant.instagram &&
+                                    <>
+                                        <h5>Instagram</h5>
+                                        <div className="mb-2">
+                                            <a href={`https://www.${restaurant.instagram}`}>{restaurant.instagram}</a>
+                                        </div>
+                                    </>}
                                 <div className='mt-3'>
                                     <Button>Upload photo</Button>
                                 </div>
