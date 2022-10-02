@@ -69,6 +69,7 @@ const SignupPage = () => {
                                     <Form.Label>Email</Form.Label>
                                     <Form.Control
                                         {...register("email", {
+                                            required: "Provide an email",
                                             pattern: {
                                                 value: /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6})*$/gm,
                                                 message: "Invalid email",
@@ -103,6 +104,7 @@ const SignupPage = () => {
                                     <Form.Label>Password</Form.Label>
                                     <Form.Control
                                         {...register("password", {
+                                            required: "Provide a password",
                                             minLength: {
                                                 value: 6,
                                                 message: "Password must be at least 6 characters"
@@ -121,6 +123,7 @@ const SignupPage = () => {
                                     <Form.Label>Password Confirmation</Form.Label>
                                     <Form.Control
                                         {...register("password_confirm", {
+                                            required: "Confirm password",
                                             validate: value =>
                                                 value === watch("password", "") || "Passwords do not match"
                                         })}
