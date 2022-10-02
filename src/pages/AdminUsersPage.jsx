@@ -41,6 +41,17 @@ export default function AdminUsersPage() {
                   })),
         [users]
     );
+
+    const adminSortByFunction = React.useMemo(() => {
+        return (rowA, rowB, columnId, desc) => {
+            console.log(rowA, rowB);
+            // inspect the row to see what data we have
+            console.log("rowA: ", rowA);
+            if (rowA.original.admin && !rowB.original.admin) return 1;
+            if (!rowA.original.admin && rowB.original.admin) return -1;
+            return 0;
+        };
+    }, []);
     const columns = React.useMemo(
         () => [
             {
@@ -56,6 +67,7 @@ export default function AdminUsersPage() {
                         />
                     </div>
                 ),
+                disableSortBy: true,
             },
             {
                 Header: "Mail",
@@ -86,9 +98,10 @@ export default function AdminUsersPage() {
                         </Button>
                     </div>
                 ),
+                sortType: adminSortByFunction,
             },
         ],
-        [users]
+        [users, adminSortByFunction]
     );
     // if (initialLoading || loading) return <></>;
 
