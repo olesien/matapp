@@ -43,7 +43,7 @@ const LocationSearch = ({ handleSetCityName }) => {
         // If so, add it to the list of filtered suggestions
         const filtered = e.target.value !== ""
             ? inputSuggestions.filter(suggestion => (
-                suggestion.place.startsWith(e.target.value)
+                suggestion.place.toLowerCase().startsWith(e.target.value.toLowerCase())
             ))
             : []
         console.log(filtered)
@@ -69,7 +69,8 @@ const LocationSearch = ({ handleSetCityName }) => {
                             key={suggestion.id}
                             // set the input field to the value of the suggestion
                             onClick={() => setSearchedLocation(suggestion.place)}
-                        >{suggestion.place}
+                        >
+                            {suggestion.place}
                         </li>
                     ))}
                 </ul>
