@@ -37,8 +37,6 @@ function App() {
                 <Route path="/logout" element={<LogoutPage />} />
                 <Route path="/signup" element={<SignupPage />} />
 
-                <Route path="/create-restaurant" element={<CreateRestaurantPage />} />
-
                 {/* Protected routes */}
 
                 <Route
@@ -64,6 +62,15 @@ function App() {
                     element={
                         <RequireAuth>
                             <RestaurantPage />
+                        </RequireAuth>
+                    }
+                />
+
+                <Route
+                    path="/create-restaurant"
+                    element={
+                        <RequireAuth>
+                            <CreateRestaurantPage />
                         </RequireAuth>
                     }
                 />
