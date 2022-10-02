@@ -203,6 +203,7 @@ const CreateRestaurantForm = () => {
                         required: "Select a category",
                     })}
                 >
+                    <option value="" disabled>Please select an option</option>
                     <option value="restaurant">Restaurant</option>
                     <option value="café">Café</option>
                     <option value="fast_food">Fast Food</option>
@@ -222,6 +223,7 @@ const CreateRestaurantForm = () => {
                         required: "Select an offer",
                     })}
                 >
+                    <option value="" disabled>Please select an option</option>
                     <option value="lunch">Lunch</option>
                     <option value="dinner">Dinner</option>
                 </Form.Select>
