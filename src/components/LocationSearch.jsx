@@ -60,18 +60,18 @@ const LocationSearch = ({ handleSetCityName }) => {
                     onChange={(e) => onInputChanged(e)}
                     id='city-search' />
             </div>
-            <ul>
-                {filteredSuggestions && (
-                    filteredSuggestions.map((suggestion) => (
+            {filteredSuggestions.length > 0 && (
+                <ul className="border border-top-0 border-primary">
+                    {filteredSuggestions.map((suggestion) => (
                         <li
                             key={suggestion.id}
                             // set the input field to the value of the suggestion
                             onClick={() => setSearchedLocation(suggestion.place)}
                         >{suggestion.place}
                         </li>
-                    )))
-                }
-            </ul>
+                    ))}
+                </ul>
+            )}
             <Button className='me-2' type='search'>Search</Button>
         </Form >
     )
