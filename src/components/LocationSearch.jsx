@@ -53,12 +53,14 @@ const LocationSearch = ({ handleSetCityName }) => {
     return (
         <Form name="restaurant-filter-form" onSubmit={onSearchFormSubmit} >
             <div className="my-2">
-                {/* <Form.Label htmlFor=''>Search</Form.Label> */}
+                <Form.Label htmlFor='city-search'>Search for a city/location</Form.Label>
                 <Form.Control
                     name='city-search'
                     value={searchedLocation}
                     onChange={(e) => onInputChanged(e)}
-                    id='city-search' />
+                    id='city-search'
+                    placeholder="Search for a city/location"
+                />
             </div>
             {filteredSuggestions.length > 0 && (
                 <ul className="border border-top-0 border-primary">

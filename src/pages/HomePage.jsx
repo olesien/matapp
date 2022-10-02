@@ -170,8 +170,9 @@ const HomePage = () => {
                     >
                         {filterOptions.listAll ? `Show in ${cityName}` : "Show all"}
                     </Button>
-
-                    <LocationSearch handleSetCityName={handleSetCityName} />
+                    <div className="location-search-wrapper">
+                        <LocationSearch handleSetCityName={handleSetCityName} />
+                    </div>
 
                     {showFilter && (
                         <FilterRestaurants
