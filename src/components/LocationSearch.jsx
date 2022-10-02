@@ -1,30 +1,36 @@
 import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+import useGetRestaurants from "../hooks/useGetRestaurants";
 
-const LocationSearch = ({ restaurants, handleSetCityName }) => {
+const LocationSearch = ({ handleSetCityName }) => {
     const [searchedLocation, setSearchedLocation] = useState("")
     const inputSuggestions = []
     const [filteredSuggestions, setFilteredSuggestions] = useState([])
+    const { data: restaurants } = useGetRestaurants()
     // console.log("inputSuggestions:", inputSuggestions)
     // console.log("filteredSuggestions:", filteredSuggestions)
 
-    restaurants.forEach(restaurant => {
-        if (restaurant?.place) {
-            // Check if the location already exists in the list
-            const index = inputSuggestions.findIndex(item => restaurant.place === item.place)
-            // If not, add it to the array
-            if (index === -1) {
-                inputSuggestions.push({
-                    place: restaurant.place,
-                    id: restaurant.id
-                })
+    if (restaurants) {
+        restaurants.forEach(restaurant => {
+            if (restaurant?.place) {
+                // Check if the location already exists in the list
+                const index = inputSuggestions.findIndex(item => restaurant.place === item.place)
+                // If not, add it to the array
+                if (index === -1) {
+                    inputSuggestions.push({
+                        place: restaurant.place,
+                        id: restaurant.id
+                    })
+                }
             }
-        }
-    });
+        });
+    }
 
     const onSearchFormSubmit = (e) => {
         e.preventDefault()
+        // Set the state to the value of the search input.
+        // This causes a refetch of the restaurant list in HomePage.
         handleSetCityName(searchedLocation)
     }
 
@@ -55,7 +61,12 @@ const LocationSearch = ({ restaurants, handleSetCityName }) => {
             <ul>
                 {filteredSuggestions && (
                     filteredSuggestions.map((suggestion) => (
-                        <li key={suggestion.id} onClick={() => setSearchedLocation(suggestion.place)}>{suggestion.place}</li>
+                        <li
+                            key={suggestion.id}
+                            // set the input field to the value of the suggestion
+                            onClick={() => setSearchedLocation(suggestion.place)}
+                        >{suggestion.place}
+                        </li>
                     )))
                 }
             </ul>

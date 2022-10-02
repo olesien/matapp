@@ -171,7 +171,7 @@ const HomePage = () => {
                         {filterOptions.listAll ? `Show in ${cityName}` : "Show all"}
                     </Button>
 
-                    <LocationSearch restaurants={restaurants} handleSetCityName={handleSetCityName} />
+                    <LocationSearch handleSetCityName={handleSetCityName} />
 
                     {showFilter && (
                         <FilterRestaurants
