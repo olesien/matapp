@@ -21,7 +21,6 @@ const SignupPage = () => {
         formState: { errors },
         watch
     } = useForm();
-    const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
     const { signup } = useAuthContext();
     const navigate = useNavigate();
@@ -52,7 +51,6 @@ const SignupPage = () => {
 
             navigate("/");
         } catch (err) {
-            setError(err.message);
             setLoading(false);
         }
     };
@@ -64,8 +62,6 @@ const SignupPage = () => {
                     <Card>
                         <Card.Body>
                             <Card.Title className="mb-3">Sign Up</Card.Title>
-
-                            {error && <Alert variant="danger">{error}</Alert>}
 
                             <Form onSubmit={handleSubmit(onHandleSubmit)} noValidate>
 
