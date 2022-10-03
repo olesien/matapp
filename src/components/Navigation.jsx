@@ -1,12 +1,10 @@
-import Container from "react-bootstrap/Container";
-import Navbar from "react-bootstrap/Navbar";
-import Nav from "react-bootstrap/Nav";
+import { Container, Navbar, Nav, Image } from "react-bootstrap";
 import { Link, NavLink } from "react-router-dom";
 import { useAuthContext } from "../contexts/AuthContext";
 import { NavDropdown } from "react-bootstrap";
 
 const Navigation = () => {
-    const { currentUser, userEmail } = useAuthContext();
+    const { currentUser, userEmail, userPhotoURL } = useAuthContext();
     return (
         <Navbar bg="dark" variant="dark" expand="md">
             <Container>
@@ -54,7 +52,17 @@ const Navigation = () => {
                                     Create new
                                 </Nav.Link>
 
-                                <NavDropdown title={userEmail}>
+                                <NavDropdown title={
+                                    userPhotoURL
+                                        ? <Image
+                                            src={userPhotoURL}
+                                            height={30}
+                                            width={30}
+                                            fluid
+                                            roundedCircle
+                                        />
+                                        : userEmail
+                                }>
                                     <NavLink
                                         to="/update-profile"
                                         className="dropdown-item"

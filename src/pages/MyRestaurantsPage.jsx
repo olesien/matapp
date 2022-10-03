@@ -16,6 +16,9 @@ const MyRestaurantsPage = () => {
 	/**
 	 * @todo Om tid finns, lägg till paginering
 	 */
+	/**
+	 * @todo Om tid finns, gråa ut restauranger som väntar på att bli godkända av admin
+	 */
 	const { data: restaurants, isLoading } = useFirestoreQueryData(['restaurants', { createdBy: currentUser.uid }], queryRef, {
 		idField: 'id',
 		subscribe: true,
@@ -24,13 +27,29 @@ const MyRestaurantsPage = () => {
 	return (
 		<Container className="py-3">
 			<h1>Your restaurants</h1>
+
+			{isLoading && <p>Loading...</p>}
+
+			{!isLoading && !restaurants && (
+				<h1>Sorry, that restaurant could not be found 😔</h1>
+			)}
+
+			{!isLoading && restaurants &&
+				restaurants.length == 0 && (
+					<div className='d-flex flex-column'>
+						<p>You have {restaurants.length} restaurants.</p>
+						<div>
+							<Button variant='primary' as={Link} to={'/create-restaurant'}>Create restaurant</Button>
+						</div>
+					</div>
+				)
+			}
+
+			{!isLoading && restaurants.length > 0 && (
+				<p>You have created {restaurants.length} approved restaurant(s)</p>
+			)}
+
 			<div className="list">
-
-				{isLoading && <p>Loading...</p>}
-
-				{!isLoading && !restaurants && (
-					<h1>Sorry, that restaurant could not be found 😔</h1>
-				)}
 
 				{!isLoading && restaurants &&
 					restaurants.length > 0 &&

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Container, Row, Col, Form, Button, Card, Alert } from 'react-bootstrap'
+import { Container, Row, Col, Form, Button, Card, Alert, Image } from 'react-bootstrap'
 import { useAuthContext } from '../contexts/AuthContext'
 import { useForm } from 'react-hook-form';
 
@@ -12,13 +12,30 @@ const UpdateProfilePage = () => {
   } = useForm();
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
+  const [image, setImage] = useState(false);
   const [message, setMessage] = useState(null)
   const {
     currentUser,
     reloadUser,
     setEmail,
-    setPassword
+    setPassword,
+    setPhoto,
+    userEmail,
+    userPhotoURL,
   } = useAuthContext()
+
+  /**
+   * @todo Om tid finns, lägg till validering för filuppladdning
+   */
+
+  const handleFileChange = (img) => {
+    if (!img.target.files.length) {
+      setImage('https://via.placeholder.com/225');
+      return;
+    }
+
+    setImage(img.target.files[0]);
+  };
 
   const onHandleSubmit = async (data) => {
 
@@ -38,6 +55,10 @@ const UpdateProfilePage = () => {
       // update password *ONLY* if the user has provided a new password to set
       if (data.password) {
         await setPassword(data.password)
+      }
+
+      if (image) {
+        await setPhoto(image)
       }
 
       // reload user
@@ -65,6 +86,14 @@ const UpdateProfilePage = () => {
 
               <Form onSubmit={handleSubmit(onHandleSubmit)}>
 
+                <div className="d-flex justify-content-center my-3">
+                  <Image
+                    src={userPhotoURL || 'https://via.placeholder.com/225'}
+                    fluid
+                    roundedCircle
+                  />
+                </div>
+
                 <Form.Group className="mb-3" controlId="email">
                   <Form.Label>Email</Form.Label>
                   <Form.Control
@@ -75,13 +104,29 @@ const UpdateProfilePage = () => {
                       },
                     })}
                     type="email"
-                    defaultValue={currentUser.email}
+                    defaultValue={userEmail}
                   />
                   {errors.email && (
                     <Form.Text className="text-danger">
                       {errors.email.message}
                     </Form.Text>
                   )}
+                </Form.Group>
+
+                <Form.Group className="mb-3" controlId="image" >
+                  <Form.Label>Profile Picture</Form.Label>
+                  <Form.Control
+                    {...register("image")}
+                    type="file"
+                    onChange={handleFileChange}
+                  />
+                  <Form.Text>
+                    {image
+                      ? `${image.name} (${Math.round(
+                        image.size / 1024
+                      )} kB)`
+                      : "No photo selected"}
+                  </Form.Text>
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="password">
