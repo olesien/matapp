@@ -21,6 +21,7 @@ const CreateRestaurantForm = () => {
              * @todo ändra namnet på fälten i databasen
              */
             ...data,
+            nameLowerCase: data.name.toLowerCase(),
             address: `${data.street_name} ${data.street_number}`,
             // category: data.category,
             // city: data.city,
