@@ -53,6 +53,9 @@ const LocationSearch = ({ handleSetCityName }) => {
             : []
         console.log(filtered)
         setFilteredSuggestions(filtered)
+        // // Only show the 10 closest suggestions somehow
+        // const bestResults = filtered.slice(-10) 
+        // setFilteredSuggestions(bestResults)
     }
 
     return (
