@@ -1,7 +1,7 @@
 import React from "react";
 import Container from "react-bootstrap/Container";
 import { useTable } from "react-table";
-import RenderTable from "../components/RenderTable";
+import RenderSortedTable from "../components/RenderSortedTable";
 import Image from "react-bootstrap/Image";
 import Button from "react-bootstrap/Button";
 import { useAuthContext } from "../contexts/AuthContext";
@@ -9,7 +9,8 @@ import useStreamRestaurants from "../hooks/useStreamRestaurants";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import { useState } from "react";
-import RestaurantOverlay from "../components/RestaurantOverlay";
+import RestaurantOverlayAdmin from "../components/RestaurantOverlayAdmin";
+import { useSortBy } from "react-table";
 
 export default function AdminRestaurantsPage() {
     console.log("rendering");
@@ -68,6 +69,16 @@ export default function AdminRestaurantsPage() {
                   })),
         [restaurants]
     );
+
+    const actionSortByFunction = React.useMemo(() => {
+        return (rowA, rowB, columnId, desc) => {
+            //Sort by approve / disapprove
+            console.log("rowA: ", rowA);
+            if (rowA.original.approved && !rowB.original.approved) return 1;
+            if (!rowA.original.approved && rowB.original.approved) return -1;
+            return 0;
+        };
+    }, []);
     const columns = React.useMemo(
         () => [
             {
@@ -121,18 +132,19 @@ export default function AdminRestaurantsPage() {
                         </Button>
                     </div>
                 ),
+                sortType: actionSortByFunction,
             },
         ],
-        [restaurants]
+        [restaurants, actionSortByFunction]
     );
     // if (initialLoading || loading) return <></>;
 
-    const tableInstance = useTable({ columns, data });
+    const tableInstance = useTable({ columns, data }, useSortBy);
     return (
         <Container>
             <h2>Restaurants</h2>
-            <RenderTable tableInstance={tableInstance} />
-            <RestaurantOverlay
+            <RenderSortedTable tableInstance={tableInstance} />
+            <RestaurantOverlayAdmin
                 restaurant={restaurant}
                 handleClose={() => setRestaurant(null)}
             />

@@ -25,7 +25,9 @@ function App() {
             <Navigation />
 
             <Routes>
+
                 {/* Guest routes */}
+
                 <Route path="*" element={<NotFound />} />
                 <Route path="/" element={<HomePage />} />
                 <Route path="/access-denied" element={<AccessDeniedPage />} />
@@ -37,9 +39,9 @@ function App() {
                 <Route path="/logout" element={<LogoutPage />} />
                 <Route path="/signup" element={<SignupPage />} />
 
-                <Route path="/create-restaurant" element={<CreateRestaurantPage />} />
-
                 {/* Protected routes */}
+
+                {/* User routes */}
 
                 <Route
                     path="/update-profile"
@@ -64,6 +66,15 @@ function App() {
                     element={
                         <RequireAuth>
                             <RestaurantPage />
+                        </RequireAuth>
+                    }
+                />
+
+                <Route
+                    path="/create-restaurant"
+                    element={
+                        <RequireAuth>
+                            <CreateRestaurantPage />
                         </RequireAuth>
                     }
                 />

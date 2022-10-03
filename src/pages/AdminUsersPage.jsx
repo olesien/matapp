@@ -1,13 +1,14 @@
 import React from "react";
 import Container from "react-bootstrap/Container";
 import { useTable } from "react-table";
-import RenderTable from "../components/RenderTable";
+import RenderSortedTable from "../components/RenderSortedTable";
 import Image from "react-bootstrap/Image";
 import Button from "react-bootstrap/Button";
 import { useAuthContext } from "../contexts/AuthContext";
 import useGetUsers from "../hooks/useStreamUsers";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase";
+import { useSortBy } from "react-table";
 
 export default function AdminUsersPage() {
     console.log("rendering");
@@ -40,6 +41,17 @@ export default function AdminUsersPage() {
                   })),
         [users]
     );
+
+    const adminSortByFunction = React.useMemo(() => {
+        return (rowA, rowB, columnId, desc) => {
+            console.log(rowA, rowB);
+            // inspect the row to see what data we have
+            console.log("rowA: ", rowA);
+            if (rowA.original.admin && !rowB.original.admin) return 1;
+            if (!rowA.original.admin && rowB.original.admin) return -1;
+            return 0;
+        };
+    }, []);
     const columns = React.useMemo(
         () => [
             {
@@ -55,6 +67,7 @@ export default function AdminUsersPage() {
                         />
                     </div>
                 ),
+                disableSortBy: true,
             },
             {
                 Header: "Mail",
@@ -85,17 +98,24 @@ export default function AdminUsersPage() {
                         </Button>
                     </div>
                 ),
+                sortType: adminSortByFunction,
             },
         ],
-        [users]
+        [users, adminSortByFunction]
     );
     // if (initialLoading || loading) return <></>;
 
-    const tableInstance = useTable({ columns, data });
+    const tableInstance = useTable(
+        {
+            columns,
+            data,
+        },
+        useSortBy
+    );
     return (
         <Container>
             <h2>Users</h2>
-            <RenderTable tableInstance={tableInstance} />
+            <RenderSortedTable tableInstance={tableInstance} />
         </Container>
     );
 }
