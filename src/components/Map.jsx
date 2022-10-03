@@ -162,7 +162,10 @@ const Map = ({ restaurants, userLocation }) => {
 
     return isLoaded ? (
         <div className="flex">
-            <RestaurantCard restaurant={restaurant}></RestaurantCard>
+            <RestaurantCard
+                restaurant={restaurant}
+                fromMap={true}
+            ></RestaurantCard>
             <GoogleMap
                 mapContainerStyle={containerStyle}
                 center={userLocation}

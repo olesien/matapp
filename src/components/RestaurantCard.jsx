@@ -15,7 +15,7 @@ const convertUnits = (distance) => {
     }
 };
 
-export default function RestaurantCard({ restaurant }) {
+export default function RestaurantCard({ restaurant, fromMap = false }) {
     const [searchParams, setSearchParams] = useSearchParams();
 
     //console.log(resturant);
@@ -36,19 +36,62 @@ export default function RestaurantCard({ restaurant }) {
         //Set new tab and map ID
         setSearchParams({ tab: "map", id: restaurant.id });
     };
+    const getDirections = () => {
+        console.log("directions");
+    };
+
+    const view = async () => {
+        console.log("view");
+        let values = {};
+        //Get all previous params
+        for (let entry of searchParams.entries()) {
+            values[entry[0]] = entry[1];
+        }
+        console.log(values);
+        setSearchParams({ ...values, viewRestaurant: restaurant.id });
+    };
     return (
         <Card data-testid="card" style={{ width: "18rem", margin: "1rem" }}>
-            <Card.Header>Distance: {convertUnits(restaurant.distance)}</Card.Header>
+            <Card.Header>
+                Distance: {convertUnits(restaurant.distance)}
+            </Card.Header>
             <Card.Img variant="top" src={restaurant.url} />
             <Card.Body>
-                <Card.Title>{restaurant.name}</Card.Title><Card.Text>📍 {restaurant.place}</Card.Text>
-                <Card.Subtitle className="mb-2 text-muted">{restaurant.cuisine}</Card.Subtitle>
-                <Card.Text>{restaurant.type_of_establishment} offering {restaurant.offers}</Card.Text>
+                <Card.Title>{restaurant.name}</Card.Title>
+                <Card.Text>📍 {restaurant.place}</Card.Text>
+                <Card.Subtitle className="mb-2 text-muted">
+                    {restaurant.cuisine}
+                </Card.Subtitle>
+                <Card.Text>
+                    {restaurant.type_of_establishment} offering{" "}
+                    {restaurant.offers}
+                </Card.Text>
                 {/* <Card.Text>{geocode.results[0]?.formatted_address}</Card.Text> */}
                 <Card.Text>"{restaurant.description}"</Card.Text>
                 <footer>
-                    <Button variant="primary" onClick={() => viewOnMap()}>
-                        View on Map
+                    {!fromMap && (
+                        <Button
+                            variant="primary"
+                            style={{ margin: 5 }}
+                            onClick={() => viewOnMap()}
+                        >
+                            See on Map
+                        </Button>
+                    )}
+
+                    <Button
+                        variant="primary"
+                        style={{ margin: 5 }}
+                        onClick={() => view()}
+                    >
+                        View
+                    </Button>
+                    <Button
+                        variant="primary"
+                        style={{ margin: 5 }}
+                        onClick={() => getDirections()}
+                    >
+                        Get Directions
                     </Button>
                 </footer>
             </Card.Body>

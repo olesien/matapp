@@ -9,7 +9,7 @@ import useStreamRestaurants from "../hooks/useStreamRestaurants";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import { useState } from "react";
-import RestaurantOverlay from "../components/RestaurantOverlay";
+import RestaurantOverlayAdmin from "../components/RestaurantOverlayAdmin";
 import { useSortBy } from "react-table";
 
 export default function AdminRestaurantsPage() {
@@ -144,7 +144,7 @@ export default function AdminRestaurantsPage() {
         <Container>
             <h2>Restaurants</h2>
             <RenderSortedTable tableInstance={tableInstance} />
-            <RestaurantOverlay
+            <RestaurantOverlayAdmin
                 restaurant={restaurant}
                 handleClose={() => setRestaurant(null)}
             />
