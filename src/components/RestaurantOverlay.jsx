@@ -2,15 +2,17 @@ import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import { Form, Image } from "react-bootstrap";
 import { useEffect, useState } from "react";
-
+import RestaurantImages from "./RestaurantImages";
 import { useSearchParams } from "react-router-dom";
 import useGetRestaurant from "../hooks/useGetRestaurant";
+import SubmitRestaurantImage from "./SubmitRestaurantImage";
 
 export default function RestaurantOverlay() {
     const [searchParams, setSearchParams] = useSearchParams();
 
     const restaurantId = searchParams.get("viewRestaurant");
     const { data: restaurant, loading } = useGetRestaurant(restaurantId);
+    const [newImage, setNewImage] = useState(false);
 
     console.log(restaurant);
 
@@ -39,14 +41,12 @@ export default function RestaurantOverlay() {
             ) : (
                 <>
                     <Modal.Header closeButton>
-                        <Modal.Title>Restaurant</Modal.Title>
+                        <Modal.Title>{restaurant?.name}</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <div className="restaurant-overlay-card">
                             <div className="restaurant-row">
                                 <div className="option-card">
-                                    <h2>{restaurant?.name}</h2>
-
                                     <Image src={restaurant?.url} />
 
                                     <p>{restaurant?.description}</p>
@@ -57,14 +57,61 @@ export default function RestaurantOverlay() {
                                 </div>
                             </div>
                             <div className="restaurant-row">
-                                <p>{restaurant?.category}</p>
-                                <p>{restaurant?.email}</p>
+                                {restaurant?.category ? (
+                                    <>
+                                        <h3>Category</h3>
+                                        <p>{restaurant.category}</p>
+                                    </>
+                                ) : (
+                                    <></>
+                                )}
+                                {restaurant?.email ? (
+                                    <>
+                                        <h3>Email</h3>
+                                        <p>{restaurant.email}</p>
+                                    </>
+                                ) : (
+                                    <></>
+                                )}
                             </div>
                             <div className="restaurant-row">
-                                <p>{restaurant?.website}</p>
-                                <p>{restaurant?.facebook}</p>
-
-                                <p>{restaurant?.instagram}</p>
+                                {restaurant?.website ? (
+                                    <>
+                                        <h3>Website</h3>
+                                        <p>{restaurant.website}</p>
+                                    </>
+                                ) : (
+                                    <></>
+                                )}
+                                {restaurant?.facebook ? (
+                                    <>
+                                        <h3>Facebook</h3>
+                                        <p>{restaurant.facebook}</p>
+                                    </>
+                                ) : (
+                                    <></>
+                                )}
+                                {restaurant?.instagram ? (
+                                    <>
+                                        <h3>Instagram</h3>
+                                        <p>{restaurant.instagram}</p>
+                                    </>
+                                ) : (
+                                    <></>
+                                )}
+                                <RestaurantImages id={restaurantId} />
+                                <Button
+                                    onClick={() =>
+                                        setNewImage((oldState) => !oldState)
+                                    }
+                                >
+                                    {newImage
+                                        ? "Hide Form"
+                                        : "Submit new image"}
+                                </Button>
+                                {newImage && (
+                                    <SubmitRestaurantImage id={restaurantId} />
+                                )}
                             </div>
                         </div>
                     </Modal.Body>
