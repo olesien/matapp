@@ -18,6 +18,7 @@ import UpdateProfilePage from "./pages/UpdateProfilePage";
 import "./assets/scss/App.scss";
 import AdminRestaurantsPage from "./pages/AdminRestaurants";
 import AdminUsersPage from "./pages/AdminUsersPage";
+import AdminRestaurantImagesPage from "./pages/AdminRestaurantImagesPage";
 
 function App() {
     return (
@@ -25,7 +26,6 @@ function App() {
             <Navigation />
 
             <Routes>
-
                 {/* Guest routes */}
 
                 <Route path="*" element={<NotFound />} />
@@ -85,6 +85,14 @@ function App() {
                     element={
                         <RequireAdminAuth>
                             <AdminRestaurantsPage />
+                        </RequireAdminAuth>
+                    }
+                />
+                <Route
+                    path="/admin-restaurant-images"
+                    element={
+                        <RequireAdminAuth>
+                            <AdminRestaurantImagesPage />
                         </RequireAdminAuth>
                     }
                 />

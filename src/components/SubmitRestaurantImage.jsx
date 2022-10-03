@@ -19,7 +19,6 @@ export default function SubmitRestaurantImage({ id }) {
     } = useForm();
     const handleFileChange = (img) => {
         if (!img.target.files.length) {
-            setImage("https://via.placeholder.com/225");
             return;
         }
 
@@ -54,7 +53,7 @@ export default function SubmitRestaurantImage({ id }) {
                 imageurl,
                 restaurantid: id,
                 userid: currentUser.uid,
-                approved: false,
+                approved: currentUser.admin,
             });
 
             toast.success("Image sent for admin approval");
