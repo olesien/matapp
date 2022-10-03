@@ -15,34 +15,36 @@ const CreateRestaurantForm = () => {
     const { currentUser } = useAuthContext();
 
     const onCreateRestaurant = async (data) => {
+        console.log(data.name.toLowerCase())
         // make firestore doc
         await addDoc(collection(db, "restaurants"), {
             /**
              * @todo ändra namnet på fälten i databasen
              */
-            ...data,
+            // ...data,
             nameLowerCase: data.name.toLowerCase(),
             address: `${data.street_name} ${data.street_number}`,
-            // category: data.category,
-            // city: data.city,
+            category: data.category,
+            city: data.city,
             createdBy: currentUser ? currentUser.uid : 0,
-            // cuisine: data.cuisine,
-            // description: data.description,
-            // email: data.email,
+            cuisine: data.cuisine,
+            description: data.description,
+            email: data.email,
             facebook: `www.facebook.com/${data.facebook}`,
             instagram: `www.instagram.com/${data.instagram}`,
             location: new GeoPoint(12, 34),
-            // name: data.name,
-            // offer: data.offer,
+            name: data.name,
+            offer: data.offer,
             offers: "lunch",
-            // phone: data.phone,
+            phone: data.phone,
             photoURL:
                 "https://firebasestorage.googleapis.com/v0/b/fed21-matguiden.appspot.com/o/restaurants%2F1663942025-london-stock.jpg?alt=media&token=bc832727-0b00-41a2-ac98-4425bbd87102",
+            place: data.city,
             position: new GeoPoint(12, 34),
-            // postcode: data.postcode,
+            postcode: data.postcode,
             type_of_establishment: "restaurant",
             url: "https://firebasestorage.googleapis.com/v0/b/fed21-matguiden.appspot.com/o/restaurants%2F1663942025-london-stock.jpg?alt=media&token=bc832727-0b00-41a2-ac98-4425bbd87102",
-            website: data.website,
+            website_url: data.website_url,
             approved: false,
         });
 
