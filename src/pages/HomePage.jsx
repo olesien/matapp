@@ -26,15 +26,16 @@ const HomePage = () => {
         setCityName(name)
     }
 
+    const handleGetCityName = async () => {
+        const res = await GeocodingAPI.getCityName(userLocation);
+        if (res) {
+            setCityName(res.results[0].address_components[0].long_name);
+        }
+    };
+
     useEffect(() => {
         console.log("Recalculating city name from userLocation");
-        const getCityName = async () => {
-            const res = await GeocodingAPI.getCityName(userLocation);
-            if (res) {
-                setCityName(res.results[0].address_components[0].long_name);
-            }
-        };
-        getCityName();
+        handleGetCityName();
     }, [userLocation]);
 
     const [searchParams, setSearchParams] = useSearchParams();
@@ -179,7 +180,10 @@ const HomePage = () => {
                         </Button>
 
                         <div className="location-search-wrapper">
-                            <LocationSearch handleSetCityName={handleSetCityName} />
+                            <LocationSearch
+                                handleSetCityName={handleSetCityName}
+                                handleGetCityName={handleGetCityName}
+                            />
                         </div>
 
                         {showFilter && (

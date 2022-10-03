@@ -3,7 +3,7 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import useGetRestaurants from "../hooks/useGetRestaurants";
 
-const LocationSearch = ({ handleSetCityName }) => {
+const LocationSearch = ({ handleSetCityName, handleGetCityName }) => {
     const [searchedLocation, setSearchedLocation] = useState("")
     const inputSuggestions = []
     const [filteredSuggestions, setFilteredSuggestions] = useState([])
@@ -110,7 +110,7 @@ const LocationSearch = ({ handleSetCityName }) => {
                 </div>
                 <Button className='ms-2' type='search'>Search</Button>
             </Form >
-
+            <Button onClick={handleGetCityName}>Reset location</Button>
         </>
     )
 }
