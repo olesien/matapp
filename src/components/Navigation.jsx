@@ -6,7 +6,7 @@ import { useAuthContext } from "../contexts/AuthContext";
 import { NavDropdown } from "react-bootstrap";
 
 const Navigation = () => {
-    const { currentUser } = useAuthContext();
+    const { currentUser, userEmail } = useAuthContext();
     return (
         <Navbar bg="dark" variant="dark" expand="md">
             <Container>
@@ -54,7 +54,7 @@ const Navigation = () => {
                                     Create new
                                 </Nav.Link>
 
-                                <NavDropdown title={currentUser.email}>
+                                <NavDropdown title={userEmail}>
                                     <NavLink
                                         to="/update-profile"
                                         className="dropdown-item"

@@ -22,6 +22,7 @@ const useAuthContext = () => {
 
 const AuthContextProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState(null);
+    const [userEmail, setUserEmail] = useState(null)
     const [initialLoading, setInitialLoading] = useState(true);
 
     const changeCurrentUser = async (user) => {
@@ -64,7 +65,8 @@ const AuthContextProvider = ({ children }) => {
 
     const reloadUser = async () => {
         await auth.currentUser.reload();
-
+        setCurrentUser(auth.currentUser)
+        setUserEmail(auth.currentUser.email)
         changeCurrentUser(auth.currentUser);
         return true;
     };
@@ -119,7 +121,13 @@ const AuthContextProvider = ({ children }) => {
     useEffect(() => {
         // listen for changes in auth-state
         const unsubscribe = onAuthStateChanged(auth, (user) => {
+
+            setCurrentUser(user)
+            setUserEmail(user?.email)
+
             changeCurrentUser(user);
+
+            setLoading(false)
         });
 
         return unsubscribe;
@@ -136,6 +144,7 @@ const AuthContextProvider = ({ children }) => {
         resetPassword,
         setEmail,
         setPassword,
+        userEmail,
     };
 
     return (
