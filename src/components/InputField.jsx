@@ -13,6 +13,8 @@ export default function InputField({
     title = false,
     isTitle = false,
     isImage = false,
+    image,
+    setImage,
 }) {
     const [show, setShow] = useState(false);
     const toggleShow = () => {
@@ -20,6 +22,15 @@ export default function InputField({
     };
     const changeField = (e) => {
         onChange(e.target.value);
+    };
+
+    const handleFileChange = (img) => {
+        if (!img.target.files.length) {
+            return;
+        }
+
+        setImage(img.target.files[0]);
+        console.log("File changed!", img.target.files[0]);
     };
     return (
         <Form.Group className={divClassName}>
@@ -48,23 +59,36 @@ export default function InputField({
                     {show ? (
                         <div>
                             <div className="imgContainer">
-                                {" "}
-                                <Image src={value} />
+                                <Image
+                                    src={value}
+                                    style={{ maxWidth: "100%" }}
+                                />
                                 <FontAwesomeIcon
                                     icon={faEyeSlash}
                                     style={{ padding: 5 }}
                                     onClick={() => toggleShow()}
                                 />
                             </div>
-                            <Form.Control
+                            {/* <Form.Control
                                 type={type}
                                 value={value}
                                 onChange={changeField}
+                            /> */}
+                            <Form.Control
+                                type="file"
+                                onChange={handleFileChange}
                             />
+                            <Form.Text>
+                                {image
+                                    ? `${image.name} (${Math.round(
+                                          image.size / 1024
+                                      )} kB)`
+                                    : "No photo selected"}
+                            </Form.Text>
                         </div>
                     ) : (
                         <div className="imgContainer">
-                            <Image src={value} />
+                            <Image src={value} style={{ maxWidth: "100%" }} />
                             <FontAwesomeIcon
                                 icon={faGear}
                                 style={{ padding: 5 }}
