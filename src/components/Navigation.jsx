@@ -30,14 +30,20 @@ const Navigation = () => {
                                     to="/admin-users"
                                     className="dropdown-item"
                                 >
-                                    Users
+                                    Manage Users
                                 </NavLink>
                                 <NavDropdown.Divider />
                                 <NavLink
                                     to="/admin-restaurants"
                                     className="dropdown-item"
                                 >
-                                    Restaurants
+                                    Manage Restaurants
+                                </NavLink>
+                                <NavLink
+                                    to="/admin-restaurant-images"
+                                    className="dropdown-item"
+                                >
+                                    Manage Restaurant Images
                                 </NavLink>
                             </NavDropdown>
                         ) : (
