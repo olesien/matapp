@@ -15,7 +15,8 @@ const convertUnits = (distance) => {
     }
 };
 
-export default function RestaurantCard({ restaurant, fromMap = false }) {
+export default function RestaurantCard({ restaurant, fromMap = false, mapReference, handleSetSearchParams
+}) {
     const [searchParams, setSearchParams] = useSearchParams();
 
     //console.log(resturant);
@@ -34,7 +35,12 @@ export default function RestaurantCard({ restaurant, fromMap = false }) {
 
     const viewOnMap = () => {
         //Set new tab and map ID
-        setSearchParams({ tab: "map", id: restaurant.id });
+        handleSetSearchParams({ tab: "map", id: restaurant.id });
+        console.log(restaurant)
+        mapReference.panTo({
+            lat: restaurant.position.latitude,
+            lng: restaurant.position.longitude,
+        });
     };
     const getDirections = () => {
         console.log("directions");

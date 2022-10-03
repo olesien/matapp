@@ -21,9 +21,14 @@ const HomePage = () => {
     });
     const [cityName, setCityName] = useState(null)
     // console.log(cityName)
+    const [mapReference, setMapReference] = useState(null)
 
     const handleSetCityName = (name) => {
         setCityName(name)
+    }
+
+    const handleSetMapReference = (map) => {
+        setMapReference(map)
     }
 
     const handleGetCityName = async () => {
@@ -137,6 +142,7 @@ const HomePage = () => {
                             <Map
                                 restaurants={restaurants}
                                 userLocation={userLocation}
+                                handleSetMapReference={handleSetMapReference}
                             />
                         ) : (
                             <></>
@@ -199,6 +205,8 @@ const HomePage = () => {
                             sortByName={sortBy}
                             cityName={cityName}
                             listingAll={filterOptions.listAll}
+                            mapReference={mapReference}
+                            handleSetSearchParams={handleSetSearchParams}
                         />
                     </Tab>
                 </Tabs>

@@ -8,7 +8,9 @@ const RestaurantList = ({
     userLocation,
     sortByName,
     cityName,
-    listingAll
+    listingAll,
+    mapReference,
+    handleSetSearchParams
 }) => {
     const [sortedRestaurants, setSortedRestaurants] = useState(null);
     const userLocationConverted = {
@@ -50,6 +52,8 @@ const RestaurantList = ({
                         <RestaurantCard
                             key={restaurant.id}
                             restaurant={restaurant}
+                            mapReference={mapReference}
+                            handleSetSearchParams={handleSetSearchParams}
                         />
                     ))
                 }
