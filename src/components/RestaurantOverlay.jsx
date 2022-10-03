@@ -54,6 +54,7 @@ export default function RestaurantOverlay() {
                                         {restaurant?.address},{" "}
                                         {restaurant?.city}
                                     </p>
+                                    <RestaurantImages id={restaurantId} />
                                 </div>
                             </div>
                             <div className="restaurant-row">
@@ -99,7 +100,7 @@ export default function RestaurantOverlay() {
                                 ) : (
                                     <></>
                                 )}
-                                <RestaurantImages id={restaurantId} />
+
                                 <Button
                                     onClick={() =>
                                         setNewImage((oldState) => !oldState)
