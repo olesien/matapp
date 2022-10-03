@@ -22,12 +22,11 @@ export default function ImageOverlayAdmin({ image, handleClose }) {
 
         try {
             let imageurl = image.imageurl;
+            let source = image.source;
             if (imageSrc) {
                 console.log("uploading image");
-                const fileRef = ref(
-                    storage,
-                    `photos/${image.userid}/${Date.now() + "-" + title}`
-                );
+                source = `photos/${image.userid}/${Date.now() + "-" + title}`;
+                const fileRef = ref(storage, source);
 
                 // upload photo to fileRef
                 const uploadResult = await uploadBytes(fileRef, imageSrc);
@@ -38,6 +37,7 @@ export default function ImageOverlayAdmin({ image, handleClose }) {
             await updateDoc(imageRef, {
                 title,
                 imageurl,
+                source,
             });
 
             console.log("Succesfully updated");

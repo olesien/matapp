@@ -6,11 +6,13 @@ import Image from "react-bootstrap/Image";
 import Button from "react-bootstrap/Button";
 import { useAuthContext } from "../contexts/AuthContext";
 import useStreamRestaurantImages from "../hooks/useStreamRestaurantImages";
-import { doc, updateDoc } from "firebase/firestore";
-import { db } from "../firebase";
+import { doc, updateDoc, deleteDoc } from "firebase/firestore";
+import { db, storage } from "../firebase";
 import { useState } from "react";
 import ImageOverlayAdmin from "../components/ImageOverlayAdmin";
 import { useSortBy } from "react-table";
+import { ref, deleteObject } from "firebase/storage";
+import { toast } from "react-toastify";
 
 export default function AdminRestaurantImagesPage() {
     console.log("rendering");
@@ -38,6 +40,17 @@ export default function AdminRestaurantImagesPage() {
             console.log(err);
         }
     };
+
+    const deleteRestaurant = async (id, source) => {
+        try {
+            await deleteDoc(doc(db, "user-pictures", id));
+            const imgRef = ref(storage, source);
+            deleteObject(imgRef);
+            toast.success("Image deleted");
+        } catch (err) {
+            console.log(err);
+        }
+    };
     // const setAdmin = async (mail, admin) => {
     //     const user = users.find((user) => user.email === mail);
     //     const uid = user.id;
@@ -60,6 +73,7 @@ export default function AdminRestaurantImagesPage() {
                 : images.map((image) => ({
                       id: image.id,
                       imageurl: image.imageurl,
+                      source: image.source,
                       title: image.title,
                       approved: image?.approved,
                   })),
@@ -118,6 +132,7 @@ export default function AdminRestaurantImagesPage() {
                                     ? "danger"
                                     : "success"
                             }
+                            style={{ marginRight: 10 }}
                             onClick={() => {
                                 toggleApproved(
                                     tableProps.row.original.id,
@@ -128,6 +143,19 @@ export default function AdminRestaurantImagesPage() {
                             {tableProps.row.original.approved
                                 ? "Disapprove"
                                 : "Approve"}
+                        </Button>
+                        <Button
+                            className="mt-2"
+                            style={{ marginRight: 10 }}
+                            variant="danger"
+                            onClick={() => {
+                                deleteRestaurant(
+                                    tableProps.row.original.id,
+                                    tableProps.row.original.source
+                                );
+                            }}
+                        >
+                            {"Delete"}
                         </Button>
                     </div>
                 ),

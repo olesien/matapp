@@ -30,15 +30,16 @@ export default function SubmitRestaurantImage({ id }) {
         // try to sign up the user with the specified credentials
         const title = data.title;
 
+        if (loading) return;
+
         try {
             setLoading(true);
 
             //Add photo, use date.now to get unix before image name to make it unique!!
-
-            const fileRef = ref(
-                storage,
-                `photos/${currentUser.email}/${Date.now() + "-" + title}`
-            );
+            const source = `photos/${currentUser.email}/${
+                Date.now() + "-" + title
+            }`;
+            const fileRef = ref(storage, source);
 
             // upload photo to fileRef
             const uploadResult = await uploadBytes(fileRef, image);
@@ -52,11 +53,13 @@ export default function SubmitRestaurantImage({ id }) {
                 title,
                 imageurl,
                 restaurantid: id,
+                source,
                 userid: currentUser.uid,
                 approved: currentUser.admin,
             });
 
             toast.success("Image sent for admin approval");
+            setLoading(false);
         } catch (err) {
             setLoading(false);
             console.log(err);
@@ -92,7 +95,7 @@ export default function SubmitRestaurantImage({ id }) {
                 </Form.Text>
             </Form.Group>
             <Button variant="success" type="submit">
-                Submit
+                {loading ? "Submitting...." : "Submit"}
             </Button>
         </Form>
     );
