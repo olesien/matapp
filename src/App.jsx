@@ -25,7 +25,9 @@ function App() {
             <Navigation />
 
             <Routes>
+
                 {/* Guest routes */}
+
                 <Route path="*" element={<NotFound />} />
                 <Route path="/" element={<HomePage />} />
                 <Route path="/access-denied" element={<AccessDeniedPage />} />
@@ -38,6 +40,8 @@ function App() {
                 <Route path="/signup" element={<SignupPage />} />
 
                 {/* Protected routes */}
+
+                {/* User routes */}
 
                 <Route
                     path="/update-profile"
