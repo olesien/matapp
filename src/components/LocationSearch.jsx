@@ -59,50 +59,59 @@ const LocationSearch = ({ handleSetCityName }) => {
     }
 
     return (
-        <Form autoComplete="off" name="restaurant-filter-form" onSubmit={onSearchFormSubmit} >
-            <div className="my-2">
-                <Form.Label htmlFor='city-search'>Search for a city/location</Form.Label>
-                <Form.Control
-                    name='city-search'
-                    value={searchedLocation}
-                    onChange={(e) => onInputChanged(e)}
-                    id='city-search'
-                    placeholder="Search for a city/location"
-                    onFocus={onInputFocus}
-                    onBlur={onInputBlur}
-                    type="search"
-                />
-            </div>
-            {/* Suggestions to show when the user has typed in the input field (and it's focused) */}
-            {filteredSuggestions.length > 0 && inputIsFocused && (
-                <ul className="border border-top-0 border-primary">
-                    {filteredSuggestions.map((suggestion) => (
-                        <li
-                            key={suggestion.id}
-                            // set the input field to the value of the suggestion
-                            onClick={() => setSearchedLocation(suggestion.place)}
-                        >
-                            {suggestion.place}
-                        </li>
-                    ))}
-                </ul>
-            )}
-            {/* Suggestions to show when the user hasn't typed in the input field (and it's focused) */}
-            {inputSuggestions.length > 0 && filteredSuggestions <= 0 && inputIsFocused && (
-                <ul className="border border-top-0 border-primary">
-                    {inputSuggestions.map((suggestion) => (
-                        <li
-                            key={suggestion.id}
-                            // set the input field to the value of the suggestion
-                            onClick={() => setSearchedLocation(suggestion.place)}
-                        >
-                            {suggestion.place}
-                        </li>
-                    ))}
-                </ul>
-            )}
-            <Button className='me-2' type='search'>Search</Button>
-        </Form >
+        <>
+            <Form
+                className="d-flex align-items-center flex-wrap"
+                autoComplete="off" name="restaurant-filter-form"
+                onSubmit={onSearchFormSubmit}
+            >
+                <div className="my-2 flex-grow-1 position-relative">
+                    {/* <Form.Label htmlFor='city-search'>Search for a location</Form.Label> */}
+                    <Form.Control
+                        className=""
+                        id='city-search'
+                        name='city-search'
+                        onChange={(e) => onInputChanged(e)}
+                        onBlur={onInputBlur}
+                        onFocus={onInputFocus}
+                        placeholder="Search for a city/location"
+                        type="search"
+                        value={searchedLocation}
+                    />
+
+                    {/* Suggestions to show when the user has typed in the input field (and it's focused) */}
+                    {filteredSuggestions.length > 0 && inputIsFocused && (
+                        <ul className="input-suggestions border border-top-0 border-primary">
+                            {filteredSuggestions.map((suggestion) => (
+                                <li
+                                    key={suggestion.id}
+                                    // set the input field to the value of the suggestion
+                                    onClick={() => setSearchedLocation(suggestion.place)}
+                                >
+                                    {suggestion.place}
+                                </li>
+                            ))}
+                        </ul>
+                    )}
+                    {/* Suggestions to show when the user hasn't typed in the input field (and it's focused) */}
+                    {inputSuggestions.length > 0 && filteredSuggestions <= 0 && inputIsFocused && (
+                        <ul className="input-suggestions">
+                            {inputSuggestions.map((suggestion) => (
+                                <li
+                                    key={suggestion.id}
+                                    // set the input field to the value of the suggestion
+                                    onClick={() => setSearchedLocation(suggestion.place)}
+                                >
+                                    <span>{suggestion.place}</span>
+                                </li>
+                            ))}
+                        </ul>
+                    )}
+                </div>
+                <Button className='ms-2' type='search'>Search</Button>
+            </Form >
+
+        </>
     )
 }
 export default LocationSearch
