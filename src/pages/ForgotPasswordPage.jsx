@@ -9,6 +9,7 @@ const ForgotPasswordPage = () => {
 		register,
 		handleSubmit,
 		formState: { errors },
+		reset,
 	} = useForm();
 	const emailRef = useRef()
 	const [error, setError] = useState(null)
@@ -29,6 +30,8 @@ const ForgotPasswordPage = () => {
 
 			// show success message
 			setMessage("Please check your spam folder.")
+
+			reset()
 
 		} catch (err) {
 			setError(err.message)
