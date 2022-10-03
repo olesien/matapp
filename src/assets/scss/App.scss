@@ -84,6 +84,24 @@
     }
 }
 
+// Styling for the autocomplete suggestions when searching for a city/location
+.input-suggestions {
+    position: absolute;
+    background-color: white;
+    width: 100%;
+    border: 1px solid #0d6efd;
+    border-top: none;
+    border-radius: 1rem;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    list-style: none;
+
+    li {
+        margin: 2px 2px 2px 0;
+        cursor: pointer;
+    }
+}
+
 @media (min-width: 1000px) {
     .modal-size {
         width: 80%;
@@ -92,5 +110,9 @@
 
     .restaurant-overlay-card {
         flex-flow: row nowrap;
+    }
+
+    .location-search-wrapper {
+        width: 50%;
     }
 }

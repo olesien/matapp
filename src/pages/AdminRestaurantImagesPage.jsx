@@ -5,37 +5,48 @@ import RenderSortedTable from "../components/RenderSortedTable";
 import Image from "react-bootstrap/Image";
 import Button from "react-bootstrap/Button";
 import { useAuthContext } from "../contexts/AuthContext";
-import useStreamRestaurants from "../hooks/useStreamRestaurants";
-import { doc, updateDoc } from "firebase/firestore";
-import { db } from "../firebase";
+import useStreamRestaurantImages from "../hooks/useStreamRestaurantImages";
+import { doc, updateDoc, deleteDoc } from "firebase/firestore";
+import { db, storage } from "../firebase";
 import { useState } from "react";
-import RestaurantOverlayAdmin from "../components/RestaurantOverlayAdmin";
+import ImageOverlayAdmin from "../components/ImageOverlayAdmin";
 import { useSortBy } from "react-table";
+import { ref, deleteObject } from "firebase/storage";
+import { toast } from "react-toastify";
 
-export default function AdminRestaurantsPage() {
+export default function AdminRestaurantImagesPage() {
     console.log("rendering");
     const { currentUser, initialLoading } = useAuthContext();
-    const { data: restaurants, loading } = useStreamRestaurants();
-    const [restaurant, setRestaurant] = useState(null);
-    console.log(restaurants);
+    const { data: images, loading } = useStreamRestaurantImages();
+    const [image, setImage] = useState(null);
+    console.log(images);
     const toggleRestaurant = (id) => {
         console.log(id);
-        const restaurant = restaurants.find(
-            (restaurant) => restaurant.id == id
-        );
-        setRestaurant(restaurant);
+        const image = images.find((image) => image.id == id);
+        setImage(image);
     };
 
     const toggleApproved = async (id, approved) => {
         console.log(id);
 
-        const restaurantRef = doc(db, "restaurants", id);
+        const imageRef = doc(db, "user-pictures", id);
 
         try {
-            await updateDoc(restaurantRef, {
+            await updateDoc(imageRef, {
                 approved: !approved,
             });
             console.log("Succesfully updated");
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    const deleteRestaurant = async (id, source) => {
+        try {
+            await deleteDoc(doc(db, "user-pictures", id));
+            const imgRef = ref(storage, source);
+            deleteObject(imgRef);
+            toast.success("Image deleted");
         } catch (err) {
             console.log(err);
         }
@@ -59,15 +70,14 @@ export default function AdminRestaurantsPage() {
         () =>
             loading
                 ? []
-                : restaurants.map((restaurant) => ({
-                      id: restaurant.id,
-                      name: restaurant.name,
-                      street_address: restaurant?.address,
-                      city: restaurant?.city,
-                      category: restaurant?.category,
-                      approved: restaurant?.approved,
+                : images.map((image) => ({
+                      id: image.id,
+                      imageurl: image.imageurl,
+                      source: image.source,
+                      title: image.title,
+                      approved: image?.approved,
                   })),
-        [restaurants]
+        [images]
     );
 
     const actionSortByFunction = React.useMemo(() => {
@@ -82,20 +92,23 @@ export default function AdminRestaurantsPage() {
     const columns = React.useMemo(
         () => [
             {
-                Header: "Name",
-                accessor: "name",
+                Header: "Image",
+                accessor: "imageurl",
+                Cell: (tableProps) => (
+                    <div>
+                        <Image
+                            fluid
+                            style={{ width: 100, height: 80 }}
+                            src={tableProps.row.original.imageurl}
+                            alt="Avatar"
+                        />
+                    </div>
+                ),
+                disableSortBy: true,
             },
             {
-                Header: "Street Address",
-                accessor: "street_address",
-            },
-            {
-                Header: "City",
-                accessor: "city",
-            },
-            {
-                Header: "Category",
-                accessor: "category",
+                Header: "Title",
+                accessor: "title",
             },
             {
                 Header: "Actions",
@@ -119,6 +132,7 @@ export default function AdminRestaurantsPage() {
                                     ? "danger"
                                     : "success"
                             }
+                            style={{ marginRight: 10 }}
                             onClick={() => {
                                 toggleApproved(
                                     tableProps.row.original.id,
@@ -130,23 +144,36 @@ export default function AdminRestaurantsPage() {
                                 ? "Disapprove"
                                 : "Approve"}
                         </Button>
+                        <Button
+                            className="mt-2"
+                            style={{ marginRight: 10 }}
+                            variant="danger"
+                            onClick={() => {
+                                deleteRestaurant(
+                                    tableProps.row.original.id,
+                                    tableProps.row.original.source
+                                );
+                            }}
+                        >
+                            {"Delete"}
+                        </Button>
                     </div>
                 ),
                 sortType: actionSortByFunction,
             },
         ],
-        [restaurants, actionSortByFunction]
+        [images, actionSortByFunction]
     );
     // if (initialLoading || loading) return <></>;
 
     const tableInstance = useTable({ columns, data }, useSortBy);
     return (
         <Container>
-            <h2>Restaurants</h2>
+            <h2>Images</h2>
             <RenderSortedTable tableInstance={tableInstance} />
-            <RestaurantOverlayAdmin
-                restaurant={restaurant}
-                handleClose={() => setRestaurant(null)}
+            <ImageOverlayAdmin
+                image={image}
+                handleClose={() => setImage(null)}
             />
         </Container>
     );

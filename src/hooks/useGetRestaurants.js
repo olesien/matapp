@@ -26,7 +26,7 @@ const useGetRestaurants = (filterOptions, cityName) => {
     const q = query(
         collection(db, "restaurants"),
         ...queryConstraints,
-        orderBy("name", "asc"),
+        orderBy("nameLowerCase", "asc"),
     );
     return useGetCollection(q, filterOptions, cityName);
 };
