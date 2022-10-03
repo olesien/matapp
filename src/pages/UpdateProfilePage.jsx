@@ -1,42 +1,26 @@
-import { useRef, useState } from 'react'
-import { Container, Row, Col, Form, Button, Card, Alert, Image } from 'react-bootstrap'
+import { useState } from 'react'
+import { Container, Row, Col, Form, Button, Card, Alert } from 'react-bootstrap'
 import { useAuthContext } from '../contexts/AuthContext'
+import { useForm } from 'react-hook-form';
 
 const UpdateProfilePage = () => {
-  const displayNameRef = useRef()
-  const emailRef = useRef()
-  const photoRef = useRef()
-  const passwordRef = useRef()
-  const passwordConfirmRef = useRef()
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    watch
+  } = useForm();
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
-  const [photo, setPhoto] = useState(null)
   const [message, setMessage] = useState(null)
   const {
     currentUser,
     reloadUser,
-    setDisplayNameAndPhoto,
     setEmail,
     setPassword
   } = useAuthContext()
 
-  const handleFileChange = (e) => {
-    if (!e.target.files.length) {
-      setPhoto(null)
-      return
-    }
-
-    setPhoto(e.target.files[0])
-    console.log("File changed!", e.target.files[0])
-  }
-
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-
-    // make sure user has entered the same password in both input fields
-    if (passwordRef.current.value !== passwordConfirmRef.current.value) {
-      return setError("The passwords does not match")
-    }
+  const onHandleSubmit = async (data) => {
 
     setError(null);
     setMessage(null);
@@ -46,22 +30,14 @@ const UpdateProfilePage = () => {
       // disable update-button while updating is in progress
       setLoading(true)
 
-      // update displayName *ONLY* if it has changed
-      if (
-        displayNameRef.current.value !== currentUser.displayName
-        || photo
-      ) {
-        await setDisplayNameAndPhoto(displayNameRef.current.value, photo)
-      }
-
       // update email *ONLY* if it has changed
-      if (emailRef.current.value !== currentUser.email) {
-        await setEmail(emailRef.current.value)
+      if (data.email !== currentUser.email) {
+        await setEmail(data.email)
       }
 
       // update password *ONLY* if the user has provided a new password to set
-      if (passwordRef.current.value) {
-        await setPassword(passwordRef.current.value)
+      if (data.password) {
+        await setPassword(data.password)
       }
 
       // reload user
@@ -87,48 +63,61 @@ const UpdateProfilePage = () => {
               {error && (<Alert variant="danger">{error}</Alert>)}
               {message && (<Alert variant="success">{message}</Alert>)}
 
-              <Form onSubmit={handleSubmit}>
-                {/*
-									Fill the displayName and email form fields with their current value!
-								*/}
-                <div className="d-flex justify-content-center my-3">
-                  <Image
-                    src={currentUser.photoURL || 'https://via.placeholder.com/225'}
-                    fluid
-                    roundedCircle
-                  />
-                </div>
+              <Form onSubmit={handleSubmit(onHandleSubmit)}>
 
-                <Form.Group id="displayName" className="mb-3">
-                  <Form.Label>Name</Form.Label>
-                  <Form.Control type="text" ref={displayNameRef} defaultValue={currentUser.displayName} />
-                </Form.Group>
-
-                <Form.Group id="photo" className="mb-3">
-                  <Form.Label>Photo</Form.Label>
-                  <Form.Control type="file" onChange={handleFileChange} />
-                  <Form.Text>
-                    {
-                      photo
-                        ? `${photo.name} (${Math.round(photo.size / 1024)} kB)`
-                        : 'No photo selected'
-                    }
-                  </Form.Text>
-                </Form.Group>
-
-                <Form.Group id="email" className="mb-3">
+                <Form.Group className="mb-3" controlId="email">
                   <Form.Label>Email</Form.Label>
-                  <Form.Control type="email" ref={emailRef} defaultValue={currentUser.email} required />
+                  <Form.Control
+                    {...register("email", {
+                      pattern: {
+                        value: /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6})*$/gm,
+                        message: "Invalid email",
+                      },
+                    })}
+                    type="email"
+                    defaultValue={currentUser.email}
+                  />
+                  {errors.email && (
+                    <Form.Text className="text-danger">
+                      {errors.email.message}
+                    </Form.Text>
+                  )}
                 </Form.Group>
 
-                <Form.Group id="password" className="mb-3">
+                <Form.Group className="mb-3" controlId="password">
                   <Form.Label>New Password</Form.Label>
-                  <Form.Control type="password" ref={passwordRef} autoComplete="new-password" />
+                  <Form.Control
+                    {...register("password", {
+                      minLength: {
+                        value: 6,
+                        message: "Password must be at least 6 characters"
+                      },
+                    })}
+                    type="password"
+                    autoComplete="new-password"
+                  />
+                  {errors.password && (
+                    <Form.Text className="text-danger">
+                      {errors.password.message}
+                    </Form.Text>
+                  )}
                 </Form.Group>
 
-                <Form.Group id="password-confirm" className="mb-3">
+                <Form.Group className="mb-3" controlId="password_confirm">
                   <Form.Label>Confirm New Password</Form.Label>
-                  <Form.Control type="password" ref={passwordConfirmRef} autoComplete="new-password" />
+                  <Form.Control
+                    {...register("password_confirm", {
+                      validate: value =>
+                        value === watch("password", "") || "Passwords do not match"
+                    })}
+                    type="password"
+                    autoComplete="new-password"
+                  />
+                  {errors.password_confirm && (
+                    <Form.Text className="text-danger">
+                      {errors.password_confirm.message}
+                    </Form.Text>
+                  )}
                 </Form.Group>
 
                 <Button disabled={loading} type="submit">Update</Button>

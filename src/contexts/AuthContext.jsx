@@ -5,6 +5,8 @@ import {
     signInWithEmailAndPassword,
     signOut,
     sendPasswordResetEmail,
+    updateEmail,
+    updatePassword,
     updateProfile,
 } from "firebase/auth";
 import { auth, db, storage } from "../firebase";
@@ -26,7 +28,7 @@ const AuthContextProvider = ({ children }) => {
         let data = {};
         if (user) {
             //Get related docs
-            console.log(user);
+            // console.log(user);
             const ref = doc(db, "users", user.uid);
             const snapshot = await getDoc(ref);
 
@@ -79,6 +81,14 @@ const AuthContextProvider = ({ children }) => {
         return sendPasswordResetEmail(auth, email);
     };
 
+    const setEmail = (email) => {
+        return updateEmail(auth.currentUser, email)
+    }
+
+    const setPassword = (newPassword) => {
+        return updatePassword(auth.currentUser, newPassword)
+    }
+
     const setPhoto = async (photo) => {
         let photoURL = auth.currentUser.photoURL;
 
@@ -122,7 +132,10 @@ const AuthContextProvider = ({ children }) => {
         login,
         logout,
         signup,
+        reloadUser,
         resetPassword,
+        setEmail,
+        setPassword,
     };
 
     return (
