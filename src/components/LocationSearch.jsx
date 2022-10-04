@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
@@ -5,7 +6,7 @@ import useGetRestaurants from "../hooks/useGetRestaurants";
 
 const LocationSearch = ({ handleSetCityName, handleGetCityName }) => {
     const [searchedLocation, setSearchedLocation] = useState("")
-    const inputSuggestions = []
+    const [inputSuggestions, setInputSuggestions] = useState([])
     const [filteredSuggestions, setFilteredSuggestions] = useState([])
     const { data: restaurants } = useGetRestaurants()
     const [inputIsFocused, setInputIsFocused] = useState(false)
@@ -18,21 +19,26 @@ const LocationSearch = ({ handleSetCityName, handleGetCityName }) => {
         }, 100)
     }
 
-    if (restaurants) {
-        restaurants.forEach(restaurant => {
-            if (restaurant?.place) {
-                // Check if the location already exists in the list
-                const index = inputSuggestions.findIndex(item => restaurant.place === item.place)
-                // If not, add it to the array
-                if (index === -1) {
-                    inputSuggestions.push({
-                        place: restaurant.place,
-                        id: restaurant.id
-                    })
+    useEffect(() => {
+        if (restaurants) {
+            const suggestions = []
+            restaurants.forEach(restaurant => {
+                if (restaurant?.place) {
+                    // Check if the location already exists in the list
+                    const index = suggestions.findIndex(item => restaurant.place === item.place)
+                    // If not, add it to the array
+                    if (index === -1) {
+                        suggestions.push({
+                            place: restaurant.place,
+                            id: restaurant.id
+                        })
+                    }
                 }
-            }
-        });
-    }
+            });
+            suggestions.sort((a, b) => (a.place > b.place) ? 1 : -1)
+            setInputSuggestions(suggestions)
+        }
+    }, [restaurants])
 
     const onSearchFormSubmit = (e) => {
         e.preventDefault()
@@ -53,11 +59,9 @@ const LocationSearch = ({ handleSetCityName, handleGetCityName }) => {
                 suggestion.place.toLowerCase().startsWith(e.target.value.toLowerCase())
             ))
             : []
-        console.log(filtered)
-        setFilteredSuggestions(filtered)
-        // // Only show the 10 closest suggestions somehow
-        // const bestResults = filtered.slice(-10) 
-        // setFilteredSuggestions(bestResults)
+        // Only show the 10 closest suggestions somehow
+        const bestResults = filtered.slice(0, 9)
+        setFilteredSuggestions(bestResults)
     }
 
     return (
