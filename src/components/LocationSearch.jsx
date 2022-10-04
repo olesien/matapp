@@ -44,6 +44,9 @@ const LocationSearch = ({ handleSetCityName, handleGetCityName }) => {
         e.preventDefault()
         // Set the state to the value of the search input.
         // This causes a refetch of the restaurant list in HomePage.
+        if (!restaurants.find(restaurant => restaurant.place === searchedLocation)) {
+            return
+        }
         handleSetCityName(searchedLocation)
         setSearchedLocation("")
         setFilteredSuggestions([])
