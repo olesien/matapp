@@ -96,6 +96,8 @@
     border-top-right-radius: 0;
     list-style: none;
     z-index: 9999;
+    max-height: 200px;
+    overflow: scroll;
 
     li {
         margin: 2px 2px 2px 0;
