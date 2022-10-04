@@ -59,7 +59,7 @@ const LocationSearch = ({ handleSetCityName, handleGetCityName }) => {
                 suggestion.place.toLowerCase().startsWith(e.target.value.toLowerCase())
             ))
             : []
-        // Only show the 10 closest suggestions somehow
+        // Using slice on the array so that only the 10 closest results are shown
         const bestResults = filtered.slice(0, 9)
         setFilteredSuggestions(bestResults)
     }
