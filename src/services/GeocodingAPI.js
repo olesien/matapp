@@ -9,6 +9,10 @@ const get = async (params) => {
     return res.data;
 };
 
+const getCoordinates = (address) => {
+    return get(`address=${address}`)
+}
+
 const getGeocode = (data) => {
     const address = data.queryKey[1];
     return get(`address=${address}`);
@@ -28,6 +32,7 @@ const getCityName = (location) => {
 };
 
 const exports = {
+    getCoordinates,
     getGeocode,
     getReverseGeocode,
     getCityName,
