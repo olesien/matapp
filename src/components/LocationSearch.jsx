@@ -60,7 +60,7 @@ const LocationSearch = ({ handleSetCityName, handleGetCityName }) => {
             ))
             : []
         // Using slice on the array so that only the 10 closest results are shown
-        const bestResults = filtered.slice(0, 9)
+        const bestResults = filtered.slice(0, 10)
         setFilteredSuggestions(bestResults)
     }
 
