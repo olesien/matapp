@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useState } from "react";
+import Alert from "react-bootstrap/Alert";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import useGetRestaurants from "../hooks/useGetRestaurants";
@@ -7,6 +8,7 @@ import useGetRestaurants from "../hooks/useGetRestaurants";
 const LocationSearch = ({ handleSetCityName, handleGetCityName }) => {
     const [searchedLocation, setSearchedLocation] = useState("")
     const [inputSuggestions, setInputSuggestions] = useState([])
+    const [locationNotFound, setLocationNotFound] = useState(false)
     const [filteredSuggestions, setFilteredSuggestions] = useState([])
     const { data: restaurants } = useGetRestaurants()
     const [inputIsFocused, setInputIsFocused] = useState(false)
@@ -44,15 +46,20 @@ const LocationSearch = ({ handleSetCityName, handleGetCityName }) => {
         e.preventDefault()
         // Set the state to the value of the search input.
         // This causes a refetch of the restaurant list in HomePage.
-        if (!restaurants.find(restaurant => restaurant.place === searchedLocation)) {
+        if (!restaurants.find(restaurant => restaurant.place.toLowerCase() === searchedLocation.toLowerCase())) {
+            setLocationNotFound(true)
             return
         }
-        handleSetCityName(searchedLocation)
+        // Reformat the supplied text to that the firebase fetch doesn't fail
+        // City name should be saved capitalised in the database
+        const reformatedLocation = searchedLocation.charAt(0).toUpperCase() + searchedLocation.slice(1)
+        handleSetCityName(reformatedLocation)
         setSearchedLocation("")
         setFilteredSuggestions([])
     }
 
     const onInputChanged = (e) => {
+        setLocationNotFound(false)
         setSearchedLocation(e.target.value)
         // If the user has started typing, check if the any of the location
         // names starts with the input.
@@ -121,6 +128,9 @@ const LocationSearch = ({ handleSetCityName, handleGetCityName }) => {
             </Form >
             {/* reset the city name/location by recalculating the value using the user's coordinates */}
             <Button onClick={handleGetCityName}>Reset location</Button>
+            {locationNotFound && (
+                <Alert className="mt-2" variant="warning">No restaurants for that location was found in our database.</Alert>
+            )}
         </>
     )
 }
