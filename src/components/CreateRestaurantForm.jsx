@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { collection, addDoc, GeoPoint } from "firebase/firestore";
 import { db } from "../firebase";
 import { useAuthContext } from "../contexts/AuthContext";
+import GeocodingAPI from '../services/GeocodingAPI'
 
 const CreateRestaurantForm = () => {
     const {
@@ -14,8 +15,18 @@ const CreateRestaurantForm = () => {
     } = useForm();
     const { currentUser } = useAuthContext();
 
+    const handleGetCoordinates = async (address) => {
+        const data = await GeocodingAPI.getCoordinates(address);
+        if (data.status === 'OK') {
+            const lat = data.results[0].geometry.location.lat
+            const lng = data.results[0].geometry.location.lng
+            return new GeoPoint(lat, lng)
+        } else {
+            console.log("error")
+        }
+    };
+
     const onCreateRestaurant = async (data) => {
-        console.log(data.name.toLowerCase())
         // make firestore doc
         await addDoc(collection(db, "restaurants"), {
             /**
@@ -32,7 +43,7 @@ const CreateRestaurantForm = () => {
             email: data.email,
             facebook: `www.facebook.com/${data.facebook}`,
             instagram: `www.instagram.com/${data.instagram}`,
-            location: new GeoPoint(12, 34),
+            location: await handleGetCoordinates(`${data.street_number}%20${data.street_name}%20${data.postcode}%20${data.city}`),
             name: data.name,
             offer: data.offer,
             offers: "lunch",
@@ -40,7 +51,7 @@ const CreateRestaurantForm = () => {
             photoURL:
                 "https://firebasestorage.googleapis.com/v0/b/fed21-matguiden.appspot.com/o/restaurants%2F1663942025-london-stock.jpg?alt=media&token=bc832727-0b00-41a2-ac98-4425bbd87102",
             place: data.city,
-            position: new GeoPoint(12, 34),
+            position: await handleGetCoordinates(`${data.street_number}%20${data.street_name}%20${data.postcode}%20${data.city}`),
             postcode: data.postcode,
             type_of_establishment: "restaurant",
             url: "https://firebasestorage.googleapis.com/v0/b/fed21-matguiden.appspot.com/o/restaurants%2F1663942025-london-stock.jpg?alt=media&token=bc832727-0b00-41a2-ac98-4425bbd87102",
@@ -322,7 +333,7 @@ const CreateRestaurantForm = () => {
                 )}
             </Form.Group>
 
-            {/* <Form.Group className="mb-3" controlId="photoURL">
+            <Form.Group className="mb-3" controlId="photoURL">
                 <Form.Label>Image</Form.Label>
                 <Form.Control as="input"
                     {...register("photoURL")}
@@ -333,7 +344,7 @@ const CreateRestaurantForm = () => {
                         {errors.photoURL.message}
                     </Form.Text>
                 )}
-            </Form.Group> */}
+            </Form.Group>
 
             <Button variant="success" type="submit">
                 Submit
