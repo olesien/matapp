@@ -1,6 +1,8 @@
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import { useSearchParams } from "react-router-dom";
+import { useState, useEffect } from "react";
+import getDistance from "geolib/es/getDistance";
 
 import GeocodingAPI from "../services/GeocodingAPI.js";
 
@@ -22,7 +24,24 @@ export default function RestaurantCard({
     handleSetSearchParams,
 }) {
     const [searchParams, setSearchParams] = useSearchParams();
-
+    const [distance, setDistance] = useState(restaurant?.distance);
+    useEffect(() => {
+        if (userLocation && restaurant && !distance) {
+            console.log("Getting distance.......");
+            setDistance(
+                getDistance(
+                    {
+                        latitude: restaurant.position._lat,
+                        longitude: restaurant.position._long,
+                    },
+                    {
+                        latitude: userLocation.lat,
+                        longitude: userLocation.lng,
+                    }
+                )
+            );
+        }
+    }, [fromMap, restaurant, userLocation]);
     //console.log(resturant);
     if (!restaurant) {
         return <div></div>;
@@ -76,7 +95,7 @@ export default function RestaurantCard({
     return (
         <Card data-testid="card" style={{ width: "18rem", margin: "1rem" }}>
             <Card.Header>
-                Distance: {convertUnits(restaurant.distance)}
+                Distance: {distance ? convertUnits(distance) : "Loading.."}
             </Card.Header>
             <Card.Img variant="top" src={restaurant.url} />
             <Card.Body>
