@@ -15,6 +15,7 @@ import useGetRestaurants from "../hooks/useGetRestaurants";
 import MyLocation from "./MyLocation";
 import { useQuery } from "react-query";
 import GeocodingAPI from "../services/GeocodingAPI";
+import { useSearchParams } from "react-router-dom";
 
 const libraries = ["places"];
 
@@ -72,6 +73,8 @@ const Map = ({ restaurants, userLocation, handleSetMapReference }) => {
         googleMapsApiKey: import.meta.env.VITE_MAPS_KEY,
         libraries,
     });
+    const [searchParams, setSearchParams] = useSearchParams();
+
 
     const [currentLocation, setCurrentLocation] = useState(userLocation);
     //const [center, setCenter] = useState(userLocation);

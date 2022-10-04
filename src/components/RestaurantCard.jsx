@@ -18,7 +18,7 @@ export default function RestaurantCard({
     restaurant,
     fromMap = false,
     userLocation,
-    mapReference,
+    // mapReference,
     handleSetSearchParams,
 }) {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -41,10 +41,10 @@ export default function RestaurantCard({
         //Set new tab and map ID
         handleSetSearchParams({ tab: "map", id: restaurant.id });
         console.log(restaurant);
-        mapReference.panTo({
-            lat: restaurant.position.latitude,
-            lng: restaurant.position.longitude,
-        });
+        // mapReference.panTo({
+        //     lat: restaurant.position.latitude,
+        //     lng: restaurant.position.longitude,
+        // });
     };
     const getDirections = async () => {
         console.log("directions");

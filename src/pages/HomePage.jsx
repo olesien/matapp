@@ -128,6 +128,21 @@ const HomePage = () => {
         }
     }, []);
 
+    const restaurantIdUrlParam = searchParams.get("id")
+
+    useEffect(() => {
+        if (restaurantIdUrlParam) {
+            const restaurant = restaurants.find(restaurant => restaurant.id === restaurantIdUrlParam)
+            
+            if (restaurant) {
+                mapReference.panTo({
+                    lat: restaurant.position.latitude,
+                    lng: restaurant.position.longitude,
+                })
+            }
+        }
+    }, [restaurantIdUrlParam])
+
     return (
         <>
             <Container className="py-3">
@@ -205,7 +220,7 @@ const HomePage = () => {
                             sortByName={sortBy}
                             cityName={cityName}
                             listingAll={filterOptions.listAll}
-                            mapReference={mapReference}
+                            // mapReference={mapReference}
                             handleSetSearchParams={handleSetSearchParams}
                         />
                     </Tab>
