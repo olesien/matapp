@@ -5,6 +5,8 @@ import {
     signInWithEmailAndPassword,
     signOut,
     sendPasswordResetEmail,
+    updateEmail,
+    updatePassword,
     updateProfile,
 } from "firebase/auth";
 import { auth, db, storage } from "../firebase";
@@ -20,13 +22,15 @@ const useAuthContext = () => {
 
 const AuthContextProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState(null);
+    const [userEmail, setUserEmail] = useState(null)
+    const [userPhotoURL, setUserPhotoURL] = useState(null)
     const [initialLoading, setInitialLoading] = useState(true);
 
     const changeCurrentUser = async (user) => {
         let data = {};
         if (user) {
             //Get related docs
-            console.log(user);
+            // console.log(user);
             const ref = doc(db, "users", user.uid);
             const snapshot = await getDoc(ref);
 
@@ -62,7 +66,9 @@ const AuthContextProvider = ({ children }) => {
 
     const reloadUser = async () => {
         await auth.currentUser.reload();
-
+        setCurrentUser(auth.currentUser)
+        setUserEmail(auth.currentUser.email)
+        setUserPhotoURL(auth.currentUser.photoURL)
         changeCurrentUser(auth.currentUser);
         return true;
     };
@@ -79,7 +85,18 @@ const AuthContextProvider = ({ children }) => {
         return sendPasswordResetEmail(auth, email);
     };
 
+    const setEmail = (email) => {
+        return updateEmail(auth.currentUser, email)
+    }
+
+    const setPassword = (newPassword) => {
+        return updatePassword(auth.currentUser, newPassword)
+    }
+
     const setPhoto = async (photo) => {
+        /**
+         * @todo Om tid finns, se till så att den gamla profilbilden skrivs över i databasen när en ny profilbild laddas upp
+         */
         let photoURL = auth.currentUser.photoURL;
 
         if (photo) {
@@ -94,11 +111,6 @@ const AuthContextProvider = ({ children }) => {
 
             // get download url to uploaded file
             photoURL = await getDownloadURL(uploadResult.ref);
-
-            console.log(
-                "Photo uploaded successfully, download url is:",
-                photoURL
-            );
         }
 
         return updateProfile(auth.currentUser, {
@@ -109,7 +121,14 @@ const AuthContextProvider = ({ children }) => {
     useEffect(() => {
         // listen for changes in auth-state
         const unsubscribe = onAuthStateChanged(auth, (user) => {
+
+            setCurrentUser(user)
+            setUserEmail(user?.email)
+            setUserPhotoURL(user?.photoURL)
+
             changeCurrentUser(user);
+
+            setInitialLoading(false)
         });
 
         return unsubscribe;
@@ -122,7 +141,13 @@ const AuthContextProvider = ({ children }) => {
         login,
         logout,
         signup,
+        reloadUser,
         resetPassword,
+        setEmail,
+        setPassword,
+        setPhoto,
+        userEmail,
+        userPhotoURL,
     };
 
     return (

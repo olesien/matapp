@@ -3,7 +3,7 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import useGetRestaurants from "../hooks/useGetRestaurants";
 
-const LocationSearch = ({ handleSetCityName }) => {
+const LocationSearch = ({ handleSetCityName, handleGetCityName }) => {
     const [searchedLocation, setSearchedLocation] = useState("")
     const inputSuggestions = []
     const [filteredSuggestions, setFilteredSuggestions] = useState([])
@@ -12,6 +12,8 @@ const LocationSearch = ({ handleSetCityName }) => {
     const onInputFocus = () => setInputIsFocused(true)
     const onInputBlur = () => {
         setTimeout(() => {
+            // Add a delay so that the list doesn't dissapear 
+            // when you try to click on a suggestion.
             setInputIsFocused(false)
         }, 100)
     }
@@ -110,7 +112,8 @@ const LocationSearch = ({ handleSetCityName }) => {
                 </div>
                 <Button className='ms-2' type='search'>Search</Button>
             </Form >
-
+            {/* reset the city name/location by recalculating the value using the user's coordinates */}
+            <Button onClick={handleGetCityName}>Reset location</Button>
         </>
     )
 }

@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import {
     Container,
     Row,
@@ -11,8 +11,8 @@ import {
 } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuthContext } from "../contexts/AuthContext";
-// import logo from '../assets/images/logo.png'
 import { useForm } from 'react-hook-form';
+import { toast } from "react-toastify";
 
 const SignupPage = () => {
     const {
@@ -22,9 +22,10 @@ const SignupPage = () => {
         watch
     } = useForm();
     const [loading, setLoading] = useState(false);
-    const { signup } = useAuthContext();
+    const { signup, reloadUser } = useAuthContext();
     const navigate = useNavigate();
     const [image, setImage] = useState(false);
+
     const handleFileChange = (img) => {
         if (!img.target.files.length) {
             setImage('https://via.placeholder.com/225');
@@ -32,7 +33,6 @@ const SignupPage = () => {
         }
 
         setImage(img.target.files[0]);
-        console.log("File changed!", img.target.files[0]);
     };
 
     const onHandleSubmit = async (data) => {
@@ -46,6 +46,10 @@ const SignupPage = () => {
                 data.password,
                 image
             );
+
+            toast.success("Sign up successful!");
+
+            await reloadUser()
 
             navigate("/");
         } catch (err) {
@@ -83,9 +87,10 @@ const SignupPage = () => {
                                     )}
                                 </Form.Group>
 
-                                <Form.Group id="image" className="mb-3">
-                                    <Form.Label>Profile Image</Form.Label>
+                                <Form.Group className="mb-3" controlId="image" >
+                                    <Form.Label>Profile Picture</Form.Label>
                                     <Form.Control
+                                        {...register("image")}
                                         type="file"
                                         onChange={handleFileChange}
                                     />

@@ -2,16 +2,22 @@ import React, { useRef, useState } from 'react'
 import { Container, Row, Col, Form, Button, Card, Alert } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { useAuthContext } from '../contexts/AuthContext'
+import { useForm } from 'react-hook-form';
 
 const ForgotPasswordPage = () => {
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+		reset,
+	} = useForm();
 	const emailRef = useRef()
 	const [error, setError] = useState(null)
 	const [loading, setLoading] = useState(false)
 	const [message, setMessage] = useState(false)
 	const { resetPassword } = useAuthContext()
 
-	const handleSubmit = async (e) => {
-		e.preventDefault()
+	const onHandleSubmit = async (data) => {
 		setError(null)
 		setMessage(null)
 
@@ -20,10 +26,12 @@ const ForgotPasswordPage = () => {
 			setLoading(true)
 
 			// send email
-			await resetPassword(emailRef.current.value)
+			await resetPassword(data.email)
 
 			// show success message
 			setMessage("Please check your spam folder.")
+
+			reset()
 
 		} catch (err) {
 			setError(err.message)
@@ -47,11 +55,25 @@ const ForgotPasswordPage = () => {
 
 							<p>Enter your email address to receive a password reset link.</p>
 
-							<Form onSubmit={handleSubmit}>
+							<Form onSubmit={handleSubmit(onHandleSubmit)} noValidate>
 
-								<Form.Group id="email" className="mb-3">
+								<Form.Group controlId="email" className="mb-3">
 									<Form.Label>Email</Form.Label>
-									<Form.Control type="email" ref={emailRef} required />
+									<Form.Control
+										{...register("email", {
+											required: "Provide an email",
+											pattern: {
+												value: /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6})*$/gm,
+												message: "Invalid email",
+											},
+										})}
+										type="email"
+									/>
+									{errors.email && (
+										<Form.Text className="text-danger">
+											{errors.email.message}
+										</Form.Text>
+									)}
 								</Form.Group>
 
 								<Button disabled={loading} type="submit">Get link</Button>

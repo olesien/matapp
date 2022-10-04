@@ -9,6 +9,8 @@ const RestaurantList = ({
     sortByName,
     cityName,
     listingAll,
+    mapReference,
+    handleSetSearchParams,
 }) => {
     const [sortedRestaurants, setSortedRestaurants] = useState(null);
     const userLocationConverted = {
@@ -55,6 +57,8 @@ const RestaurantList = ({
                             key={restaurant.id}
                             restaurant={restaurant}
                             userLocation={userLocation}
+                            mapReference={mapReference}
+                            handleSetSearchParams={handleSetSearchParams}
                         />
                     ))}
                 {sortedRestaurants && sortedRestaurants.length === 0 && (

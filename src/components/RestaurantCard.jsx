@@ -18,6 +18,8 @@ export default function RestaurantCard({
     restaurant,
     fromMap = false,
     userLocation,
+    mapReference,
+    handleSetSearchParams,
 }) {
     const [searchParams, setSearchParams] = useSearchParams();
 
@@ -37,7 +39,12 @@ export default function RestaurantCard({
 
     const viewOnMap = () => {
         //Set new tab and map ID
-        setSearchParams({ tab: "map", id: restaurant.id });
+        handleSetSearchParams({ tab: "map", id: restaurant.id });
+        console.log(restaurant);
+        mapReference.panTo({
+            lat: restaurant.position.latitude,
+            lng: restaurant.position.longitude,
+        });
     };
     const getDirections = async () => {
         console.log("directions");

@@ -51,7 +51,7 @@ const defaultZoom = 10;
 //const userLocation = { lat: 33.872, lng: -117.214 };
 //const userLocation = { lat: 55.872, lng: -13.214 };
 
-const Map = ({ restaurants, userLocation }) => {
+const Map = ({ restaurants, userLocation, handleSetMapReference }) => {
     // const location = useQuery(
     //     ["location", 40.714224, -73.961452],
     //     GeocodingAPI.getReverseGeocode
@@ -109,6 +109,7 @@ const Map = ({ restaurants, userLocation }) => {
         // const bounds = new window.google.maps.LatLngBounds(center);
         // map.fitBounds(bounds);
         map.setZoom(defaultZoom);
+        handleSetMapReference(map)
         setMap(map);
     }, []);
 
