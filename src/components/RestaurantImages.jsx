@@ -11,8 +11,8 @@ export default function RestaurantImages({ id }) {
         <div className=" d-block w-100">
             User submitted images
             <Carousel slide={false}>
-                {images.map((image) => (
-                    <Carousel.Item>
+                {images.map((image, key) => (
+                    <Carousel.Item key={key}>
                         <img
                             className="d-block"
                             style={{ width: "100%", height: 250 }}
