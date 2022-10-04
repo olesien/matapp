@@ -48,6 +48,8 @@ const LocationSearch = ({ handleSetCityName, handleGetCityName }) => {
         // Set the state to the value of the search input.
         // This causes a refetch of the restaurant list in HomePage.
         if (!restaurants.find(restaurant => restaurant.place.toLowerCase() === searchedLocation.toLowerCase())) {
+            setSearchedLocation("")
+            setFilteredSuggestions([])
             setLocationNotFound(true)
             return
         }
