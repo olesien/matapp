@@ -165,6 +165,7 @@ const Map = ({ restaurants, userLocation }) => {
             <RestaurantCard
                 restaurant={restaurant}
                 fromMap={true}
+                userLocation={userLocation}
             ></RestaurantCard>
             <GoogleMap
                 mapContainerStyle={containerStyle}

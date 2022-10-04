@@ -14,10 +14,12 @@ const getGeocode = (data) => {
     return get(`address=${address}`);
 };
 
-const getReverseGeocode = (data) => {
-    const lat = data.queryKey[1];
-    const lng = data.queryKey[2];
+const getReverseGeocode = (lat, lng) => {
     return get(`latlng=${lat},${lng}`);
+};
+
+const getReverseGeocodeAsync = async (lat, lng) => {
+    return await get(`latlng=${lat},${lng}`);
 };
 
 // get the city/town (or similar) based on the user's current position
@@ -25,6 +27,11 @@ const getCityName = (location) => {
     return get(`latlng=${location.lat},${location.lng}&result_type=locality`);
 };
 
-const exports = { getGeocode, getReverseGeocode, getCityName };
+const exports = {
+    getGeocode,
+    getReverseGeocode,
+    getCityName,
+    getReverseGeocodeAsync,
+};
 
 export default exports;

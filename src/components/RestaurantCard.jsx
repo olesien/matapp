@@ -2,8 +2,7 @@ import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import { useSearchParams } from "react-router-dom";
 
-import { useQuery } from "react-query";
-import GeocodingAPI from "../services/GeocodingAPI";
+import GeocodingAPI from "../services/GeocodingAPI.js";
 
 const convertUnits = (distance) => {
     if (distance >= 1000) {
@@ -15,7 +14,11 @@ const convertUnits = (distance) => {
     }
 };
 
-export default function RestaurantCard({ restaurant, fromMap = false }) {
+export default function RestaurantCard({
+    restaurant,
+    fromMap = false,
+    userLocation,
+}) {
     const [searchParams, setSearchParams] = useSearchParams();
 
     //console.log(resturant);
@@ -36,8 +39,21 @@ export default function RestaurantCard({ restaurant, fromMap = false }) {
         //Set new tab and map ID
         setSearchParams({ tab: "map", id: restaurant.id });
     };
-    const getDirections = () => {
+    const getDirections = async () => {
         console.log("directions");
+
+        let fromPlace = "Malmö";
+        const { lat, lng } = userLocation;
+        const geocode = await GeocodingAPI.getReverseGeocodeAsync(lat, lng);
+        console.log(geocode);
+        if (geocode && "results" in geocode && geocode.results.length > 0) {
+            fromPlace = geocode.results[0];
+        }
+        const toPlace = (restaurant.address + ",+" + restaurant.city).replace(
+            " ",
+            "+"
+        );
+        window.location.href = `https://www.google.com/maps/dir/${fromPlace}/${toPlace}/`;
     };
 
     const view = async () => {

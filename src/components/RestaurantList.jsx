@@ -8,7 +8,7 @@ const RestaurantList = ({
     userLocation,
     sortByName,
     cityName,
-    listingAll
+    listingAll,
 }) => {
     const [sortedRestaurants, setSortedRestaurants] = useState(null);
     const userLocationConverted = {
@@ -37,12 +37,16 @@ const RestaurantList = ({
             );
         }
         // set the newly created array of restaurants to state
-        setSortedRestaurants(restaurantsWithDistance)
+        setSortedRestaurants(restaurantsWithDistance);
     }, [restaurants, sortByName]);
 
     return (
         <div>
-            <h3 className="my-4">{listingAll ? "Showing all restaurants" : `Showing results for: ${cityName}`}</h3>
+            <h3 className="my-4">
+                {listingAll
+                    ? "Showing all restaurants"
+                    : `Showing results for: ${cityName}`}
+            </h3>
             <div className="list">
                 {sortedRestaurants &&
                     sortedRestaurants.length > 0 &&
@@ -50,13 +54,12 @@ const RestaurantList = ({
                         <RestaurantCard
                             key={restaurant.id}
                             restaurant={restaurant}
+                            userLocation={userLocation}
                         />
-                    ))
-                }
+                    ))}
                 {sortedRestaurants && sortedRestaurants.length === 0 && (
                     <p>No results were found</p>
                 )}
-
             </div>
         </div>
     );
