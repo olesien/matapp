@@ -15,11 +15,17 @@ import LocationSearch from "../components/LocationSearch";
 import RestaurantOverlay from "../components/RestaurantOverlay";
 
 const HomePage = () => {
+    const [searchParams, setSearchParams] = useSearchParams();
+
     const [userLocation, setUserLocation] = useState({
         lat: 33.872,
         lng: -117.214,
     });
     const [cityName, setCityName] = useState(null)
+    const [initialCityName, setInitialCityName] = useState(searchParams.get("city")
+        ? searchParams.get('city')
+        : null
+    )
     // console.log(cityName)
     const [mapReference, setMapReference] = useState(null)
 
@@ -41,10 +47,10 @@ const HomePage = () => {
 
     useEffect(() => {
         console.log("Recalculating city name from userLocation");
-        handleGetCityName();
+        if (initialCityName === null) {
+            handleGetCityName();
+        }
     }, [userLocation]);
-
-    const [searchParams, setSearchParams] = useSearchParams();
 
     let tab = searchParams.get("tab");
     if (!tab) {
