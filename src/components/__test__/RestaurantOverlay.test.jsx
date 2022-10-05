@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { MemoryRouter } from "react-router-dom";
 import RestaurantOverlay from "../RestaurantOverlay";
 
 const mockData = {
@@ -38,50 +39,11 @@ const mockData = {
 
 test("that modal is shown", () => {
     render(
-        <RestaurantOverlay restaurant={mockData} handleClose={() => null} />
-    );
-
-    const modalTitle = screen.getByText("Restaurant");
-    expect(modalTitle).toBeInTheDocument();
-});
-
-test("that restaurant name exists", () => {
-    render(
-        <RestaurantOverlay restaurant={mockData} handleClose={() => null} />
+        <MemoryRouter>
+            <RestaurantOverlay customRestaurant={mockData} />
+        </MemoryRouter>
     );
     const modalName = screen.getByText("testing title");
 
     expect(modalName).toBeInTheDocument();
-});
-
-test("that restaurant name changes to form when clicked", async () => {
-    render(
-        <RestaurantOverlay restaurant={mockData} handleClose={() => null} />
-    );
-    const modalName = screen.getByText("testing title");
-
-    await userEvent.click(modalName);
-
-    const modalInput = screen.getByDisplayValue("testing title");
-    expect(modalInput).toBeInTheDocument();
-});
-
-test("that restaurant namee changes when it's edited", async () => {
-    render(
-        <RestaurantOverlay restaurant={mockData} handleClose={() => null} />
-    );
-    const modalName = screen.getByText("testing title");
-
-    await userEvent.click(modalName);
-
-    const modalInput = screen.getByDisplayValue("testing title");
-    await userEvent.clear(modalInput);
-    await userEvent.type(modalInput, "A new title!");
-
-    const eyeIcon = screen.getByTestId("close-name");
-    console.log(eyeIcon);
-    await userEvent.click(eyeIcon);
-
-    const newModalName = screen.getByText("A new title!");
-    expect(newModalName).toBeInTheDocument();
 });
