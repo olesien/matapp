@@ -15,7 +15,7 @@ export default function SubmitRestaurantImage({ id }) {
         register,
         handleSubmit,
         formState: { errors },
-        watch,
+        reset,
     } = useForm();
     const handleFileChange = (img) => {
         if (!img.target.files.length) {
@@ -60,6 +60,7 @@ export default function SubmitRestaurantImage({ id }) {
 
             toast.success("Image sent for admin approval");
             setLoading(false);
+            reset()
         } catch (err) {
             setLoading(false);
             console.log(err);
