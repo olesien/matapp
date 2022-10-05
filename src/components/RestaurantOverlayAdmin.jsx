@@ -11,6 +11,7 @@ import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
 
 export default function RestaurantOverlayAdmin({ restaurant, handleClose }) {
     console.log(restaurant);
+    //To please the tests
     const { currentUser } = useAuthContext();
     const [name, setName] = useState(restaurant?.name);
     const [url, setUrl] = useState(restaurant?.photoURL);

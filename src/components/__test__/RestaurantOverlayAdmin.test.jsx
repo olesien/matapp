@@ -2,6 +2,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import RestaurantOverlayAdmin from "../RestaurantOverlayAdmin";
+import AuthContextProvider from "../../contexts/AuthContext";
 
 const mockData = {
     id: "18k9hCsfCZNKB2sKY8bD",
@@ -37,38 +38,44 @@ const mockData = {
     title: "testing title",
 };
 
-test("that modal is shown", () => {
+test("that modal is shown", async () => {
     render(
-        <RestaurantOverlayAdmin
-            restaurant={mockData}
-            handleClose={() => null}
-        />
+        <AuthContextProvider>
+            <RestaurantOverlayAdmin
+                restaurant={mockData}
+                handleClose={() => null}
+            />
+        </AuthContextProvider>
     );
 
-    const modalTitle = screen.getByText("Restaurant");
+    const modalTitle = await screen.findByText("Restaurant");
     expect(modalTitle).toBeInTheDocument();
 });
 
-test("that restaurant name exists", () => {
+test("that restaurant name exists", async () => {
     render(
-        <RestaurantOverlayAdmin
-            restaurant={mockData}
-            handleClose={() => null}
-        />
+        <AuthContextProvider>
+            <RestaurantOverlayAdmin
+                restaurant={mockData}
+                handleClose={() => null}
+            />
+        </AuthContextProvider>
     );
-    const modalName = screen.getByText("testing title");
+    const modalName = await screen.findByText("testing title");
 
     expect(modalName).toBeInTheDocument();
 });
 
 test("that restaurant name changes to form when clicked", async () => {
     render(
-        <RestaurantOverlayAdmin
-            restaurant={mockData}
-            handleClose={() => null}
-        />
+        <AuthContextProvider>
+            <RestaurantOverlayAdmin
+                restaurant={mockData}
+                handleClose={() => null}
+            />
+        </AuthContextProvider>
     );
-    const modalName = screen.getByText("testing title");
+    const modalName = await screen.findByText("testing title");
 
     await userEvent.click(modalName);
 
@@ -78,12 +85,14 @@ test("that restaurant name changes to form when clicked", async () => {
 
 test("that restaurant namee changes when it's edited", async () => {
     render(
-        <RestaurantOverlayAdmin
-            restaurant={mockData}
-            handleClose={() => null}
-        />
+        <AuthContextProvider>
+            <RestaurantOverlayAdmin
+                restaurant={mockData}
+                handleClose={() => null}
+            />
+        </AuthContextProvider>
     );
-    const modalName = screen.getByText("testing title");
+    const modalName = await screen.findByText("testing title");
 
     await userEvent.click(modalName);
 

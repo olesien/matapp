@@ -16,6 +16,7 @@ export default function RestaurantOverlay({ customRestaurant = null }) {
     const { data, loading } = useGetRestaurant(restaurantId);
     const [newImage, setNewImage] = useState(false);
     let restaurant = data;
+    //for testing
     const { currentUser } = useAuthContext();
     console.log(restaurant);
     if (customRestaurant) {

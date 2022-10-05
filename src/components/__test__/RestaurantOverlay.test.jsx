@@ -2,6 +2,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import RestaurantOverlay from "../RestaurantOverlay";
+import AuthContextProvider from "../../contexts/AuthContext";
 
 const mockData = {
     id: "18k9hCsfCZNKB2sKY8bD",
@@ -35,15 +36,18 @@ const mockData = {
         longitude: 34,
     },
     title: "testing title",
+    currentUser: null,
 };
 
-test("that modal is shown", () => {
+test("that modal is shown", async () => {
     render(
         <MemoryRouter>
-            <RestaurantOverlay customRestaurant={mockData} />
+            <AuthContextProvider>
+                <RestaurantOverlay customRestaurant={mockData} />
+            </AuthContextProvider>
         </MemoryRouter>
     );
-    const modalName = screen.getByText("testing title");
+    const modalName = await screen.findByText("testing title");
 
     expect(modalName).toBeInTheDocument();
 });
