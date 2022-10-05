@@ -25,13 +25,19 @@ export default function RestaurantOverlay({ customRestaurant = null }) {
 
     const handleClose = () => {
         //Handle close
-        let values = {};
+        // let values = {};
+        const oldParams = {};
         //Get all previous params
-        for (let entry of searchParams.entries()) {
-            if (!entry[0] === "viewRestaurant") values[entry[0]] = entry[1];
-        }
-        console.log(values);
-        setSearchParams({ ...values });
+        // for (let entry of searchParams.entries()) {
+        //     if (!entry[0] === "viewRestaurant") values[entry[0]] = entry[1];
+        // }
+        searchParams.forEach((value, key) => {
+            if (key !== "viewRestaurant") {
+                oldParams[key] = value;
+            }
+        });
+        console.log("Closing values", oldParams);
+        setSearchParams({ ...oldParams });
     };
     if (!restaurantId && !customRestaurant) return <></>;
 
