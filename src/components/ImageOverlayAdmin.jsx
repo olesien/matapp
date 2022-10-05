@@ -7,6 +7,7 @@ import InputField from "./InputField";
 import { doc, updateDoc } from "firebase/firestore";
 import { db, storage } from "../firebase";
 import { toast } from "react-toastify";
+import useGetRestaurant from "../hooks/useGetRestaurant";
 
 export default function ImageOverlayAdmin({ image, handleClose }) {
     const [title, setTitle] = useState(image?.title);
@@ -17,6 +18,10 @@ export default function ImageOverlayAdmin({ image, handleClose }) {
         setTitle(image?.title);
         setUrl(image?.imageurl);
     }, [image]);
+
+    const { data: restaurant, loading: restaurantLoading } = useGetRestaurant(
+        image?.restaurantid
+    );
 
     const [err, setErr] = useState(null);
 
@@ -59,7 +64,11 @@ export default function ImageOverlayAdmin({ image, handleClose }) {
     return (
         <Modal show={image} onHide={handleClose} dialogClassName="modal-size">
             <Modal.Header closeButton>
-                <Modal.Title>Image</Modal.Title>
+                <Modal.Title>
+                    {restaurant
+                        ? "Image for restaurant " + restaurant.name
+                        : "Loading..."}
+                </Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 {err ? <p>{err}</p> : <></>}
