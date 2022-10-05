@@ -7,13 +7,16 @@ import { useSearchParams } from "react-router-dom";
 import useGetRestaurant from "../hooks/useGetRestaurant";
 import SubmitRestaurantImage from "./SubmitRestaurantImage";
 
-export default function RestaurantOverlay() {
+export default function RestaurantOverlay({ customRestaurant = null }) {
     const [searchParams, setSearchParams] = useSearchParams();
 
     const restaurantId = searchParams.get("viewRestaurant");
-    const { data: restaurant, loading } = useGetRestaurant(restaurantId);
+    const { data, loading } = useGetRestaurant(restaurantId);
     const [newImage, setNewImage] = useState(false);
-
+    let restaurant = data;
+    if (customRestaurant) {
+        restaurant = customRestaurant;
+    }
     console.log(restaurant);
 
     const handleClose = () => {
@@ -26,7 +29,7 @@ export default function RestaurantOverlay() {
         console.log(values);
         setSearchParams({ ...values });
     };
-    if (!restaurantId) return <></>;
+    if (!restaurant) return <></>;
 
     return (
         <Modal
