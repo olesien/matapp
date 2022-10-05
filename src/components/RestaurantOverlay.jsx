@@ -31,12 +31,14 @@ export default function RestaurantOverlay({ customRestaurant = null }) {
         // for (let entry of searchParams.entries()) {
         //     if (!entry[0] === "viewRestaurant") values[entry[0]] = entry[1];
         // }
+        // Getting all params in the url except viewRestaurant.
+        // This causes the overlay to disappear when the params are set.
         searchParams.forEach((value, key) => {
             if (key !== "viewRestaurant") {
                 oldParams[key] = value;
             }
         });
-        console.log("Closing values", oldParams);
+        // console.log("Values when closing overlay", oldParams);
         setSearchParams({ ...oldParams });
     };
     if (!restaurantId && !customRestaurant) return <></>;
