@@ -74,6 +74,7 @@ const AuthContextProvider = ({ children }) => {
     };
 
     const login = (email, password) => {
+        console.log(email, password);
         return signInWithEmailAndPassword(auth, email, password);
     };
 
