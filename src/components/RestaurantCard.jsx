@@ -22,6 +22,7 @@ export default function RestaurantCard({
     userLocation,
     // mapReference,
     handleSetSearchParams,
+    onClose,
 }) {
     const [searchParams, setSearchParams] = useSearchParams();
     const [distance, setDistance] = useState(restaurant?.distance);
@@ -139,6 +140,13 @@ export default function RestaurantCard({
                     </Button>
                 </footer>
             </Card.Body>
+            <Card.Footer>
+                {fromMap && (
+                    <Button variant="primary" onClick={onClose}>
+                        Close
+                    </Button>
+                )}
+            </Card.Footer>
         </Card>
     );
 }

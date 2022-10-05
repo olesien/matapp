@@ -75,7 +75,6 @@ const Map = ({ restaurants, userLocation, handleSetMapReference }) => {
     });
     const [searchParams, setSearchParams] = useSearchParams();
 
-
     const [currentLocation, setCurrentLocation] = useState(userLocation);
     //const [center, setCenter] = useState(userLocation);
     // const restaurants = useGetRestaurants();
@@ -112,7 +111,7 @@ const Map = ({ restaurants, userLocation, handleSetMapReference }) => {
         // const bounds = new window.google.maps.LatLngBounds(center);
         // map.fitBounds(bounds);
         map.setZoom(defaultZoom);
-        handleSetMapReference(map)
+        handleSetMapReference(map);
         setMap(map);
     }, []);
 
@@ -127,6 +126,10 @@ const Map = ({ restaurants, userLocation, handleSetMapReference }) => {
     // Gain access to the searchBox property from Search Box component
     const [searchBox, setSearchBox] = useState(null);
     const onSearchBoxLoad = (ref) => setSearchBox(ref);
+
+    const onClose = () => {
+        setRestaurant(null);
+    };
 
     // Pan the map to the new location after search
     const onPlaceChanged = async () => {
@@ -170,6 +173,7 @@ const Map = ({ restaurants, userLocation, handleSetMapReference }) => {
                 restaurant={restaurant}
                 fromMap={true}
                 userLocation={userLocation}
+                onClose={onClose}
             ></RestaurantCard>
             <GoogleMap
                 mapContainerStyle={containerStyle}
