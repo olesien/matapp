@@ -22,8 +22,8 @@ const useAuthContext = () => {
 
 const AuthContextProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState(null);
-    const [userEmail, setUserEmail] = useState(null)
-    const [userPhotoURL, setUserPhotoURL] = useState(null)
+    const [userEmail, setUserEmail] = useState(null);
+    const [userPhotoURL, setUserPhotoURL] = useState(null);
     const [initialLoading, setInitialLoading] = useState(true);
 
     const changeCurrentUser = async (user) => {
@@ -66,9 +66,9 @@ const AuthContextProvider = ({ children }) => {
 
     const reloadUser = async () => {
         await auth.currentUser.reload();
-        setCurrentUser(auth.currentUser)
-        setUserEmail(auth.currentUser.email)
-        setUserPhotoURL(auth.currentUser.photoURL)
+        setCurrentUser(auth.currentUser);
+        setUserEmail(auth.currentUser.email);
+        setUserPhotoURL(auth.currentUser.photoURL);
         changeCurrentUser(auth.currentUser);
         return true;
     };
@@ -86,12 +86,12 @@ const AuthContextProvider = ({ children }) => {
     };
 
     const setEmail = (email) => {
-        return updateEmail(auth.currentUser, email)
-    }
+        return updateEmail(auth.currentUser, email);
+    };
 
     const setPassword = (newPassword) => {
-        return updatePassword(auth.currentUser, newPassword)
-    }
+        return updatePassword(auth.currentUser, newPassword);
+    };
 
     const setPhoto = async (photo) => {
         /**
@@ -121,14 +121,11 @@ const AuthContextProvider = ({ children }) => {
     useEffect(() => {
         // listen for changes in auth-state
         const unsubscribe = onAuthStateChanged(auth, (user) => {
-
-            setCurrentUser(user)
-            setUserEmail(user?.email)
-            setUserPhotoURL(user?.photoURL)
+            setCurrentUser(user);
+            setUserEmail(user?.email);
+            setUserPhotoURL(user?.photoURL);
 
             changeCurrentUser(user);
-
-            setInitialLoading(false)
         });
 
         return unsubscribe;

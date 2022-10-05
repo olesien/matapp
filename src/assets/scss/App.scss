@@ -108,6 +108,10 @@
     }
 }
 
+.table > :not(caption) > * > * {
+    padding: 0.4rem 0.25rem;
+}
+
 @media (min-width: 1000px) {
     .modal-size {
         width: 80%;
@@ -124,5 +128,9 @@
 
     .flex {
         flex-direction: row;
+    }
+
+    .table > :not(caption) > * > * {
+        padding: 0.5rem 0.5rem;
     }
 }
