@@ -7,6 +7,8 @@ import { useSearchParams } from "react-router-dom";
 import useGetRestaurant from "../hooks/useGetRestaurant";
 import SubmitRestaurantImage from "./SubmitRestaurantImage";
 
+import { useAuthContext } from "../contexts/AuthContext";
+
 export default function RestaurantOverlay({ customRestaurant = null }) {
     const [searchParams, setSearchParams] = useSearchParams();
 
@@ -14,6 +16,7 @@ export default function RestaurantOverlay({ customRestaurant = null }) {
     const { data, loading } = useGetRestaurant(restaurantId);
     const [newImage, setNewImage] = useState(false);
     let restaurant = data;
+    const { currentUser } = useAuthContext();
     console.log(restaurant);
     if (customRestaurant) {
         restaurant = customRestaurant;
@@ -104,18 +107,27 @@ export default function RestaurantOverlay({ customRestaurant = null }) {
                                 ) : (
                                     <></>
                                 )}
-
-                                <Button
-                                    onClick={() =>
-                                        setNewImage((oldState) => !oldState)
-                                    }
-                                >
-                                    {newImage
-                                        ? "Hide Form"
-                                        : "Submit new image"}
-                                </Button>
-                                {newImage && (
-                                    <SubmitRestaurantImage id={restaurantId} />
+                                {currentUser ? (
+                                    <>
+                                        <Button
+                                            onClick={() =>
+                                                setNewImage(
+                                                    (oldState) => !oldState
+                                                )
+                                            }
+                                        >
+                                            {newImage
+                                                ? "Hide Form"
+                                                : "Submit new image"}
+                                        </Button>
+                                        {newImage && (
+                                            <SubmitRestaurantImage
+                                                id={restaurantId}
+                                            />
+                                        )}
+                                    </>
+                                ) : (
+                                    <p>Login to add image!</p>
                                 )}
                             </div>
                         </div>
