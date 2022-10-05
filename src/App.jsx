@@ -9,9 +9,7 @@ import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import LogoutPage from "./pages/LogoutPage";
-import MyRestaurantsPage from "./pages/MyRestaurantsPage";
 import NotFound from "./pages/NotFound";
-import RestaurantPage from "./pages/RestaurantPage";
 import SignupPage from "./pages/SignupPage";
 import CreateRestaurantPage from "./pages/CreateRestaurantPage";
 import UpdateProfilePage from "./pages/UpdateProfilePage";
@@ -48,24 +46,6 @@ function App() {
                     element={
                         <RequireAuth>
                             <UpdateProfilePage />
-                        </RequireAuth>
-                    }
-                />
-
-                <Route
-                    path="/my-restaurants"
-                    element={
-                        <RequireAuth>
-                            <MyRestaurantsPage />
-                        </RequireAuth>
-                    }
-                />
-
-                <Route
-                    path="/my-restaurants/:id"
-                    element={
-                        <RequireAuth>
-                            <RestaurantPage />
                         </RequireAuth>
                     }
                 />
