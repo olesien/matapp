@@ -49,7 +49,7 @@ const RestaurantList = ({
                     ? "Showing all restaurants"
                     : `Showing results for: ${cityName}`}
             </h3>
-            <div className="list">
+            <div className="list" data-testid="restaurant-list">
                 {sortedRestaurants &&
                     sortedRestaurants.length > 0 &&
                     sortedRestaurants.map((restaurant) => (
