@@ -71,14 +71,16 @@ export default function RestaurantCard({
         let fromPlace = "Malmö";
         const { lat, lng } = userLocation;
         const geocode = await GeocodingAPI.getReverseGeocodeAsync(lat, lng);
-        console.log(geocode);
+        //console.log(geocode);
         if (geocode && "results" in geocode && geocode.results.length > 0) {
-            fromPlace = geocode.results[0];
+            fromPlace = geocode.results[0].formatted_address;
         }
+        fromPlace.replace(" ", "+");
         const toPlace = (restaurant.address + ",+" + restaurant.city).replace(
             " ",
             "+"
         );
+
         window.location.href = `https://www.google.com/maps/dir/${fromPlace}/${toPlace}/`;
     };
 
