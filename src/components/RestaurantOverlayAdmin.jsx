@@ -36,10 +36,10 @@ export default function RestaurantOverlayAdmin({ restaurant, handleClose }) {
         setUrl(restaurant?.photoURL);
         setDescription(restaurant?.description);
         setAddress(restaurant?.address);
-        setCity(restaurant?.city);
+        setCity(restaurant?.place);
         setPostcode(restaurant?.postcode);
         setEmail(restaurant?.email);
-        setCategory(restaurant?.category);
+        setCategory(restaurant?.type_of_establishment);
         setPhone(restaurant?.phone);
         setSite(restaurant?.website);
         setFacebook(restaurant?.facebook);
@@ -185,7 +185,7 @@ export default function RestaurantOverlayAdmin({ restaurant, handleClose }) {
                             value={category}
                             onChange={setCategory}
                             type="text"
-                            title="Type"
+                            title="Category"
                         />
                         <InputField
                             divClassName="option-card-child"

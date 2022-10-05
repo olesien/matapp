@@ -107,12 +107,12 @@ export default function RestaurantCard({
                 <Card.Title>{restaurant.name}</Card.Title>
                 <Card.Text>📍 {restaurant.place}</Card.Text>
                 <Card.Subtitle className="mb-2 text-muted">
-                    {restaurant.cuisine}
+                    {restaurant.cuisine} cuisine
                 </Card.Subtitle>
-                <Card.Text>
+                {/* <Card.Text>
                     {restaurant.type_of_establishment} offering{" "}
                     {restaurant.offers}
-                </Card.Text>
+                </Card.Text> */}
                 {/* <Card.Text>{geocode.results[0]?.formatted_address}</Card.Text> */}
                 <Card.Text>"{restaurant.description}"</Card.Text>
                 <footer>

@@ -67,17 +67,16 @@ export default function RestaurantOverlay({ customRestaurant = null }) {
 
                                     <p>{restaurant?.description}</p>
                                     <p>
-                                        {restaurant?.address},{" "}
-                                        {restaurant?.city}
+                                        📍 {restaurant?.address}, {restaurant?.place}
                                     </p>
                                     <RestaurantImages id={restaurantId} />
                                 </div>
                             </div>
                             <div className="restaurant-row">
-                                {restaurant?.category ? (
+                                {restaurant?.type_of_establishment ? (
                                     <>
                                         <h3>Category</h3>
-                                        <p>{restaurant.category}</p>
+                                        <p>{restaurant.type_of_establishment}</p>
                                     </>
                                 ) : (
                                     <></>
