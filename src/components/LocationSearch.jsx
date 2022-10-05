@@ -100,7 +100,7 @@ const LocationSearch = ({ handleSetCityName, handleGetCityName }) => {
 
                     {/* Suggestions to show when the user has typed in the input field (and it's focused) */}
                     {filteredSuggestions.length > 0 && inputIsFocused && (
-                        <ul className="input-suggestions">
+                        <ul className="input-suggestions border border-top-0 border-primary">
                             {filteredSuggestions.map((suggestion) => (
                                 <li
                                     key={suggestion.id}
@@ -113,7 +113,7 @@ const LocationSearch = ({ handleSetCityName, handleGetCityName }) => {
                         </ul>
                     )}
                     {/* Suggestions to show when the user hasn't typed in the input field (and it's focused) */}
-                    {inputSuggestions.length > 0 && filteredSuggestions <= 0 && inputIsFocused && (
+                    {inputSuggestions.length > 0 && filteredSuggestions <= 0 && searchedLocation === "" && inputIsFocused && (
                         <ul className="input-suggestions">
                             {inputSuggestions.map((suggestion) => (
                                 <li
