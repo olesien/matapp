@@ -27,6 +27,7 @@ const useGetRestaurants = (filterOptions, cityName) => {
         collection(db, "restaurants"),
         ...queryConstraints,
         orderBy("nameLowerCase", "asc"),
+        where("approved", "==", true)
     );
     return useGetCollection(q, filterOptions, cityName);
 };
