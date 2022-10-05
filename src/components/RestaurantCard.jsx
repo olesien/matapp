@@ -20,7 +20,7 @@ export default function RestaurantCard({
     restaurant,
     fromMap = false,
     userLocation,
-    // mapReference,
+    mapReference,
     handleSetSearchParams,
     onClose,
 }) {
@@ -61,10 +61,12 @@ export default function RestaurantCard({
         //Set new tab and map ID
         handleSetSearchParams({ tab: "map", id: restaurant.id });
         console.log(restaurant);
-        // mapReference.panTo({
-        //     lat: restaurant.position.latitude,
-        //     lng: restaurant.position.longitude,
-        // });
+        // Also running panTo here so that the map pans to the location 
+        // even if the id url param doesn't change
+        mapReference.panTo({
+            lat: restaurant.position.latitude,
+            lng: restaurant.position.longitude,
+        });
     };
     const getDirections = async () => {
         console.log("directions");

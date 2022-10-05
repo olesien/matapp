@@ -220,7 +220,7 @@ const HomePage = () => {
                             sortByName={sortBy}
                             cityName={cityName}
                             listingAll={filterOptions.listAll}
-                            // mapReference={mapReference}
+                            mapReference={mapReference}
                             handleSetSearchParams={handleSetSearchParams}
                         />
                     </Tab>
