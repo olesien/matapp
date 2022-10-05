@@ -51,11 +51,8 @@ const Navigation = () => {
                             <>
                                 {/* User is logged in */}
 
-                                <Nav.Link as={NavLink} to="/my-restaurants">
-                                    Restaurants
-                                </Nav.Link>
                                 <Nav.Link as={NavLink} to="/create-restaurant">
-                                    Create new
+                                    Create a new restaurant
                                 </Nav.Link>
 
                                 <NavDropdown title={
