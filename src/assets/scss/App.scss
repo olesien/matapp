@@ -120,7 +120,6 @@
 
     td button {
         font-size: 0.9em;
-        margin-right: 0;
     }
 }
 
@@ -146,19 +145,18 @@
         flex-direction: row;
     }
 
-    .table > :not(caption) > * > * {
-        padding: 0.5rem 0.5rem;
-    }
+    .table {
+        > :not(caption) > * > * {
+            padding: 0.5rem 0.5rem;
+        }
 
-    .table th {
-        font-size: 1em;
-    }
+        th,
+        td {
+            font-size: 1em;
+        }
 
-    .container {
-        --bs-gutter-x: 1.5rem;
-    }
-
-    td button {
-        font-size: 1em;
+        td button {
+            font-size: 1em;
+        }
     }
 }
