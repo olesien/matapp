@@ -2,9 +2,12 @@ import { Button, Form } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { collection, addDoc, GeoPoint } from "firebase/firestore";
-import { db } from "../firebase";
+import { db, storage } from "../firebase";
 import { useAuthContext } from "../contexts/AuthContext";
-import GeocodingAPI from '../services/GeocodingAPI'
+import GeocodingAPI from "../services/GeocodingAPI";
+
+import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
+import { useState } from "react";
 
 const CreateRestaurantForm = () => {
     const {
@@ -15,19 +18,42 @@ const CreateRestaurantForm = () => {
     } = useForm();
     const { currentUser } = useAuthContext();
 
-    const onCreateRestaurant = async (data) => {
+    const [image, setImage] = useState(false);
+    const handleFileChange = (img) => {
+        if (!img.target.files.length) {
+            setImage("https://via.placeholder.com/225");
+            return;
+        }
 
+        setImage(img.target.files[0]);
+    };
+
+    const onCreateRestaurant = async (data) => {
         // Get address information from Google Maps API
-        const response = await GeocodingAPI.getCoordinates(`${data.street_number}%20${data.street_name}%20${data.postcode}%20${data.city}`)
+        const response = await GeocodingAPI.getCoordinates(
+            `${data.street_number}%20${data.street_name}%20${data.postcode}%20${data.city}`
+        );
         // Handle error
-        if (response.status !== 'OK') {
-            toast.error("Invalid address. Please try again!")
-            return
+
+        if (response.status !== "OK") {
+            toast.error("Invalid address. Please try again!");
+            return;
         } else {
             // Get coordinates
-            const lat = response.results[0].geometry.location.lat
-            const lng = response.results[0].geometry.location.lng
+            const lat = response.results[0].geometry.location.lat;
+            const lng = response.results[0].geometry.location.lng;
 
+            //Add photo, use date.now to get unix before image name to make it unique!!
+            const source = `photos/${currentUser.email}/${
+                Date.now() + "-" + data.name
+            }`;
+            const fileRef = ref(storage, source);
+
+            // upload photo to fileRef
+            const uploadResult = await uploadBytes(fileRef, image);
+
+            // get download url to uploaded file
+            const photoURL = await getDownloadURL(uploadResult.ref);
             // make firestore doc
             await addDoc(collection(db, "restaurants"), {
                 /**
@@ -45,16 +71,17 @@ const CreateRestaurantForm = () => {
                 nameLowerCase: data.name.toLowerCase(),
                 offers: data.offer,
                 phone: data.phone,
-                photoURL:
-                    "https://firebasestorage.googleapis.com/v0/b/fed21-matguiden.appspot.com/o/restaurants%2F1663942025-london-stock.jpg?alt=media&token=bc832727-0b00-41a2-ac98-4425bbd87102",
+                photoURL,
                 place: data.city,
                 position: new GeoPoint(lat, lng),
                 postcode: data.postcode,
                 type_of_establishment: data.category,
-                url: "https://firebasestorage.googleapis.com/v0/b/fed21-matguiden.appspot.com/o/restaurants%2F1663942025-london-stock.jpg?alt=media&token=bc832727-0b00-41a2-ac98-4425bbd87102",
+
                 website_url: data.website_url,
                 approved: false,
             });
+
+            // url: "https://firebasestorage.googleapis.com/v0/b/fed21-matguiden.appspot.com/o/restaurants%2F1663942025-london-stock.jpg?alt=media&token=bc832727-0b00-41a2-ac98-4425bbd87102",
 
             toast.success("Restaurant sent for admin approval");
             reset();
@@ -63,7 +90,6 @@ const CreateRestaurantForm = () => {
 
     return (
         <Form onSubmit={handleSubmit(onCreateRestaurant)} noValidate>
-
             <Form.Group className="mb-3" controlId="name">
                 <Form.Label>Name</Form.Label>
                 <Form.Control
@@ -82,6 +108,20 @@ const CreateRestaurantForm = () => {
                         {errors.name.message}
                     </Form.Text>
                 )}
+            </Form.Group>
+
+            <Form.Group className="mb-3" controlId="image">
+                <Form.Label>Restaurant Picture</Form.Label>
+                <Form.Control
+                    {...register("image")}
+                    type="file"
+                    onChange={handleFileChange}
+                />
+                <Form.Text>
+                    {image
+                        ? `${image.name} (${Math.round(image.size / 1024)} kB)`
+                        : "No photo selected"}
+                </Form.Text>
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="street_name">
@@ -216,7 +256,9 @@ const CreateRestaurantForm = () => {
                         required: "Select a category",
                     })}
                 >
-                    <option value="" disabled>Please select an option</option>
+                    <option value="" disabled>
+                        Please select an option
+                    </option>
                     <option value="restaurant">Restaurant</option>
                     <option value="café">Café</option>
                     <option value="fast_food">Fast Food</option>
@@ -236,7 +278,9 @@ const CreateRestaurantForm = () => {
                         required: "Select an offer",
                     })}
                 >
-                    <option value="" disabled>Please select an option</option>
+                    <option value="" disabled>
+                        Please select an option
+                    </option>
                     <option value="lunch">Lunch</option>
                     <option value="dinner">Dinner</option>
                 </Form.Select>

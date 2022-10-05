@@ -4,16 +4,21 @@ import { Form, Image } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import InputField from "./InputField";
 import { doc, updateDoc } from "firebase/firestore";
-import { db } from "../firebase";
+import { db, storage } from "../firebase";
 import { toast } from "react-toastify";
+import { useAuthContext } from "../contexts/AuthContext";
+import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
 
 export default function RestaurantOverlayAdmin({ restaurant, handleClose }) {
     console.log(restaurant);
-    const [title, setTitle] = useState(restaurant?.title);
-    const [url, setUrl] = useState(restaurant?.url);
+    const { currentUser } = useAuthContext();
+    const [name, setName] = useState(restaurant?.name);
+    const [url, setUrl] = useState(restaurant?.photoURL);
+    const [image, setImage] = useState(null);
     const [description, setDescription] = useState(restaurant?.description);
     const [address, setAddress] = useState(restaurant?.address);
     const [city, setCity] = useState(restaurant?.city);
+    const [postcode, setPostcode] = useState(restaurant?.postcode);
     const [category, setCategory] = useState(restaurant?.category);
     const [email, setEmail] = useState(restaurant?.email);
     const [phone, setPhone] = useState(restaurant?.phone);
@@ -26,12 +31,12 @@ export default function RestaurantOverlayAdmin({ restaurant, handleClose }) {
     const [loading, setLoading] = useState(null);
 
     useEffect(() => {
-        setTitle(restaurant?.name);
-        setUrl(restaurant?.url);
+        setName(restaurant?.name);
+        setUrl(restaurant?.photoURL);
         setDescription(restaurant?.description);
-        setAddress(restaurant?.description);
-        setCity(restaurant?.description);
-        setDescription(restaurant?.description);
+        setAddress(restaurant?.address);
+        setCity(restaurant?.city);
+        setPostcode(restaurant?.postcode);
         setEmail(restaurant?.email);
         setCategory(restaurant?.category);
         setPhone(restaurant?.phone);
@@ -46,14 +51,37 @@ export default function RestaurantOverlayAdmin({ restaurant, handleClose }) {
         try {
             setLoading(true);
             const newData = {
-                title,
+                name,
                 description,
                 address,
                 city,
                 category,
+                postcode,
             };
 
             console.log(newData);
+            let photoURL = url;
+            if (image) {
+                //Upload new one
+                try {
+                    const source = `photos/${currentUser.email}/${
+                        Date.now() + "-" + name
+                    }`;
+                    const fileRef = ref(storage, source);
+
+                    // upload photo to fileRef
+                    const uploadResult = await uploadBytes(fileRef, image);
+
+                    // get download url to uploaded file
+                    photoURL = await getDownloadURL(uploadResult.ref);
+                } catch (err) {
+                    return setErr("Something went wrong when uploading");
+                }
+            }
+            if (photoURL) {
+                newData.photoURL = photoURL;
+                setUrl(photoURL);
+            }
             if (email) {
                 newData.email = email;
             }
@@ -96,8 +124,8 @@ export default function RestaurantOverlayAdmin({ restaurant, handleClose }) {
                         <div className="option-card">
                             <InputField
                                 divClassName="option-card-child"
-                                value={title}
-                                onChange={setTitle}
+                                value={name}
+                                onChange={setName}
                                 type="text"
                                 isTitle
                             />
@@ -107,6 +135,8 @@ export default function RestaurantOverlayAdmin({ restaurant, handleClose }) {
                                 value={url}
                                 onChange={setUrl}
                                 type="text"
+                                image={image}
+                                setImage={setImage}
                                 isImage
                             />
 
@@ -130,6 +160,14 @@ export default function RestaurantOverlayAdmin({ restaurant, handleClose }) {
                                 onChange={setCity}
                                 type="text"
                                 title="City"
+                            />
+
+                            <InputField
+                                divClassName="option-card-child"
+                                value={postcode}
+                                onChange={setPostcode}
+                                type="number"
+                                title="Postcode"
                             />
                         </div>
                     </div>

@@ -100,7 +100,7 @@ export default function RestaurantCard({
             <Card.Header>
                 Distance: {distance ? convertUnits(distance) : "Loading.."}
             </Card.Header>
-            <Card.Img variant="top" src={restaurant.url} />
+            <Card.Img variant="top" src={restaurant.photoURL} />
             <Card.Body>
                 <Card.Title>{restaurant.name}</Card.Title>
                 <Card.Text>📍 {restaurant.place}</Card.Text>
