@@ -21,6 +21,10 @@ export default function RestaurantOverlayAdmin({ restaurant, handleClose }) {
     const [facebook, setFacebook] = useState(restaurant?.facebook);
     const [instagram, setInstagram] = useState(restaurant?.instagram);
 
+    const [err, setErr] = useState(null);
+
+    const [loading, setLoading] = useState(null);
+
     useEffect(() => {
         setTitle(restaurant?.name);
         setUrl(restaurant?.url);
@@ -40,23 +44,40 @@ export default function RestaurantOverlayAdmin({ restaurant, handleClose }) {
         const restaurantRef = doc(db, "restaurants", restaurant.id);
 
         try {
-            await updateDoc(restaurantRef, {
+            setLoading(true);
+            const newData = {
                 title,
                 description,
                 address,
                 city,
                 category,
-                email,
-                phone,
-                website: site,
-                facebook,
-                instagram,
-            });
+            };
+
+            console.log(newData);
+            if (email) {
+                newData.email = email;
+            }
+            if (phone) {
+                newData.phone = phone;
+            }
+            if (site) {
+                newData.website = site;
+            }
+            if (facebook) {
+                newData.facebook = facebook;
+            }
+            if (instagram) {
+                newData.instagram = instagram;
+            }
+            await updateDoc(restaurantRef, newData);
             console.log("Succesfully updated");
             toast.success("Restaurant Edited!");
+            setLoading(false);
             handleClose();
         } catch (err) {
             console.log(err);
+            setLoading(false);
+            setErr(err.message);
         }
     };
     return (
@@ -69,11 +90,12 @@ export default function RestaurantOverlayAdmin({ restaurant, handleClose }) {
                 <Modal.Title>Restaurant</Modal.Title>
             </Modal.Header>
             <Modal.Body>
+                {err ? <p>{err}</p> : <></>}
                 <Form className="restaurant-overlay-card">
                     <div className="restaurant-row">
                         <div className="option-card">
                             <InputField
-                                divClassName="option-card"
+                                divClassName="option-card-child"
                                 value={title}
                                 onChange={setTitle}
                                 type="text"
@@ -81,7 +103,7 @@ export default function RestaurantOverlayAdmin({ restaurant, handleClose }) {
                             />
                             {/* <Image src={restaurant?.url} /> */}
                             <InputField
-                                divClassName="option-card"
+                                divClassName="option-card-child"
                                 value={url}
                                 onChange={setUrl}
                                 type="text"
@@ -89,21 +111,21 @@ export default function RestaurantOverlayAdmin({ restaurant, handleClose }) {
                             />
 
                             <InputField
-                                divClassName="option-card"
+                                divClassName="option-card-child"
                                 value={description}
                                 onChange={setDescription}
                                 type="text"
                             />
 
                             <InputField
-                                divClassName="option-card"
+                                divClassName="option-card-child"
                                 value={address}
                                 onChange={setAddress}
                                 type="text"
                                 title="Address"
                             />
                             <InputField
-                                divClassName="option-card"
+                                divClassName="option-card-child"
                                 value={city}
                                 onChange={setCity}
                                 type="text"
@@ -120,21 +142,21 @@ export default function RestaurantOverlayAdmin({ restaurant, handleClose }) {
                             </ul>
                         </div> */}
                         <InputField
-                            divClassName="option-card"
+                            divClassName="option-card-child"
                             value={category}
                             onChange={setCategory}
                             type="text"
                             title="Type"
                         />
                         <InputField
-                            divClassName="option-card"
+                            divClassName="option-card-child"
                             value={email}
                             onChange={setEmail}
                             type="email"
                             title="Email"
                         />
                         <InputField
-                            divClassName="option-card"
+                            divClassName="option-card-child"
                             value={phone}
                             onChange={setPhone}
                             type="text"
@@ -143,21 +165,21 @@ export default function RestaurantOverlayAdmin({ restaurant, handleClose }) {
                     </div>
                     <div className="restaurant-row">
                         <InputField
-                            divClassName="option-card"
+                            divClassName="option-card-child"
                             value={site}
                             onChange={setSite}
                             type="text"
                             title="Website"
                         />
                         <InputField
-                            divClassName="option-card"
+                            divClassName="option-card-child"
                             value={facebook}
                             onChange={setFacebook}
                             type="text"
                             title="Facebook"
                         />
                         <InputField
-                            divClassName="option-card"
+                            divClassName="option-card-child"
                             value={instagram}
                             onChange={setInstagram}
                             type="text"
@@ -171,9 +193,15 @@ export default function RestaurantOverlayAdmin({ restaurant, handleClose }) {
                 <Button variant="secondary" onClick={handleClose}>
                     Close
                 </Button>
-                <Button variant="primary" onClick={submit}>
-                    Save Changes
-                </Button>
+                {loading ? (
+                    <Button variant="primary" disabled>
+                        Loading...
+                    </Button>
+                ) : (
+                    <Button variant="primary" onClick={submit}>
+                        Save Changes
+                    </Button>
+                )}
             </Modal.Footer>
         </Modal>
     );

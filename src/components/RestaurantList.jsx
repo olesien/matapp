@@ -9,7 +9,7 @@ const RestaurantList = ({
     sortByName,
     cityName,
     listingAll,
-    mapReference,
+    // mapReference,
     handleSetSearchParams,
 }) => {
     const [sortedRestaurants, setSortedRestaurants] = useState(null);
@@ -57,7 +57,7 @@ const RestaurantList = ({
                             key={restaurant.id}
                             restaurant={restaurant}
                             userLocation={userLocation}
-                            mapReference={mapReference}
+                            // mapReference={mapReference}
                             handleSetSearchParams={handleSetSearchParams}
                         />
                     ))}

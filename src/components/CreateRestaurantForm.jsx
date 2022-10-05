@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { collection, addDoc, GeoPoint } from "firebase/firestore";
 import { db } from "../firebase";
 import { useAuthContext } from "../contexts/AuthContext";
+import GeocodingAPI from '../services/GeocodingAPI'
 
 const CreateRestaurantForm = () => {
     const {
@@ -15,45 +16,58 @@ const CreateRestaurantForm = () => {
     const { currentUser } = useAuthContext();
 
     const onCreateRestaurant = async (data) => {
-        console.log(data.name.toLowerCase())
-        // make firestore doc
-        await addDoc(collection(db, "restaurants"), {
-            /**
-             * @todo ändra namnet på fälten i databasen
-             */
-            // ...data,
-            nameLowerCase: data.name.toLowerCase(),
-            address: `${data.street_name} ${data.street_number}`,
-            category: data.category,
-            city: data.city,
-            createdBy: currentUser ? currentUser.uid : 0,
-            cuisine: data.cuisine,
-            description: data.description,
-            email: data.email,
-            facebook: `www.facebook.com/${data.facebook}`,
-            instagram: `www.instagram.com/${data.instagram}`,
-            location: new GeoPoint(12, 34),
-            name: data.name,
-            offer: data.offer,
-            offers: "lunch",
-            phone: data.phone,
-            photoURL:
-                "https://firebasestorage.googleapis.com/v0/b/fed21-matguiden.appspot.com/o/restaurants%2F1663942025-london-stock.jpg?alt=media&token=bc832727-0b00-41a2-ac98-4425bbd87102",
-            place: data.city,
-            position: new GeoPoint(12, 34),
-            postcode: data.postcode,
-            type_of_establishment: "restaurant",
-            url: "https://firebasestorage.googleapis.com/v0/b/fed21-matguiden.appspot.com/o/restaurants%2F1663942025-london-stock.jpg?alt=media&token=bc832727-0b00-41a2-ac98-4425bbd87102",
-            website_url: data.website_url,
-            approved: false,
-        });
 
-        toast.success("Restaurant sent for admin approval");
-        reset();
+        // Get address information from Google Maps API
+        const response = await GeocodingAPI.getCoordinates(`${data.street_number}%20${data.street_name}%20${data.postcode}%20${data.city}`)
+        // Handle error
+        if (response.status !== 'OK') {
+            toast.error("Invalid address. Please try again!")
+            return
+        } else {
+            // Get coordinates
+            const lat = response.results[0].geometry.location.lat
+            const lng = response.results[0].geometry.location.lng
+
+            // make firestore doc
+            await addDoc(collection(db, "restaurants"), {
+                /**
+                 * @todo ändra namnet på fälten i databasen
+                 */
+                // ...data,
+                nameLowerCase: data.name.toLowerCase(),
+                address: `${data.street_name} ${data.street_number}`,
+                category: data.category,
+                city: data.city,
+                createdBy: currentUser.uid,
+                cuisine: data.cuisine,
+                description: data.description,
+                email: data.email,
+                facebook: data.facebook,
+                instagram: data.instagram,
+                location: new GeoPoint(lat, lng),
+                name: data.name,
+                offer: data.offer,
+                offers: "lunch",
+                phone: data.phone,
+                photoURL:
+                    "https://firebasestorage.googleapis.com/v0/b/fed21-matguiden.appspot.com/o/restaurants%2F1663942025-london-stock.jpg?alt=media&token=bc832727-0b00-41a2-ac98-4425bbd87102",
+                place: data.city,
+                position: new GeoPoint(lat, lng),
+                postcode: data.postcode,
+                type_of_establishment: "restaurant",
+                url: "https://firebasestorage.googleapis.com/v0/b/fed21-matguiden.appspot.com/o/restaurants%2F1663942025-london-stock.jpg?alt=media&token=bc832727-0b00-41a2-ac98-4425bbd87102",
+                website_url: data.website_url,
+                approved: false,
+            });
+
+            toast.success("Restaurant sent for admin approval");
+            reset();
+        }
     };
 
     return (
         <Form onSubmit={handleSubmit(onCreateRestaurant)} noValidate>
+
             <Form.Group className="mb-3" controlId="name">
                 <Form.Label>Name</Form.Label>
                 <Form.Control
@@ -321,19 +335,6 @@ const CreateRestaurantForm = () => {
                     </Form.Text>
                 )}
             </Form.Group>
-
-            {/* <Form.Group className="mb-3" controlId="photoURL">
-                <Form.Label>Image</Form.Label>
-                <Form.Control as="input"
-                    {...register("photoURL")}
-                    type="file"
-                />
-                {errors.photoURL && (
-                    <Form.Text className="text-danger">
-                        {errors.photoURL.message}
-                    </Form.Text>
-                )}
-            </Form.Group> */}
 
             <Button variant="success" type="submit">
                 Submit

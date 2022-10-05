@@ -13,8 +13,8 @@ test("The current values of the dropdown forms can be changed", async () => {
     render(<FilterRestaurants filterOptions={filterOptions} />)
 
     // find
-    const typeDropdown = screen.getByLabelText(/type of restaurant/i)
-    const offeringDropdown = screen.getByLabelText(/serving/i)
+    const typeDropdown = screen.getByLabelText(/category/i)
+    const offeringDropdown = screen.getByLabelText(/offer/i)
 
     // interact
     await userEvent.selectOptions(typeDropdown, ["restaurant"])
@@ -31,8 +31,8 @@ test("The form has the corresponding values from the input fields", async () => 
     render(<FilterRestaurants filterOptions={filterOptions} />)
 
     // find
-    const typeDropdown = screen.getByLabelText(/type of restaurant/i)
-    const offeringDropdown = screen.getByLabelText(/serving/i)
+    const typeDropdown = screen.getByLabelText(/category/i)
+    const offeringDropdown = screen.getByLabelText(/offer/i)
 
     // interact
     await userEvent.selectOptions(typeDropdown, ["restaurant"])

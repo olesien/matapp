@@ -7,7 +7,10 @@ const useGetDocument = (collection, id) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        if (!id) return;
+        if (!id) {
+            setLoading(false);
+            return;
+        }
         const getDocSnapshot = async () => {
             setLoading(true);
             // get reference to document in collection

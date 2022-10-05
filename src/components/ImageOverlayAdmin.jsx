@@ -17,10 +17,16 @@ export default function ImageOverlayAdmin({ image, handleClose }) {
         setTitle(image?.title);
         setUrl(image?.imageurl);
     }, [image]);
+
+    const [err, setErr] = useState(null);
+
+    const [loading, setLoading] = useState(null);
+
     const submit = async () => {
         const imageRef = doc(db, "user-pictures", image.id);
 
         try {
+            setLoading(true);
             let imageurl = image.imageurl;
             let source = image.source;
             if (imageSrc) {
@@ -42,9 +48,12 @@ export default function ImageOverlayAdmin({ image, handleClose }) {
 
             console.log("Succesfully updated");
             toast.success("Image Edited!");
+            setLoading(false);
             handleClose();
         } catch (err) {
+            setLoading(false);
             console.log(err);
+            setErr(err.message);
         }
     };
     return (
@@ -53,6 +62,7 @@ export default function ImageOverlayAdmin({ image, handleClose }) {
                 <Modal.Title>Image</Modal.Title>
             </Modal.Header>
             <Modal.Body>
+                {err ? <p>{err}</p> : <></>}
                 <Form>
                     <InputField
                         divClassName="option-card"
@@ -80,9 +90,15 @@ export default function ImageOverlayAdmin({ image, handleClose }) {
                 <Button variant="secondary" onClick={handleClose}>
                     Close
                 </Button>
-                <Button variant="primary" onClick={submit}>
-                    Save Changes
-                </Button>
+                {loading ? (
+                    <Button variant="primary" disabled>
+                        Loading...
+                    </Button>
+                ) : (
+                    <Button variant="primary" onClick={submit}>
+                        Save Changes
+                    </Button>
+                )}
             </Modal.Footer>
         </Modal>
     );
