@@ -25,6 +25,9 @@
 
 .flex {
     display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }
 
 #map-search-box {
@@ -105,6 +108,26 @@
     }
 }
 
+.table {
+    > :not(caption) > * > * {
+        padding: 0.4rem 0.25rem;
+    }
+
+    th,
+    td {
+        font-size: 0.8em;
+    }
+
+    td button {
+        font-size: 0.9em;
+        margin-right: 0;
+    }
+}
+
+.container {
+    --bs-gutter-x: 0.2rem;
+}
+
 @media (min-width: 1000px) {
     .modal-size {
         width: 80%;
@@ -117,5 +140,25 @@
 
     .location-search-wrapper {
         width: 50%;
+    }
+
+    .flex {
+        flex-direction: row;
+    }
+
+    .table > :not(caption) > * > * {
+        padding: 0.5rem 0.5rem;
+    }
+
+    .table th {
+        font-size: 1em;
+    }
+
+    .container {
+        --bs-gutter-x: 1.5rem;
+    }
+
+    td button {
+        font-size: 1em;
     }
 }
