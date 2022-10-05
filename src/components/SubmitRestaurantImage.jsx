@@ -36,9 +36,8 @@ export default function SubmitRestaurantImage({ id }) {
             setLoading(true);
 
             //Add photo, use date.now to get unix before image name to make it unique!!
-            const source = `photos/${currentUser.email}/${
-                Date.now() + "-" + title
-            }`;
+            const source = `photos/${currentUser.email}/${Date.now() + "-" + title
+                }`;
             const fileRef = ref(storage, source);
 
             // upload photo to fileRef
@@ -58,7 +57,11 @@ export default function SubmitRestaurantImage({ id }) {
                 approved: currentUser.admin,
             });
 
-            toast.success("Image sent for admin approval");
+            if (currentUser.admin) {
+                toast.success("Image successfully uploaded");
+            } else {
+                toast.success("Image sent for admin approval");
+            }
             setLoading(false);
             reset()
         } catch (err) {
