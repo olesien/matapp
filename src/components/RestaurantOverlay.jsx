@@ -54,7 +54,7 @@ export default function RestaurantOverlay({ customRestaurant = null }) {
                         <div className="restaurant-overlay-card">
                             <div className="restaurant-row">
                                 <div className="option-card">
-                                    <Image src={restaurant?.url} />
+                                    <Image src={restaurant?.photoURL} />
 
                                     <p>{restaurant?.description}</p>
                                     <p>
