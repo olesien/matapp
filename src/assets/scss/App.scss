@@ -25,6 +25,9 @@
 
 .flex {
     display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }
 
 #map-search-box {
@@ -117,5 +120,9 @@
 
     .location-search-wrapper {
         width: 50%;
+    }
+
+    .flex {
+        flex-direction: row;
     }
 }
