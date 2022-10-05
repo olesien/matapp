@@ -261,8 +261,8 @@ const CreateRestaurantForm = () => {
                     </option>
                     <option value="restaurant">Restaurant</option>
                     <option value="café">Café</option>
-                    <option value="fast_food">Fast Food</option>
-                    <option value="food_truck">Food Truck</option>
+                    <option value="fast food">Fast Food</option>
+                    <option value="food truck">Food Truck</option>
                 </Form.Select>
                 {errors.category && (
                     <Form.Text className="text-danger">
