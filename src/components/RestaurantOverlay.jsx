@@ -14,6 +14,7 @@ export default function RestaurantOverlay({ customRestaurant = null }) {
     const { data, loading } = useGetRestaurant(restaurantId);
     const [newImage, setNewImage] = useState(false);
     let restaurant = data;
+    console.log(restaurant);
     if (customRestaurant) {
         restaurant = customRestaurant;
     }
@@ -29,7 +30,7 @@ export default function RestaurantOverlay({ customRestaurant = null }) {
         console.log(values);
         setSearchParams({ ...values });
     };
-    if (!restaurant) return <></>;
+    if (!restaurantId && !customRestaurant) return <></>;
 
     return (
         <Modal
