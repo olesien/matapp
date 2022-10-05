@@ -34,7 +34,8 @@ const HomePage = () => {
     const handleGetCityName = async () => {
         const res = await GeocodingAPI.getCityName(userLocation);
         if (res) {
-            setCityName(res.results[0].address_components[0].long_name);
+            // setCityName(res.results[0].address_components[0].long_name);
+            handleSetSearchParams({ city: res.results[0].address_components[0].long_name })
         }
     };
 
@@ -133,7 +134,7 @@ const HomePage = () => {
     useEffect(() => {
         if (restaurantIdUrlParam) {
             const restaurant = restaurants.find(restaurant => restaurant.id === restaurantIdUrlParam)
-            
+
             if (restaurant) {
                 mapReference.panTo({
                     lat: restaurant.position.latitude,
@@ -142,6 +143,14 @@ const HomePage = () => {
             }
         }
     }, [restaurantIdUrlParam])
+
+
+    useEffect(() => {
+        const city = searchParams.get("city")
+        if (city) {
+            setCityName(city)
+        }
+    }, [searchParams])
 
     return (
         <>
@@ -204,6 +213,7 @@ const HomePage = () => {
                             <LocationSearch
                                 handleSetCityName={handleSetCityName}
                                 handleGetCityName={handleGetCityName}
+                                handleSetSearchParams={handleSetSearchParams}
                             />
                         </div>
 

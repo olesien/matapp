@@ -5,7 +5,7 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import useGetRestaurants from "../hooks/useGetRestaurants";
 
-const LocationSearch = ({ handleSetCityName, handleGetCityName }) => {
+const LocationSearch = ({ handleSetCityName, handleGetCityName, handleSetSearchParams }) => {
     const [searchedLocation, setSearchedLocation] = useState("")
     const [inputSuggestions, setInputSuggestions] = useState([])
     const [locationNotFound, setLocationNotFound] = useState(false)
@@ -56,7 +56,10 @@ const LocationSearch = ({ handleSetCityName, handleGetCityName }) => {
         // Reformat the supplied text to that the firebase fetch doesn't fail
         // City name should be saved capitalised in the database
         const reformatedLocation = searchedLocation.charAt(0).toUpperCase() + searchedLocation.slice(1)
-        handleSetCityName(reformatedLocation)
+        handleSetSearchParams({ city: reformatedLocation })
+
+        // handleSetCityName(reformatedLocation)
+
         setSearchedLocation("")
         setFilteredSuggestions([])
     }
