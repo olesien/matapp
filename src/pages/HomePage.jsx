@@ -251,7 +251,7 @@ const HomePage = () => {
                         >
                             {filterOptions.listAll
                                 ? `Show in ${cityName}`
-                                : "Show all"}
+                                : "Show all cities"}
                         </Button>
 
                         {showFilter && (

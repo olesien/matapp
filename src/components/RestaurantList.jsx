@@ -51,7 +51,7 @@ const RestaurantList = ({
             )}
             <h3 className="my-4">
                 {listingAll
-                    ? "Showing all restaurants"
+                    ? "Showing restaurants from all cities"
                     : `Showing results for: ${cityName}`}
             </h3>
             <div className="list" data-testid="restaurant-list">
