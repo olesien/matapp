@@ -158,6 +158,16 @@ const HomePage = () => {
         }
     }, [searchParams])
 
+    useEffect(() => {
+        // Setting city search param if there is none and cityName is truthy.
+        // Helps to preserve the city search param if the user navigates to the home page via
+        // the navbar brand link (and the home page has already been mounted).
+        if (cityName && !searchParams.get("city")) {
+            console.log("Setting city search param if there is none and cityName is truthy")
+            handleSetSearchParams({ city: cityName })
+        }
+    }, [searchParams])
+
     return (
         <>
             <Container className="py-3">
