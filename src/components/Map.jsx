@@ -19,7 +19,12 @@ const containerStyle = {
 
 const defaultZoom = 10;
 
-const Map = ({ restaurants, userLocation, handleSetMapReference }) => {
+const Map = ({
+    restaurants,
+    userLocation,
+    handleSetMapReference,
+    restaurantLoading,
+}) => {
     const [restaurant, setRestaurant] = useState(null);
 
     const [currentZoom, setCurrentZoom] = useState(defaultZoom);
@@ -128,72 +133,71 @@ const Map = ({ restaurants, userLocation, handleSetMapReference }) => {
                 </StandaloneSearchBox>
 
                 {/* Child components, such as markers, info windows, etc. */}
+                {!restaurantLoading ? (
+                    <div>
+                        <OverlayView
+                            key="mwl"
+                            position={userLocation}
+                            mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
+                            getPixelPositionOffset={(x, y) => ({
+                                x: 0,
+                                y: 0,
+                            })}
+                        >
+                            <FontAwesomeIcon icon={faPerson} />
+                        </OverlayView>
+                        <MyLocation userLocation={userLocation} />
+                        {currentZoom > -1 &&
+                            restaurants.map((restaurant, key) => {
+                                const position = {
+                                    lat: restaurant.position._lat,
+                                    lng: restaurant.position._long,
+                                };
 
-                {currentZoom > -1 &&
-                    restaurants.map((restaurant, key) => {
-                        const position = {
-                            lat: restaurant.position._lat,
-                            lng: restaurant.position._long,
-                        };
-
-                        return (
-                            <div key={key}>
-                                {key == 1 && (
-                                    //Loaded
-                                    <div>
-                                        <OverlayView
-                                            key="mwl"
-                                            position={userLocation}
-                                            mapPaneName={
-                                                OverlayView.OVERLAY_MOUSE_TARGET
-                                            }
-                                            getPixelPositionOffset={(x, y) => ({
-                                                x: 0,
-                                                y: 0,
-                                            })}
-                                        >
-                                            <FontAwesomeIcon icon={faPerson} />
-                                        </OverlayView>
-                                        <MyLocation
-                                            userLocation={userLocation}
-                                        />
-                                    </div>
-                                )}
-                                <div>
-                                    <Marker
-                                        key={key}
-                                        position={position}
-                                        onClick={() =>
-                                            setRestaurant(restaurant)
-                                        }
-                                    />
-                                    <OverlayView
-                                        key="mwl"
-                                        position={position}
-                                        mapPaneName={
-                                            OverlayView.OVERLAY_MOUSE_TARGET
-                                        }
-                                        getPixelPositionOffset={(x, y) => ({
-                                            x: -50,
-                                            y: 10,
-                                        })}
-                                    >
-                                        <div
-                                            style={{
-                                                background: `#203254`,
-                                                padding: `7px 12px`,
-                                                fontSize: "11px",
-                                                color: `white`,
-                                                borderRadius: "4px",
-                                            }}
-                                        >
-                                            {restaurant.name}
+                                return (
+                                    <div key={key}>
+                                        <div>
+                                            <Marker
+                                                key={key}
+                                                position={position}
+                                                onClick={() =>
+                                                    setRestaurant(restaurant)
+                                                }
+                                            />
+                                            <OverlayView
+                                                key="mwl"
+                                                position={position}
+                                                mapPaneName={
+                                                    OverlayView.OVERLAY_MOUSE_TARGET
+                                                }
+                                                getPixelPositionOffset={(
+                                                    x,
+                                                    y
+                                                ) => ({
+                                                    x: -50,
+                                                    y: 10,
+                                                })}
+                                            >
+                                                <div
+                                                    style={{
+                                                        background: `#203254`,
+                                                        padding: `7px 12px`,
+                                                        fontSize: "11px",
+                                                        color: `white`,
+                                                        borderRadius: "4px",
+                                                    }}
+                                                >
+                                                    {restaurant.name}
+                                                </div>
+                                            </OverlayView>
                                         </div>
-                                    </OverlayView>
-                                </div>
-                            </div>
-                        );
-                    })}
+                                    </div>
+                                );
+                            })}
+                    </div>
+                ) : (
+                    <></>
+                )}
 
                 <></>
             </GoogleMap>
