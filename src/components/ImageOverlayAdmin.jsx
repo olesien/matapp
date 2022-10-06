@@ -13,19 +13,16 @@ export default function ImageOverlayAdmin({ image, handleClose }) {
     const [title, setTitle] = useState(image?.title);
     const [url, setUrl] = useState(image?.imageurl);
     const [imageSrc, setImageSrc] = useState(null);
+    const [err, setErr] = useState(null);
+    const [loading, setLoading] = useState(null);
+    const { data: restaurant, loading: restaurantLoading } = useGetRestaurant(
+        image?.restaurantid
+    );
 
     useEffect(() => {
         setTitle(image?.title);
         setUrl(image?.imageurl);
     }, [image]);
-
-    const { data: restaurant, loading: restaurantLoading } = useGetRestaurant(
-        image?.restaurantid
-    );
-
-    const [err, setErr] = useState(null);
-
-    const [loading, setLoading] = useState(null);
 
     const submit = async () => {
         const imageRef = doc(db, "user-pictures", image.id);
@@ -35,7 +32,6 @@ export default function ImageOverlayAdmin({ image, handleClose }) {
             let imageurl = image.imageurl;
             let source = image.source;
             if (imageSrc) {
-                console.log("uploading image");
                 source = `photos/${image.userid}/${Date.now() + "-" + title}`;
                 const fileRef = ref(storage, source);
 
@@ -51,13 +47,11 @@ export default function ImageOverlayAdmin({ image, handleClose }) {
                 source,
             });
 
-            console.log("Succesfully updated");
             toast.success("Image Edited!");
             setLoading(false);
             handleClose();
         } catch (err) {
             setLoading(false);
-            console.log(err);
             setErr(err.message);
         }
     };
@@ -80,7 +74,6 @@ export default function ImageOverlayAdmin({ image, handleClose }) {
                         type="text"
                         isTitle
                     />
-                    {/* <Image src={restaurant?.url} /> */}
                     <div style={{ maxWidth: "50%" }}>
                         <InputField
                             divClassName="option-card"

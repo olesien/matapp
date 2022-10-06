@@ -30,7 +30,6 @@ export default function InputField({
         }
 
         setImage(img.target.files[0]);
-        console.log("File changed!", img.target.files[0]);
     };
     return (
         <Form.Group className={divClassName}>
@@ -69,11 +68,6 @@ export default function InputField({
                                     onClick={() => toggleShow()}
                                 />
                             </div>
-                            {/* <Form.Control
-                                type={type}
-                                value={value}
-                                onChange={changeField}
-                            /> */}
                             <Form.Control
                                 type="file"
                                 onChange={handleFileChange}

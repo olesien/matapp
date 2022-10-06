@@ -10,7 +10,7 @@ import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import { useSearchParams } from "react-router-dom";
 import { useAuthContext } from "../contexts/AuthContext";
-import GeocodingAPI from "../services/GeocodingAPI"
+import GeocodingAPI from "../services/GeocodingAPI";
 import LocationSearch from "../components/LocationSearch";
 import RestaurantOverlay from "../components/RestaurantOverlay";
 
@@ -21,42 +21,62 @@ const HomePage = () => {
         lat: 33.872,
         lng: -117.214,
     });
-    const [cityName, setCityName] = useState(null)
-    const [initialCityName, setInitialCityName] = useState(searchParams.get("city")
-        ? searchParams.get('city')
-        : null
-    )
-    // console.log(cityName)
-    const [mapReference, setMapReference] = useState(null)
 
-    const handleSetCityName = (name) => {
-        setCityName(name)
-    }
+    // saving city name to state
+    const [cityName, setCityName] = useState(null);
+
+    // saving city name that is initially fetched
+    const [initialCityName, setInitialCityName] = useState(
+        searchParams.get("city") ? searchParams.get("city") : null
+    );
+
+    const [mapReference, setMapReference] = useState(null);
 
     const handleSetMapReference = (map) => {
-        setMapReference(map)
-    }
+        setMapReference(map);
+    };
+    let retrievedLocation = searchParams.get("retrievedLocation");
 
-    const handleGetCityName = async () => {
+    // get city name via currentLocation.
+    const handleGetCityName = async (userLocation) => {
+        console.log(retrievedLocation);
+        if (retrievedLocation) return;
+        console.log("got this far");
         const res = await GeocodingAPI.getCityName(userLocation);
         if (res) {
             // setCityName(res.results[0].address_components[0].long_name);
-            handleSetSearchParams({ city: res.results[0].address_components[0].long_name })
+            handleSetSearchParams({
+                city: res.results[0].address_components[0].long_name,
+                retrievedLocation: true,
+            });
         }
     };
+
+    // reset city name to that of your current location.
+    const resetCityName = async () => {
+        const res = await GeocodingAPI.getCityName(userLocation);
+        if (res) {
+            handleSetSearchParams({
+                city: res.results[0].address_components[0].long_name,
+                // retrievedLocation: true,
+            });
+        }
+    }
 
     useEffect(() => {
         console.log("Recalculating city name from userLocation");
         if (initialCityName === null) {
-            handleGetCityName();
+            console.log("getting it");
+            handleGetCityName(userLocation);
         }
-    }, [userLocation]);
+    }, [userLocation, initialCityName]);
 
     let tab = searchParams.get("tab");
     if (!tab) {
         tab = "map";
     }
 
+    // initially get filter options from search params.
     const [filterOptions, setFilterOptions] = useState({
         type: searchParams.get("type"),
         offering: searchParams.get("offering"),
@@ -66,18 +86,23 @@ const HomePage = () => {
                 : true
             : false,
     });
+
     const { initialLoading } = useAuthContext();
+
     const [showFilter, setShowFilter] = useState(false);
-    // const [sortBy, setSortBy] = useState(false);
     const sortBy = searchParams.get("sortByName")
         ? searchParams.get("sortByName") === "true"
             ? true
             : false
         : false;
 
-    const { data: restaurants } = useGetRestaurants(filterOptions, cityName);
+    const { data: restaurants, loading: restaurantLoading } = useGetRestaurants(
+        filterOptions,
+        cityName
+    );
 
     useEffect(() => {
+        // set filter options to search params
         setFilterOptions({
             type: searchParams.get("type") ? searchParams.get("type") : "",
             offering: searchParams.get("offering")
@@ -91,8 +116,6 @@ const HomePage = () => {
         });
     }, [searchParams]);
 
-    //const [tab, setTab] = useState("map");
-
     if (initialLoading) return <></>;
 
     const setTab = (tab) => {
@@ -102,14 +125,13 @@ const HomePage = () => {
         });
         setSearchParams({ ...oldParams, tab });
     };
-    // console.log(filterOptions);
 
+    // set new search params while saving old values
     const handleSetSearchParams = (options) => {
         const oldParams = {};
         searchParams.forEach((value, key) => {
             oldParams[key] = value;
         });
-        // setFilterOptions(options);
         setSearchParams({ ...oldParams, ...options });
     };
 
@@ -124,10 +146,9 @@ const HomePage = () => {
                     lat: position.coords.latitude,
                     lng: position.coords.longitude,
                 };
-                console.log(userLocation);
                 center = userLocation;
-                console.log(center);
                 setUserLocation(center);
+                handleGetCityName(center);
             });
         } else {
             // code for legacy browsers
@@ -135,32 +156,77 @@ const HomePage = () => {
         }
     }, []);
 
-    const restaurantIdUrlParam = searchParams.get("id")
+    const restaurantIdUrlParam = searchParams.get("id");
 
     useEffect(() => {
+        // if restaurant id param changes, pan the map to the restaurant
         if (restaurantIdUrlParam) {
-            const restaurant = restaurants.find(restaurant => restaurant.id === restaurantIdUrlParam)
+            const restaurant = restaurants.find(
+                (restaurant) => restaurant.id === restaurantIdUrlParam
+            );
 
             if (restaurant) {
                 mapReference.panTo({
                     lat: restaurant.position.latitude,
                     lng: restaurant.position.longitude,
-                })
+                });
             }
         }
-    }, [restaurantIdUrlParam])
-
+    }, [restaurantIdUrlParam]);
 
     useEffect(() => {
-        const city = searchParams.get("city")
+        const city = searchParams.get("city");
+        // if city exists in the params, set cityName to it.
         if (city) {
-            setCityName(city)
+            setCityName(city);
         }
-    }, [searchParams])
+    }, [searchParams]);
+
+    useEffect(() => {
+        // Setting city search param if there is none and cityName is truthy.
+        // Helps to preserve the city search param if the user navigates to the home page via
+        // the navbar brand link (and the home page has already been mounted).
+        if (cityName && !searchParams.get("city")) {
+            console.log(
+                "Setting city search param if there is none and cityName is truthy"
+            );
+            handleSetSearchParams({ city: cityName });
+        }
+    }, [searchParams]);
+
+    useEffect(() => {
+        // Panning the map when cityName changes
+        if (mapReference) {
+            console.log("Panning when cityName changes");
+            GeocodingAPI.getCoordinates(cityName).then((res) => {
+                mapReference.panTo({
+                    lat: res.results[0].geometry.location.lat,
+                    lng: res.results[0].geometry.location.lng,
+                });
+            });
+        }
+    }, [cityName]);
+
+    const [showAlert, setShowAlert] = useState(false);
+
+    // function to toggle alert. Used in the filter component
+    const handleSetShowAlert = () => {
+        setShowAlert(true);
+        setTimeout(() => {
+            setShowAlert(false);
+        }, 4000);
+    };
 
     return (
         <>
             <Container className="py-3">
+                <div className="location-search-wrapper mb-2">
+                    <LocationSearch
+                        resetCityName={resetCityName}
+                        handleSetSearchParams={handleSetSearchParams}
+                    />
+                </div>
+
                 <Tabs
                     activeKey={tab}
                     onSelect={(tab) => setTab(tab)}
@@ -171,6 +237,7 @@ const HomePage = () => {
                         {userLocation ? (
                             <Map
                                 restaurants={restaurants}
+                                restaurantLoading={restaurantLoading}
                                 userLocation={userLocation}
                                 handleSetMapReference={handleSetMapReference}
                             />
@@ -212,22 +279,15 @@ const HomePage = () => {
                         >
                             {filterOptions.listAll
                                 ? `Show in ${cityName}`
-                                : "Show all"}
+                                : "Show all cities"}
                         </Button>
-
-                        <div className="location-search-wrapper">
-                            <LocationSearch
-                                handleSetCityName={handleSetCityName}
-                                handleGetCityName={handleGetCityName}
-                                handleSetSearchParams={handleSetSearchParams}
-                            />
-                        </div>
 
                         {showFilter && (
                             <FilterRestaurants
                                 handleSetSearchParams={handleSetSearchParams}
                                 filterOptions={filterOptions}
                                 searchParams={searchParams}
+                                handleSetShowAlert={handleSetShowAlert}
                             />
                         )}
                         <RestaurantList
@@ -238,6 +298,7 @@ const HomePage = () => {
                             listingAll={filterOptions.listAll}
                             mapReference={mapReference}
                             handleSetSearchParams={handleSetSearchParams}
+                            showAlert={showAlert}
                         />
                     </Tab>
                 </Tabs>

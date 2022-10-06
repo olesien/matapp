@@ -28,7 +28,6 @@ export default function RestaurantCard({
     const [distance, setDistance] = useState(restaurant?.distance);
     useEffect(() => {
         if (userLocation && restaurant && !distance) {
-            console.log("Getting distance.......");
             setDistance(
                 getDistance(
                     {
@@ -43,25 +42,14 @@ export default function RestaurantCard({
             );
         }
     }, [fromMap, restaurant, userLocation]);
-    //console.log(resturant);
     if (!restaurant) {
         return <div></div>;
     }
-    // const { isLoading, data: geocode } = useQuery(
-    //     [restaurant.id, restaurant.position._lat, restaurant.position._long],
-    //     GeocodingAPI.getReverseGeocode
-    // );
-
-    // if (isLoading) {
-    //     return <div></div>;
-    // }
-    // console.log(geocode);
 
     const viewOnMap = () => {
         //Set new tab and map ID
         handleSetSearchParams({ tab: "map", id: restaurant.id });
-        console.log(restaurant);
-        // Also running panTo here so that the map pans to the location 
+        // Also running panTo here so that the map pans to the location
         // even if the id url param doesn't change
         mapReference.panTo({
             lat: restaurant.position.latitude,
@@ -69,17 +57,14 @@ export default function RestaurantCard({
         });
     };
     const getDirections = async () => {
-        console.log("directions");
-
         let fromPlace = "Malmö";
         const { lat, lng } = userLocation;
         const geocode = await GeocodingAPI.getReverseGeocodeAsync(lat, lng);
-        //console.log(geocode);
         if (geocode && "results" in geocode && geocode.results.length > 0) {
             fromPlace = geocode.results[0].formatted_address;
         }
         fromPlace.replace(" ", "+");
-        const toPlace = (restaurant.address + ",+" + restaurant.city).replace(
+        const toPlace = (restaurant.address + ",+" + restaurant.place).replace(
             " ",
             "+"
         );
@@ -88,13 +73,11 @@ export default function RestaurantCard({
     };
 
     const view = async () => {
-        console.log("view");
         let values = {};
         //Get all previous params
         for (let entry of searchParams.entries()) {
             values[entry[0]] = entry[1];
         }
-        console.log(values);
         setSearchParams({ ...values, viewRestaurant: restaurant.id });
     };
     return (
@@ -109,11 +92,6 @@ export default function RestaurantCard({
                 <Card.Subtitle className="mb-2 text-muted">
                     {restaurant.cuisine} cuisine
                 </Card.Subtitle>
-                {/* <Card.Text>
-                    {restaurant.type_of_establishment} offering{" "}
-                    {restaurant.offers}
-                </Card.Text> */}
-                {/* <Card.Text>{geocode.results[0]?.formatted_address}</Card.Text> */}
                 <Card.Text>"{restaurant.description}"</Card.Text>
                 <footer>
                     {!fromMap && (

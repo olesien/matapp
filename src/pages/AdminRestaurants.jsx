@@ -2,24 +2,19 @@ import React from "react";
 import Container from "react-bootstrap/Container";
 import { useTable } from "react-table";
 import RenderSortedTable from "../components/RenderSortedTable";
-import Image from "react-bootstrap/Image";
 import Button from "react-bootstrap/Button";
-import { useAuthContext } from "../contexts/AuthContext";
 import useStreamRestaurants from "../hooks/useStreamRestaurants";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import { useState } from "react";
 import RestaurantOverlayAdmin from "../components/RestaurantOverlayAdmin";
 import { useSortBy } from "react-table";
+import { toast } from "react-toastify";
 
 export default function AdminRestaurantsPage() {
-    console.log("rendering");
-    const { currentUser, initialLoading } = useAuthContext();
     const { data: restaurants, loading } = useStreamRestaurants();
     const [restaurant, setRestaurant] = useState(null);
-    console.log(restaurants);
     const toggleRestaurant = (id) => {
-        console.log(id);
         const restaurant = restaurants.find(
             (restaurant) => restaurant.id == id
         );
@@ -27,7 +22,6 @@ export default function AdminRestaurantsPage() {
     };
 
     const toggleApproved = async (id, approved) => {
-        console.log(id);
 
         const restaurantRef = doc(db, "restaurants", id);
 
@@ -35,25 +29,11 @@ export default function AdminRestaurantsPage() {
             await updateDoc(restaurantRef, {
                 approved: !approved,
             });
-            console.log("Succesfully updated");
+            toast.success('Successfully approved restaurant!')
         } catch (err) {
-            console.log(err);
+            toast.error(err.message)
         }
     };
-    // const setAdmin = async (mail, admin) => {
-    //     const user = users.find((user) => user.email === mail);
-    //     const uid = user.id;
-    //     const userRef = doc(db, "users", uid);
-
-    //     try {
-    //         await updateDoc(userRef, {
-    //             admin: !admin,
-    //         });
-    //         console.log("Succesfully updated");
-    //     } catch (err) {
-    //         console.log(err);
-    //     }
-    // };
 
     const data = React.useMemo(
         () =>
@@ -73,7 +53,6 @@ export default function AdminRestaurantsPage() {
     const actionSortByFunction = React.useMemo(() => {
         return (rowA, rowB, columnId, desc) => {
             //Sort by approve / disapprove
-            console.log("rowA: ", rowA);
             if (rowA.original.approved && !rowB.original.approved) return 1;
             if (!rowA.original.approved && rowB.original.approved) return -1;
             return 0;
@@ -137,7 +116,6 @@ export default function AdminRestaurantsPage() {
         ],
         [restaurants, actionSortByFunction]
     );
-    // if (initialLoading || loading) return <></>;
 
     const tableInstance = useTable({ columns, data }, useSortBy);
     return (

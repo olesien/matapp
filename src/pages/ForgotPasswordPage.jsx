@@ -30,7 +30,6 @@ const ForgotPasswordPage = () => {
 
 			// show success message
 			setMessage("Please check your spam folder.")
-
 			reset()
 
 		} catch (err) {
