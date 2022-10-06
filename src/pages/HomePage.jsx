@@ -192,6 +192,14 @@ const HomePage = () => {
     return (
         <>
             <Container className="py-3">
+                <div className="location-search-wrapper mb-2">
+                    <LocationSearch
+                        handleSetCityName={handleSetCityName}
+                        handleGetCityName={handleGetCityName}
+                        handleSetSearchParams={handleSetSearchParams}
+                    />
+                </div>
+
                 <Tabs
                     activeKey={tab}
                     onSelect={(tab) => setTab(tab)}
@@ -245,14 +253,6 @@ const HomePage = () => {
                                 ? `Show in ${cityName}`
                                 : "Show all"}
                         </Button>
-
-                        <div className="location-search-wrapper">
-                            <LocationSearch
-                                handleSetCityName={handleSetCityName}
-                                handleGetCityName={handleGetCityName}
-                                handleSetSearchParams={handleSetSearchParams}
-                            />
-                        </div>
 
                         {showFilter && (
                             <FilterRestaurants
