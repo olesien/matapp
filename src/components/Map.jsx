@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
     GoogleMap,
     useJsApiLoader,
@@ -9,10 +9,9 @@ import {
 import { useState } from "react";
 import RestaurantCard from "./RestaurantCard";
 import MyLocation from "./MyLocation";
-import { useSearchParams } from "react-router-dom";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPerson } from "@fortawesome/free-solid-svg-icons";
 const libraries = ["places"];
-
 const containerStyle = {
     width: "100%",
     height: "600px",
@@ -30,22 +29,10 @@ const Map = ({ restaurants, userLocation, handleSetMapReference }) => {
         googleMapsApiKey: import.meta.env.VITE_MAPS_KEY,
         libraries,
     });
-    const [searchParams, setSearchParams] = useSearchParams();
 
-    const [currentLocation, setCurrentLocation] = useState(userLocation);
     const [map, setMap] = React.useState(null);
-    const divStyle = {
-        background: `white`,
-        border: `1px solid #ccc`,
-        padding: 15,
-    };
 
-    const handleCenterChanged = () => {
-        if (map) {
-            const newCenter = map.getCenter();
-            setCurrentLocation({ lat: newCenter.lat(), lng: newCenter.lng() });
-        }
-    };
+    //Current zoom has changed
     const handleZoomChanged = () => {
         if (map) {
             const newZoom = map.getZoom();
@@ -53,16 +40,14 @@ const Map = ({ restaurants, userLocation, handleSetMapReference }) => {
         }
     };
 
-    // console.log(currentLocation, userLocation, currentZoom);
-
+    //Map has loaded
     const onLoad = React.useCallback(function callback(map) {
-        // const bounds = new window.google.maps.LatLngBounds(center);
-        // map.fitBounds(bounds);
         map.setZoom(defaultZoom);
         handleSetMapReference(map);
         setMap(map);
     }, []);
 
+    //Unmount map
     const onUnmount = React.useCallback(function callback(map) {
         setMap(null);
     }, []);
@@ -88,6 +73,7 @@ const Map = ({ restaurants, userLocation, handleSetMapReference }) => {
         }
     };
 
+    //Custom styling and removing map type selection as it goes below searchbar in mobile
     const defaultOptions = {
         styles: [
             {
@@ -112,6 +98,7 @@ const Map = ({ restaurants, userLocation, handleSetMapReference }) => {
         mapTypeControl: false,
     };
 
+    //Has loaded, load the map and card
     return isLoaded ? (
         <div className="flex">
             <RestaurantCard
@@ -123,11 +110,9 @@ const Map = ({ restaurants, userLocation, handleSetMapReference }) => {
             <GoogleMap
                 mapContainerStyle={containerStyle}
                 center={userLocation}
-                // zoom={defaultZoom}
                 onLoad={onLoad}
                 onUnmount={onUnmount}
                 onZoomChanged={handleZoomChanged}
-                onCenterChanged={handleCenterChanged}
                 options={defaultOptions}
             >
                 <MyLocation userLocation={userLocation} />
@@ -156,6 +141,19 @@ const Map = ({ restaurants, userLocation, handleSetMapReference }) => {
                                 {key == 1 && (
                                     //Loaded
                                     <div>
+                                        <OverlayView
+                                            key="mwl"
+                                            position={userLocation}
+                                            mapPaneName={
+                                                OverlayView.OVERLAY_MOUSE_TARGET
+                                            }
+                                            getPixelPositionOffset={(x, y) => ({
+                                                x: 0,
+                                                y: 0,
+                                            })}
+                                        >
+                                            <FontAwesomeIcon icon={faPerson} />
+                                        </OverlayView>
                                         <MyLocation
                                             userLocation={userLocation}
                                         />
@@ -163,14 +161,6 @@ const Map = ({ restaurants, userLocation, handleSetMapReference }) => {
                                 )}
                                 <div>
                                     <Marker
-                                        // icon={{
-                                        //     path: "M8 12l-4.7023 2.4721.898-5.236L.3916 5.5279l5.2574-.764L8 0l2.3511 4.764 5.2574.7639-3.8043 3.7082.898 5.236z",
-                                        //     fillColor: "yellow",
-                                        //     fillOpacity: 0.9,
-                                        //     scale: 2,
-                                        //     strokeColor: "gold",
-                                        //     strokeWeight: 2,
-                                        // }}
                                         key={key}
                                         position={position}
                                         onClick={() =>
@@ -183,13 +173,10 @@ const Map = ({ restaurants, userLocation, handleSetMapReference }) => {
                                         mapPaneName={
                                             OverlayView.OVERLAY_MOUSE_TARGET
                                         }
-                                        getPixelPositionOffset={(x, y) =>
-                                            // getPixelPositionOffset(x, y, {
-                                            //     x: -30,
-                                            //     y: -15,
-                                            // })
-                                            ({ x: -50, y: 10 })
-                                        }
+                                        getPixelPositionOffset={(x, y) => ({
+                                            x: -50,
+                                            y: 10,
+                                        })}
                                     >
                                         <div
                                             style={{
