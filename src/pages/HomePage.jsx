@@ -22,8 +22,10 @@ const HomePage = () => {
         lng: -117.214,
     });
 
+    // saving city name to state
     const [cityName, setCityName] = useState(null);
 
+    // saving city name that is initially fetched
     const [initialCityName, setInitialCityName] = useState(
         searchParams.get("city") ? searchParams.get("city") : null
     );
@@ -35,6 +37,7 @@ const HomePage = () => {
     };
     let retrievedLocation = searchParams.get("retrievedLocation");
 
+    // get city name via currentLocation.
     const handleGetCityName = async (userLocation) => {
         console.log(retrievedLocation);
         if (retrievedLocation) return;
@@ -49,6 +52,7 @@ const HomePage = () => {
         }
     };
 
+    // reset city name to that of your current location.
     const resetCityName = async () => {
         const res = await GeocodingAPI.getCityName(userLocation);
         if (res) {
@@ -72,6 +76,7 @@ const HomePage = () => {
         tab = "map";
     }
 
+    // initially get filter options from search params.
     const [filterOptions, setFilterOptions] = useState({
         type: searchParams.get("type"),
         offering: searchParams.get("offering"),
@@ -97,6 +102,7 @@ const HomePage = () => {
     );
 
     useEffect(() => {
+        // set filter options to search params
         setFilterOptions({
             type: searchParams.get("type") ? searchParams.get("type") : "",
             offering: searchParams.get("offering")
@@ -120,6 +126,7 @@ const HomePage = () => {
         setSearchParams({ ...oldParams, tab });
     };
 
+    // set new search params while saving old values
     const handleSetSearchParams = (options) => {
         const oldParams = {};
         searchParams.forEach((value, key) => {
@@ -152,6 +159,7 @@ const HomePage = () => {
     const restaurantIdUrlParam = searchParams.get("id");
 
     useEffect(() => {
+        // if restaurant id param changes, pan the map to the restaurant
         if (restaurantIdUrlParam) {
             const restaurant = restaurants.find(
                 (restaurant) => restaurant.id === restaurantIdUrlParam
@@ -168,6 +176,7 @@ const HomePage = () => {
 
     useEffect(() => {
         const city = searchParams.get("city");
+        // if city exists in the params, set cityName to it.
         if (city) {
             setCityName(city);
         }
@@ -186,6 +195,7 @@ const HomePage = () => {
     }, [searchParams]);
 
     useEffect(() => {
+        // Panning the map when cityName changes
         if (mapReference) {
             console.log("Panning when cityName changes");
             GeocodingAPI.getCoordinates(cityName).then((res) => {
@@ -199,6 +209,7 @@ const HomePage = () => {
 
     const [showAlert, setShowAlert] = useState(false);
 
+    // function to toggle alert. Used in the filter component
     const handleSetShowAlert = () => {
         setShowAlert(true);
         setTimeout(() => {
