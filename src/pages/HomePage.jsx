@@ -158,6 +158,37 @@ const HomePage = () => {
         }
     }, [searchParams])
 
+    useEffect(() => {
+        // Setting city search param if there is none and cityName is truthy.
+        // Helps to preserve the city search param if the user navigates to the home page via
+        // the navbar brand link (and the home page has already been mounted).
+        if (cityName && !searchParams.get("city")) {
+            console.log("Setting city search param if there is none and cityName is truthy")
+            handleSetSearchParams({ city: cityName })
+        }
+    }, [searchParams])
+
+    useEffect(() => {
+        if (mapReference) {
+            console.log("Panning when cityName changes")
+            GeocodingAPI.getCoordinates(cityName).then(res => {
+                mapReference.panTo({
+                    lat: res.results[0].geometry.location.lat,
+                    lng: res.results[0].geometry.location.lng
+                })
+            })
+        }
+    }, [cityName])
+
+    const [showAlert, setShowAlert] = useState(false)
+
+    const handleSetShowAlert = () => {
+        setShowAlert(true)
+        setTimeout(() => {
+            setShowAlert(false)
+        }, 4000);
+    }
+
     return (
         <>
             <Container className="py-3">
@@ -228,6 +259,7 @@ const HomePage = () => {
                                 handleSetSearchParams={handleSetSearchParams}
                                 filterOptions={filterOptions}
                                 searchParams={searchParams}
+                                handleSetShowAlert={handleSetShowAlert}
                             />
                         )}
                         <RestaurantList
@@ -238,6 +270,7 @@ const HomePage = () => {
                             listingAll={filterOptions.listAll}
                             mapReference={mapReference}
                             handleSetSearchParams={handleSetSearchParams}
+                            showAlert={showAlert}
                         />
                     </Tab>
                 </Tabs>
