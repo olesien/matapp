@@ -1,4 +1,4 @@
-import Alert from "react-bootstrap/Alert"
+import Alert from "react-bootstrap/Alert";
 import RestaurantCard from "./RestaurantCard";
 import getDistance from "geolib/es/getDistance";
 import { useState } from "react";

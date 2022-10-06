@@ -49,7 +49,7 @@ export default function RestaurantCard({
     const viewOnMap = () => {
         //Set new tab and map ID
         handleSetSearchParams({ tab: "map", id: restaurant.id });
-        // Also running panTo here so that the map pans to the location 
+        // Also running panTo here so that the map pans to the location
         // even if the id url param doesn't change
         mapReference.panTo({
             lat: restaurant.position.latitude,
@@ -57,7 +57,6 @@ export default function RestaurantCard({
         });
     };
     const getDirections = async () => {
-
         let fromPlace = "Malmö";
         const { lat, lng } = userLocation;
         const geocode = await GeocodingAPI.getReverseGeocodeAsync(lat, lng);
@@ -65,7 +64,7 @@ export default function RestaurantCard({
             fromPlace = geocode.results[0].formatted_address;
         }
         fromPlace.replace(" ", "+");
-        const toPlace = (restaurant.address + ",+" + restaurant.city).replace(
+        const toPlace = (restaurant.address + ",+" + restaurant.place).replace(
             " ",
             "+"
         );

@@ -17,7 +17,7 @@ export default function RestaurantOverlayAdmin({ restaurant, handleClose }) {
     const [image, setImage] = useState(null);
     const [description, setDescription] = useState(restaurant?.description);
     const [address, setAddress] = useState(restaurant?.address);
-    const [city, setCity] = useState(restaurant?.city);
+    const [city, setCity] = useState(restaurant?.place);
     const [postcode, setPostcode] = useState(restaurant?.postcode);
     const [category, setCategory] = useState(restaurant?.category);
     const [email, setEmail] = useState(restaurant?.email);
@@ -52,7 +52,7 @@ export default function RestaurantOverlayAdmin({ restaurant, handleClose }) {
                 name,
                 description,
                 address,
-                city,
+                place: city,
                 category,
                 postcode,
             };
