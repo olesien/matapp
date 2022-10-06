@@ -47,7 +47,7 @@ const RestaurantList = ({
     return (
         <div>
             {showAlert && (
-                <Alert>Filter options were updated.</Alert>
+                <Alert className="mt-2">Filter options were updated.</Alert>
             )}
             <h3 className="my-4">
                 {listingAll
