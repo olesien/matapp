@@ -8,7 +8,7 @@ test("alert shows error message when searching for a location", async () => {
     render(
         <BrowserRouter>
             <AuthContextProvider>
-                <HomePage/>
+                <HomePage />
             </AuthContextProvider>
         </BrowserRouter>
     )
@@ -31,7 +31,7 @@ test("alert shows error message when searching for a location", async () => {
 
     // find alert
     const alertEl = await screen.findByRole('alert')
-    
+
     // assert that alert shows error message
     expect(alertEl).toHaveTextContent('No restaurants for that location was found in our database.')
 })
@@ -48,7 +48,12 @@ it("can filter restaurants by category", async () => {
     // find restaurant list tab
     const restaurantListTabEl = await screen.findByText('Restaurant List')
 
-    // find 'show all' button
+    // click on tab
+    userEvent.click(restaurantListTabEl)
+
+     // // find 'filter' button
+     const filterButtonEl = await screen.findByRole('button', { name: /filter/i })
+    //  console.log(filterButtonEl)
 
     // click on 'show all' button
 
