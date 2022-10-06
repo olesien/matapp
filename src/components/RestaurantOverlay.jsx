@@ -1,7 +1,7 @@
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
-import { Form, Image } from "react-bootstrap";
-import { useEffect, useState } from "react";
+import { Image } from "react-bootstrap";
+import { useState } from "react";
 import RestaurantImages from "./RestaurantImages";
 import { useSearchParams } from "react-router-dom";
 import useGetRestaurant from "../hooks/useGetRestaurant";

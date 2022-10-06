@@ -1,6 +1,6 @@
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
-import { Form, Image } from "react-bootstrap";
+import { Form } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import InputField from "./InputField";
 import { doc, updateDoc } from "firebase/firestore";

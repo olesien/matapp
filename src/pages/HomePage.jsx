@@ -21,11 +21,13 @@ const HomePage = () => {
         lat: 33.872,
         lng: -117.214,
     });
+
     const [cityName, setCityName] = useState(null);
+
     const [initialCityName, setInitialCityName] = useState(
         searchParams.get("city") ? searchParams.get("city") : null
     );
-    // console.log(cityName)
+
     const [mapReference, setMapReference] = useState(null);
 
     const handleSetCityName = (name) => {
@@ -67,7 +69,9 @@ const HomePage = () => {
                 : true
             : false,
     });
+
     const { initialLoading } = useAuthContext();
+    
     const [showFilter, setShowFilter] = useState(false);
     // const [sortBy, setSortBy] = useState(false);
     const sortBy = searchParams.get("sortByName")
@@ -201,7 +205,6 @@ const HomePage = () => {
             <Container className="py-3">
                 <div className="location-search-wrapper mb-2">
                     <LocationSearch
-                        handleSetCityName={handleSetCityName}
                         handleGetCityName={handleGetCityName}
                         handleSetSearchParams={handleSetSearchParams}
                     />

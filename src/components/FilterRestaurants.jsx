@@ -19,9 +19,6 @@ const FilterRestaurants = ({ handleSetSearchParams, filterOptions, handleSetShow
         })
 
         handleSetShowAlert()
-        // setTimeout(() => {
-        //     handleSetShowAlert()
-        // }, 5000);
     }
 
     // Make sure the dropdown inputs have the correct values if the user navigates to the page 

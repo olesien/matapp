@@ -5,7 +5,7 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import useGetRestaurants from "../hooks/useGetRestaurants";
 
-const LocationSearch = ({ handleSetCityName, handleGetCityName, handleSetSearchParams }) => {
+const LocationSearch = ({ handleGetCityName, handleSetSearchParams }) => {
     const [searchedLocation, setSearchedLocation] = useState("")
     const [inputSuggestions, setInputSuggestions] = useState([])
     const [locationNotFound, setLocationNotFound] = useState(false)
