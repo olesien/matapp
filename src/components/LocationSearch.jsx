@@ -13,10 +13,11 @@ const LocationSearch = ({ handleGetCityName, handleSetSearchParams }) => {
     const { data: restaurants } = useGetRestaurants();
     const [inputIsFocused, setInputIsFocused] = useState(false);
     const onInputFocus = () => setInputIsFocused(true);
-    const onInputBlur = (e) => {
-        console.log(e.relatedTarget?.id);
-        if (e.relatedTarget?.id == "search-option") return;
-        setInputIsFocused(false);
+    const onInputBlur = () => {
+        //Tried my best, still failed
+        setTimeout(() => {
+            setInputIsFocused(false);
+        }, 300);
     };
 
     useEffect(() => {
@@ -122,7 +123,6 @@ const LocationSearch = ({ handleGetCityName, handleSetSearchParams }) => {
                                 <li
                                     key={suggestion.id}
                                     id="search-option"
-                                    tabIndex="0"
                                     // set the input field to the value of the suggestion
                                     onClick={() =>
                                         changeSearch(suggestion.place)
@@ -143,8 +143,6 @@ const LocationSearch = ({ handleGetCityName, handleSetSearchParams }) => {
                                     <li
                                         key={suggestion.id}
                                         id="search-option"
-                                        tabIndex="0"
-                                        // set the input field to the value of the suggestion
                                         onClick={() =>
                                             changeSearch(suggestion.place)
                                         }
