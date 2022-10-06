@@ -33,10 +33,12 @@ const HomePage = () => {
     const handleSetMapReference = (map) => {
         setMapReference(map);
     };
+    let retrievedLocation = searchParams.get("retrievedLocation");
 
     const handleGetCityName = async (userLocation) => {
-        let retrievedLocation = searchParams.get("retrievedLocation");
-        if (!retrievedLocation) return;
+        console.log(retrievedLocation);
+        if (retrievedLocation) return;
+        console.log("got this far");
         const res = await GeocodingAPI.getCityName(userLocation);
         if (res) {
             // setCityName(res.results[0].address_components[0].long_name);
@@ -60,6 +62,7 @@ const HomePage = () => {
     useEffect(() => {
         console.log("Recalculating city name from userLocation");
         if (initialCityName === null) {
+            console.log("getting it");
             handleGetCityName(userLocation);
         }
     }, [userLocation, initialCityName]);
