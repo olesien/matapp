@@ -30,21 +30,24 @@ const HomePage = () => {
         searchParams.get("city") ? searchParams.get("city") : null
     );
 
+    // Reference to the map object created in the Map component.
+    // This way we can access functions to change the map.
     const [mapReference, setMapReference] = useState(null);
 
+    // Function to set the reference.
     const handleSetMapReference = (map) => {
         setMapReference(map);
     };
+
     let retrievedLocation = searchParams.get("retrievedLocation");
 
-    // get city name via currentLocation.
+    // Get city name via currentLocation.
     const handleGetCityName = async (userLocation) => {
         console.log(retrievedLocation);
         if (retrievedLocation) return;
         console.log("got this far");
         const res = await GeocodingAPI.getCityName(userLocation);
         if (res) {
-            // setCityName(res.results[0].address_components[0].long_name);
             handleSetSearchParams({
                 city: res.results[0].address_components[0].long_name,
                 retrievedLocation: true,
@@ -58,11 +61,11 @@ const HomePage = () => {
         if (res) {
             handleSetSearchParams({
                 city: res.results[0].address_components[0].long_name,
-                // retrievedLocation: true,
             });
         }
     }
 
+    // Recalculating city name from userLocation"
     useEffect(() => {
         console.log("Recalculating city name from userLocation");
         if (initialCityName === null) {
@@ -71,12 +74,13 @@ const HomePage = () => {
         }
     }, [userLocation, initialCityName]);
 
+    // Check which tab should load
     let tab = searchParams.get("tab");
     if (!tab) {
         tab = "map";
     }
 
-    // initially get filter options from search params.
+    // Initially get filter options from search params.
     const [filterOptions, setFilterOptions] = useState({
         type: searchParams.get("type"),
         offering: searchParams.get("offering"),
@@ -90,12 +94,16 @@ const HomePage = () => {
     const { initialLoading } = useAuthContext();
 
     const [showFilter, setShowFilter] = useState(false);
+
+    // getting sortBy from url params. 
+    // Used to query the database for restaurants.
     const sortBy = searchParams.get("sortByName")
         ? searchParams.get("sortByName") === "true"
             ? true
             : false
         : false;
 
+    // Get the restaurants data
     const { data: restaurants, loading: restaurantLoading } = useGetRestaurants(
         filterOptions,
         cityName
@@ -135,6 +143,7 @@ const HomePage = () => {
         setSearchParams({ ...oldParams, ...options });
     };
 
+    // Setting the user's coordinates to state
     useEffect(() => {
         let center = {
             lat: 33.872,
