@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Container, Row, Col, Form, Button, Card, Alert, Image } from 'react-bootstrap'
 import { useAuthContext } from '../contexts/AuthContext'
 import { useForm } from 'react-hook-form';
+import { toast } from "react-toastify";
 
 const UpdateProfilePage = () => {
   const {
@@ -64,7 +65,7 @@ const UpdateProfilePage = () => {
       // reload user
       await reloadUser()
 
-      setMessage("Profile successfully updated")
+      toast.success("Profile successfully updated!");
       setLoading(false)
 
     } catch (e) {

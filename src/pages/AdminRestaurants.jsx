@@ -63,8 +63,8 @@ export default function AdminRestaurantsPage() {
                       id: restaurant.id,
                       name: restaurant.name,
                       street_address: restaurant?.address,
-                      city: restaurant?.city,
-                      category: restaurant?.category,
+                      city: restaurant?.place,
+                      category: restaurant?.type_of_establishment,
                       approved: restaurant?.approved,
                   })),
         [restaurants]

@@ -7,26 +7,42 @@ import { useSearchParams } from "react-router-dom";
 import useGetRestaurant from "../hooks/useGetRestaurant";
 import SubmitRestaurantImage from "./SubmitRestaurantImage";
 
-export default function RestaurantOverlay() {
+import { useAuthContext } from "../contexts/AuthContext";
+
+export default function RestaurantOverlay({ customRestaurant = null }) {
     const [searchParams, setSearchParams] = useSearchParams();
 
     const restaurantId = searchParams.get("viewRestaurant");
-    const { data: restaurant, loading } = useGetRestaurant(restaurantId);
+    const { data, loading } = useGetRestaurant(restaurantId);
     const [newImage, setNewImage] = useState(false);
-
+    let restaurant = data;
+    //for testing
+    const { currentUser } = useAuthContext();
+    console.log(restaurant);
+    if (customRestaurant) {
+        restaurant = customRestaurant;
+    }
     console.log(restaurant);
 
     const handleClose = () => {
         //Handle close
-        let values = {};
+        // let values = {};
+        const oldParams = {};
         //Get all previous params
-        for (let entry of searchParams.entries()) {
-            if (!entry[0] === "viewRestaurant") values[entry[0]] = entry[1];
-        }
-        console.log(values);
-        setSearchParams({ ...values });
+        // for (let entry of searchParams.entries()) {
+        //     if (!entry[0] === "viewRestaurant") values[entry[0]] = entry[1];
+        // }
+        // Getting all params in the url except viewRestaurant.
+        // This causes the overlay to disappear when the params are set.
+        searchParams.forEach((value, key) => {
+            if (key !== "viewRestaurant") {
+                oldParams[key] = value;
+            }
+        });
+        // console.log("Values when closing overlay", oldParams);
+        setSearchParams({ ...oldParams });
     };
-    if (!restaurantId) return <></>;
+    if (!restaurantId && !customRestaurant) return <></>;
 
     return (
         <Modal
@@ -47,21 +63,20 @@ export default function RestaurantOverlay() {
                         <div className="restaurant-overlay-card">
                             <div className="restaurant-row">
                                 <div className="option-card">
-                                    <Image src={restaurant?.url} />
+                                    <Image src={restaurant?.photoURL} />
 
                                     <p>{restaurant?.description}</p>
                                     <p>
-                                        {restaurant?.address},{" "}
-                                        {restaurant?.city}
+                                        📍 {restaurant?.address}, {restaurant?.place}
                                     </p>
                                     <RestaurantImages id={restaurantId} />
                                 </div>
                             </div>
                             <div className="restaurant-row">
-                                {restaurant?.category ? (
+                                {restaurant?.type_of_establishment ? (
                                     <>
                                         <h3>Category</h3>
-                                        <p>{restaurant.category}</p>
+                                        <p>{restaurant.type_of_establishment}</p>
                                     </>
                                 ) : (
                                     <></>
@@ -100,18 +115,27 @@ export default function RestaurantOverlay() {
                                 ) : (
                                     <></>
                                 )}
-
-                                <Button
-                                    onClick={() =>
-                                        setNewImage((oldState) => !oldState)
-                                    }
-                                >
-                                    {newImage
-                                        ? "Hide Form"
-                                        : "Submit new image"}
-                                </Button>
-                                {newImage && (
-                                    <SubmitRestaurantImage id={restaurantId} />
+                                {currentUser ? (
+                                    <>
+                                        <Button
+                                            onClick={() =>
+                                                setNewImage(
+                                                    (oldState) => !oldState
+                                                )
+                                            }
+                                        >
+                                            {newImage
+                                                ? "Hide Form"
+                                                : "Submit new image"}
+                                        </Button>
+                                        {newImage && (
+                                            <SubmitRestaurantImage
+                                                id={restaurantId}
+                                            />
+                                        )}
+                                    </>
+                                ) : (
+                                    <p>Login to add image!</p>
                                 )}
                             </div>
                         </div>

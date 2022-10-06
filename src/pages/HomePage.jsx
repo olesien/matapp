@@ -15,11 +15,17 @@ import LocationSearch from "../components/LocationSearch";
 import RestaurantOverlay from "../components/RestaurantOverlay";
 
 const HomePage = () => {
+    const [searchParams, setSearchParams] = useSearchParams();
+
     const [userLocation, setUserLocation] = useState({
         lat: 33.872,
         lng: -117.214,
     });
     const [cityName, setCityName] = useState(null)
+    const [initialCityName, setInitialCityName] = useState(searchParams.get("city")
+        ? searchParams.get('city')
+        : null
+    )
     // console.log(cityName)
     const [mapReference, setMapReference] = useState(null)
 
@@ -34,16 +40,17 @@ const HomePage = () => {
     const handleGetCityName = async () => {
         const res = await GeocodingAPI.getCityName(userLocation);
         if (res) {
-            setCityName(res.results[0].address_components[0].long_name);
+            // setCityName(res.results[0].address_components[0].long_name);
+            handleSetSearchParams({ city: res.results[0].address_components[0].long_name })
         }
     };
 
     useEffect(() => {
         console.log("Recalculating city name from userLocation");
-        handleGetCityName();
+        if (initialCityName === null) {
+            handleGetCityName();
+        }
     }, [userLocation]);
-
-    const [searchParams, setSearchParams] = useSearchParams();
 
     let tab = searchParams.get("tab");
     if (!tab) {
@@ -128,6 +135,29 @@ const HomePage = () => {
         }
     }, []);
 
+    const restaurantIdUrlParam = searchParams.get("id")
+
+    useEffect(() => {
+        if (restaurantIdUrlParam) {
+            const restaurant = restaurants.find(restaurant => restaurant.id === restaurantIdUrlParam)
+
+            if (restaurant) {
+                mapReference.panTo({
+                    lat: restaurant.position.latitude,
+                    lng: restaurant.position.longitude,
+                })
+            }
+        }
+    }, [restaurantIdUrlParam])
+
+
+    useEffect(() => {
+        const city = searchParams.get("city")
+        if (city) {
+            setCityName(city)
+        }
+    }, [searchParams])
+
     return (
         <>
             <Container className="py-3">
@@ -189,6 +219,7 @@ const HomePage = () => {
                             <LocationSearch
                                 handleSetCityName={handleSetCityName}
                                 handleGetCityName={handleGetCityName}
+                                handleSetSearchParams={handleSetSearchParams}
                             />
                         </div>
 

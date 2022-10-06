@@ -35,8 +35,8 @@ const FilterRestaurants = ({ handleSetSearchParams, filterOptions }) => {
                         <option value={""} disabled>Please select an option</option>
                         <option value={"restaurant"}>Restaurant</option>
                         <option value={"café"}>Café</option>
-                        <option value={"fast_food"}>Fast Food</option>
-                        <option value={"food_truck"}>Food Truck</option>
+                        <option value={"fast food"}>Fast Food</option>
+                        <option value={"food truck"}>Food Truck</option>
                     </Form.Select>
                 </div>
                 <div className="my-2">

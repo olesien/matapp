@@ -7,6 +7,7 @@ import InputField from "./InputField";
 import { doc, updateDoc } from "firebase/firestore";
 import { db, storage } from "../firebase";
 import { toast } from "react-toastify";
+import useGetRestaurant from "../hooks/useGetRestaurant";
 
 export default function ImageOverlayAdmin({ image, handleClose }) {
     const [title, setTitle] = useState(image?.title);
@@ -17,10 +18,20 @@ export default function ImageOverlayAdmin({ image, handleClose }) {
         setTitle(image?.title);
         setUrl(image?.imageurl);
     }, [image]);
+
+    const { data: restaurant, loading: restaurantLoading } = useGetRestaurant(
+        image?.restaurantid
+    );
+
+    const [err, setErr] = useState(null);
+
+    const [loading, setLoading] = useState(null);
+
     const submit = async () => {
         const imageRef = doc(db, "user-pictures", image.id);
 
         try {
+            setLoading(true);
             let imageurl = image.imageurl;
             let source = image.source;
             if (imageSrc) {
@@ -42,17 +53,25 @@ export default function ImageOverlayAdmin({ image, handleClose }) {
 
             console.log("Succesfully updated");
             toast.success("Image Edited!");
+            setLoading(false);
             handleClose();
         } catch (err) {
+            setLoading(false);
             console.log(err);
+            setErr(err.message);
         }
     };
     return (
         <Modal show={image} onHide={handleClose} dialogClassName="modal-size">
             <Modal.Header closeButton>
-                <Modal.Title>Image</Modal.Title>
+                <Modal.Title>
+                    {restaurant
+                        ? "Image for restaurant " + restaurant.name
+                        : "Loading..."}
+                </Modal.Title>
             </Modal.Header>
             <Modal.Body>
+                {err ? <p>{err}</p> : <></>}
                 <Form>
                     <InputField
                         divClassName="option-card"
@@ -80,9 +99,15 @@ export default function ImageOverlayAdmin({ image, handleClose }) {
                 <Button variant="secondary" onClick={handleClose}>
                     Close
                 </Button>
-                <Button variant="primary" onClick={submit}>
-                    Save Changes
-                </Button>
+                {loading ? (
+                    <Button variant="primary" disabled>
+                        Loading...
+                    </Button>
+                ) : (
+                    <Button variant="primary" onClick={submit}>
+                        Save Changes
+                    </Button>
+                )}
             </Modal.Footer>
         </Modal>
     );

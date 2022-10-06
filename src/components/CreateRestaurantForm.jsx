@@ -2,8 +2,12 @@ import { Button, Form } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { collection, addDoc, GeoPoint } from "firebase/firestore";
-import { db } from "../firebase";
+import { db, storage } from "../firebase";
 import { useAuthContext } from "../contexts/AuthContext";
+import GeocodingAPI from "../services/GeocodingAPI";
+
+import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
+import { useState } from "react";
 
 const CreateRestaurantForm = () => {
     const {
@@ -14,42 +18,78 @@ const CreateRestaurantForm = () => {
     } = useForm();
     const { currentUser } = useAuthContext();
 
-    const onCreateRestaurant = async (data) => {
-        console.log(data.name.toLowerCase())
-        // make firestore doc
-        await addDoc(collection(db, "restaurants"), {
-            /**
-             * @todo ändra namnet på fälten i databasen
-             */
-            // ...data,
-            nameLowerCase: data.name.toLowerCase(),
-            address: `${data.street_name} ${data.street_number}`,
-            category: data.category,
-            city: data.city,
-            createdBy: currentUser ? currentUser.uid : 0,
-            cuisine: data.cuisine,
-            description: data.description,
-            email: data.email,
-            facebook: `www.facebook.com/${data.facebook}`,
-            instagram: `www.instagram.com/${data.instagram}`,
-            location: new GeoPoint(12, 34),
-            name: data.name,
-            offer: data.offer,
-            offers: "lunch",
-            phone: data.phone,
-            photoURL:
-                "https://firebasestorage.googleapis.com/v0/b/fed21-matguiden.appspot.com/o/restaurants%2F1663942025-london-stock.jpg?alt=media&token=bc832727-0b00-41a2-ac98-4425bbd87102",
-            place: data.city,
-            position: new GeoPoint(12, 34),
-            postcode: data.postcode,
-            type_of_establishment: "restaurant",
-            url: "https://firebasestorage.googleapis.com/v0/b/fed21-matguiden.appspot.com/o/restaurants%2F1663942025-london-stock.jpg?alt=media&token=bc832727-0b00-41a2-ac98-4425bbd87102",
-            website_url: data.website_url,
-            approved: false,
-        });
+    const [image, setImage] = useState(false);
+    const handleFileChange = (img) => {
+        if (!img.target.files.length) {
+            setImage("https://via.placeholder.com/225");
+            return;
+        }
 
-        toast.success("Restaurant sent for admin approval");
-        reset();
+        setImage(img.target.files[0]);
+    };
+
+    const onCreateRestaurant = async (data) => {
+        // Get address information from Google Maps API
+        const response = await GeocodingAPI.getCoordinates(
+            `${data.street_number}%20${data.street_name}%20${data.postcode}%20${data.city}`
+        );
+        // Handle error
+
+        if (response.status !== "OK") {
+            toast.error("Invalid address. Please try again!");
+            return;
+        } else {
+            // Get coordinates
+            const lat = response.results[0].geometry.location.lat;
+            const lng = response.results[0].geometry.location.lng;
+
+            //Add photo, use date.now to get unix before image name to make it unique!!
+            const source = `photos/${currentUser.email}/${
+                Date.now() + "-" + data.name
+            }`;
+            const fileRef = ref(storage, source);
+
+            // upload photo to fileRef
+            const uploadResult = await uploadBytes(fileRef, image);
+
+            // get download url to uploaded file
+            const photoURL = await getDownloadURL(uploadResult.ref);
+            // make firestore doc
+            await addDoc(collection(db, "restaurants"), {
+                /**
+                 * @todo ändra namnet på fälten i databasen
+                 */
+                // ...data,
+                address: `${data.street_name} ${data.street_number}`,
+                createdBy: currentUser.uid,
+                cuisine: data.cuisine,
+                description: data.description,
+                email: data.email,
+                facebook: data.facebook,
+                instagram: data.instagram,
+                name: data.name,
+                nameLowerCase: data.name.toLowerCase(),
+                offers: data.offer,
+                phone: data.phone,
+                photoURL,
+                place: data.city,
+                position: new GeoPoint(lat, lng),
+                postcode: data.postcode,
+                type_of_establishment: data.category,
+
+                website_url: data.website_url,
+                approved: false,
+            });
+
+            // url: "https://firebasestorage.googleapis.com/v0/b/fed21-matguiden.appspot.com/o/restaurants%2F1663942025-london-stock.jpg?alt=media&token=bc832727-0b00-41a2-ac98-4425bbd87102",
+
+            if (currentUser.admin) {
+                toast.success("Restaurant successfully created");
+            } else {
+                toast.success("Restaurant sent for admin approval");
+            }
+            reset();
+        }
     };
 
     return (
@@ -72,6 +112,20 @@ const CreateRestaurantForm = () => {
                         {errors.name.message}
                     </Form.Text>
                 )}
+            </Form.Group>
+
+            <Form.Group className="mb-3" controlId="image">
+                <Form.Label>Restaurant Picture</Form.Label>
+                <Form.Control
+                    {...register("image")}
+                    type="file"
+                    onChange={handleFileChange}
+                />
+                <Form.Text>
+                    {image
+                        ? `${image.name} (${Math.round(image.size / 1024)} kB)`
+                        : "No photo selected"}
+                </Form.Text>
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="street_name">
@@ -206,11 +260,13 @@ const CreateRestaurantForm = () => {
                         required: "Select a category",
                     })}
                 >
-                    <option value="" disabled>Please select an option</option>
+                    <option value="" disabled>
+                        Please select an option
+                    </option>
                     <option value="restaurant">Restaurant</option>
                     <option value="café">Café</option>
-                    <option value="fast_food">Fast Food</option>
-                    <option value="food_truck">Food Truck</option>
+                    <option value="fast food">Fast Food</option>
+                    <option value="food truck">Food Truck</option>
                 </Form.Select>
                 {errors.category && (
                     <Form.Text className="text-danger">
@@ -226,7 +282,9 @@ const CreateRestaurantForm = () => {
                         required: "Select an offer",
                     })}
                 >
-                    <option value="" disabled>Please select an option</option>
+                    <option value="" disabled>
+                        Please select an option
+                    </option>
                     <option value="lunch">Lunch</option>
                     <option value="dinner">Dinner</option>
                 </Form.Select>
@@ -321,19 +379,6 @@ const CreateRestaurantForm = () => {
                     </Form.Text>
                 )}
             </Form.Group>
-
-            {/* <Form.Group className="mb-3" controlId="photoURL">
-                <Form.Label>Image</Form.Label>
-                <Form.Control as="input"
-                    {...register("photoURL")}
-                    type="file"
-                />
-                {errors.photoURL && (
-                    <Form.Text className="text-danger">
-                        {errors.photoURL.message}
-                    </Form.Text>
-                )}
-            </Form.Group> */}
 
             <Button variant="success" type="submit">
                 Submit
