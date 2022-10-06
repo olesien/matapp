@@ -1,4 +1,3 @@
-import Alert from "react-bootstrap/Alert"
 import RestaurantCard from "./RestaurantCard";
 import getDistance from "geolib/es/getDistance";
 import { useState } from "react";
@@ -12,7 +11,6 @@ const RestaurantList = ({
     listingAll,
     mapReference,
     handleSetSearchParams,
-    showAlert,
 }) => {
     const [sortedRestaurants, setSortedRestaurants] = useState(null);
     const userLocationConverted = {
@@ -46,9 +44,6 @@ const RestaurantList = ({
 
     return (
         <div>
-            {showAlert && (
-                <Alert className="mt-2">Filter options were updated.</Alert>
-            )}
             <h3 className="my-4">
                 {listingAll
                     ? "Showing all restaurants"

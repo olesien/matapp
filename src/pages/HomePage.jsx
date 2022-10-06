@@ -180,15 +180,6 @@ const HomePage = () => {
         }
     }, [cityName])
 
-    const [showAlert, setShowAlert] = useState(false)
-
-    const handleSetShowAlert = () => {
-        setShowAlert(true)
-        setTimeout(() => {
-            setShowAlert(false)
-        }, 4000);
-    }
-
     return (
         <>
             <Container className="py-3">
@@ -259,7 +250,6 @@ const HomePage = () => {
                                 handleSetSearchParams={handleSetSearchParams}
                                 filterOptions={filterOptions}
                                 searchParams={searchParams}
-                                handleSetShowAlert={handleSetShowAlert}
                             />
                         )}
                         <RestaurantList
@@ -270,7 +260,6 @@ const HomePage = () => {
                             listingAll={filterOptions.listAll}
                             mapReference={mapReference}
                             handleSetSearchParams={handleSetSearchParams}
-                            showAlert={showAlert}
                         />
                     </Tab>
                 </Tabs>
