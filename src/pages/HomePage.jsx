@@ -47,6 +47,16 @@ const HomePage = () => {
         }
     };
 
+    const resetCityName = async () => {
+        const res = await GeocodingAPI.getCityName(userLocation);
+        if (res) {
+            handleSetSearchParams({
+                city: res.results[0].address_components[0].long_name,
+                // retrievedLocation: true,
+            });
+        }
+    }
+
     useEffect(() => {
         console.log("Recalculating city name from userLocation");
         if (initialCityName === null) {
@@ -198,7 +208,7 @@ const HomePage = () => {
             <Container className="py-3">
                 <div className="location-search-wrapper mb-2">
                     <LocationSearch
-                        handleGetCityName={handleGetCityName}
+                        resetCityName={resetCityName}
                         handleSetSearchParams={handleSetSearchParams}
                     />
                 </div>
@@ -246,7 +256,7 @@ const HomePage = () => {
                                 handleSetSearchParams({
                                     listAll: searchParams.get("listAll")
                                         ? searchParams.get("listAll") ===
-                                          "false"
+                                            "false"
                                             ? true
                                             : false
                                         : true,

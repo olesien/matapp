@@ -5,7 +5,7 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import useGetRestaurants from "../hooks/useGetRestaurants";
 
-const LocationSearch = ({ handleGetCityName, handleSetSearchParams }) => {
+const LocationSearch = ({ resetCityName, handleSetSearchParams }) => {
     const [searchedLocation, setSearchedLocation] = useState("")
     const [inputSuggestions, setInputSuggestions] = useState([])
     const [locationNotFound, setLocationNotFound] = useState(false)
@@ -130,7 +130,7 @@ const LocationSearch = ({ handleGetCityName, handleSetSearchParams }) => {
                 <Button className='ms-2' type='search'>Search</Button>
             </Form >
             {/* reset the city name/location by recalculating the value using the user's coordinates */}
-            <Button onClick={handleGetCityName}>Reset location</Button>
+            <Button onClick={resetCityName}>Reset location</Button>
             {locationNotFound && (
                 <Alert className="mt-2" variant="warning">No restaurants for that location was found in our database.</Alert>
             )}
