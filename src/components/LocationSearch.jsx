@@ -14,7 +14,7 @@ const LocationSearch = ({ handleGetCityName, handleSetSearchParams }) => {
     const [inputIsFocused, setInputIsFocused] = useState(false);
     const onInputFocus = () => setInputIsFocused(true);
     const onInputBlur = (e) => {
-        console.log(e);
+        console.log(e.relatedTarget?.id);
         if (e.relatedTarget?.id == "search-option") return;
         setInputIsFocused(false);
     };
