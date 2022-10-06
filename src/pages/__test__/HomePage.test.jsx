@@ -36,7 +36,7 @@ test("alert shows error message when searching for a location", async () => {
     expect(alertEl).toHaveTextContent('No restaurants for that location was found in our database.')
 })
 
-it("can filter restaurants by category", async () => {
+it("alert shows update message when filtering restaurants", async () => {
     render(
         <BrowserRouter>
             <AuthContextProvider>
@@ -53,9 +53,19 @@ it("can filter restaurants by category", async () => {
 
      // // find 'filter' button
      const filterButtonEl = await screen.findByRole('button', { name: /filter/i })
-    //  console.log(filterButtonEl)
 
-    // click on 'show all' button
+    // click on 'filter' button
+    userEvent.click(filterButtonEl)
 
-    // assert that restaurant list shows all restaurants
+    // find 'submit' button
+    const submitButtonEl = await screen.findByRole('button', { name: /submit/i })
+    
+    // click on 'submit' button
+    userEvent.click(submitButtonEl)
+
+    // find alert
+    const alertEl = await screen.findByRole('alert')
+
+    // assert that alert shows message
+    expect(alertEl).toHaveTextContent('Filter options were updated.')
 })
