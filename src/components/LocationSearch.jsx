@@ -66,7 +66,7 @@ const LocationSearch = ({ handleGetCityName, handleSetSearchParams }) => {
         const reformatedLocation =
             searchedLocation.charAt(0).toUpperCase() +
             searchedLocation.slice(1);
-        handleSetSearchParams({ city: reformatedLocation });
+        handleSetSearchParams({ city: reformatedLocation, listAll: false });
 
         setSearchedLocation("");
         setFilteredSuggestions([]);
