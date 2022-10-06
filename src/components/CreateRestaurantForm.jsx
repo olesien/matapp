@@ -78,7 +78,7 @@ const CreateRestaurantForm = () => {
                 type_of_establishment: data.category,
 
                 website_url: data.website_url,
-                approved: false,
+                approved: currentUser.admin,
             });
 
             // url: "https://firebasestorage.googleapis.com/v0/b/fed21-matguiden.appspot.com/o/restaurants%2F1663942025-london-stock.jpg?alt=media&token=bc832727-0b00-41a2-ac98-4425bbd87102",
@@ -152,14 +152,7 @@ const CreateRestaurantForm = () => {
             <Form.Group className="mb-3" controlId="street_number">
                 <Form.Label>Street number</Form.Label>
                 <Form.Control
-                    {...register("street_number", {
-                        required: "Provide a street number",
-                        minLength: {
-                            value: 1,
-                            message:
-                                "Street number must be at least 1 character long",
-                        },
-                    })}
+                    {...register("street_number")}
                     placeholder="4B"
                     type="text"
                 />
