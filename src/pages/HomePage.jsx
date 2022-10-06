@@ -10,7 +10,7 @@ import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import { useSearchParams } from "react-router-dom";
 import { useAuthContext } from "../contexts/AuthContext";
-import GeocodingAPI from "../services/GeocodingAPI"
+import GeocodingAPI from "../services/GeocodingAPI";
 import LocationSearch from "../components/LocationSearch";
 import RestaurantOverlay from "../components/RestaurantOverlay";
 
@@ -21,27 +21,28 @@ const HomePage = () => {
         lat: 33.872,
         lng: -117.214,
     });
-    const [cityName, setCityName] = useState(null)
-    const [initialCityName, setInitialCityName] = useState(searchParams.get("city")
-        ? searchParams.get('city')
-        : null
-    )
+    const [cityName, setCityName] = useState(null);
+    const [initialCityName, setInitialCityName] = useState(
+        searchParams.get("city") ? searchParams.get("city") : null
+    );
     // console.log(cityName)
-    const [mapReference, setMapReference] = useState(null)
+    const [mapReference, setMapReference] = useState(null);
 
     const handleSetCityName = (name) => {
-        setCityName(name)
-    }
+        setCityName(name);
+    };
 
     const handleSetMapReference = (map) => {
-        setMapReference(map)
-    }
+        setMapReference(map);
+    };
 
     const handleGetCityName = async () => {
         const res = await GeocodingAPI.getCityName(userLocation);
         if (res) {
             // setCityName(res.results[0].address_components[0].long_name);
-            handleSetSearchParams({ city: res.results[0].address_components[0].long_name })
+            handleSetSearchParams({
+                city: res.results[0].address_components[0].long_name,
+            });
         }
     };
 
@@ -75,7 +76,10 @@ const HomePage = () => {
             : false
         : false;
 
-    const { data: restaurants } = useGetRestaurants(filterOptions, cityName);
+    const { data: restaurants, loading: restaurantLoading } = useGetRestaurants(
+        filterOptions,
+        cityName
+    );
 
     useEffect(() => {
         setFilterOptions({
@@ -135,50 +139,53 @@ const HomePage = () => {
         }
     }, []);
 
-    const restaurantIdUrlParam = searchParams.get("id")
+    const restaurantIdUrlParam = searchParams.get("id");
 
     useEffect(() => {
         if (restaurantIdUrlParam) {
-            const restaurant = restaurants.find(restaurant => restaurant.id === restaurantIdUrlParam)
+            const restaurant = restaurants.find(
+                (restaurant) => restaurant.id === restaurantIdUrlParam
+            );
 
             if (restaurant) {
                 mapReference.panTo({
                     lat: restaurant.position.latitude,
                     lng: restaurant.position.longitude,
-                })
+                });
             }
         }
-    }, [restaurantIdUrlParam])
-
+    }, [restaurantIdUrlParam]);
 
     useEffect(() => {
-        const city = searchParams.get("city")
+        const city = searchParams.get("city");
         if (city) {
-            setCityName(city)
+            setCityName(city);
         }
-    }, [searchParams])
+    }, [searchParams]);
 
     useEffect(() => {
         // Setting city search param if there is none and cityName is truthy.
         // Helps to preserve the city search param if the user navigates to the home page via
         // the navbar brand link (and the home page has already been mounted).
         if (cityName && !searchParams.get("city")) {
-            console.log("Setting city search param if there is none and cityName is truthy")
-            handleSetSearchParams({ city: cityName })
+            console.log(
+                "Setting city search param if there is none and cityName is truthy"
+            );
+            handleSetSearchParams({ city: cityName });
         }
-    }, [searchParams])
+    }, [searchParams]);
 
     useEffect(() => {
         if (mapReference) {
-            console.log("Panning when cityName changes")
-            GeocodingAPI.getCoordinates(cityName).then(res => {
+            console.log("Panning when cityName changes");
+            GeocodingAPI.getCoordinates(cityName).then((res) => {
                 mapReference.panTo({
                     lat: res.results[0].geometry.location.lat,
-                    lng: res.results[0].geometry.location.lng
-                })
-            })
+                    lng: res.results[0].geometry.location.lng,
+                });
+            });
         }
-    }, [cityName])
+    }, [cityName]);
 
     const [showAlert, setShowAlert] = useState(false)
 
@@ -210,6 +217,7 @@ const HomePage = () => {
                         {userLocation ? (
                             <Map
                                 restaurants={restaurants}
+                                restaurantLoading={restaurantLoading}
                                 userLocation={userLocation}
                                 handleSetMapReference={handleSetMapReference}
                             />
