@@ -34,12 +34,14 @@ const HomePage = () => {
         setMapReference(map);
     };
 
-    const handleGetCityName = async () => {
+    const handleGetCityName = async (userLocation) => {
         const res = await GeocodingAPI.getCityName(userLocation);
-        if (res) {
+        let retrievedLocation = searchParams.get("retrievedLocation");
+        if (res && !retrievedLocation) {
             // setCityName(res.results[0].address_components[0].long_name);
             handleSetSearchParams({
                 city: res.results[0].address_components[0].long_name,
+                retrievedLocation: true,
             });
         }
     };
@@ -47,9 +49,9 @@ const HomePage = () => {
     useEffect(() => {
         console.log("Recalculating city name from userLocation");
         if (initialCityName === null) {
-            handleGetCityName();
+            handleGetCityName(userLocation);
         }
-    }, [userLocation]);
+    }, [userLocation, initialCityName]);
 
     let tab = searchParams.get("tab");
     if (!tab) {
@@ -67,7 +69,7 @@ const HomePage = () => {
     });
 
     const { initialLoading } = useAuthContext();
-    
+
     const [showFilter, setShowFilter] = useState(false);
     const sortBy = searchParams.get("sortByName")
         ? searchParams.get("sortByName") === "true"
@@ -125,6 +127,7 @@ const HomePage = () => {
                 };
                 center = userLocation;
                 setUserLocation(center);
+                handleGetCityName(center);
             });
         } else {
             // code for legacy browsers
@@ -180,14 +183,14 @@ const HomePage = () => {
         }
     }, [cityName]);
 
-    const [showAlert, setShowAlert] = useState(false)
+    const [showAlert, setShowAlert] = useState(false);
 
     const handleSetShowAlert = () => {
-        setShowAlert(true)
+        setShowAlert(true);
         setTimeout(() => {
-            setShowAlert(false)
+            setShowAlert(false);
         }, 4000);
-    }
+    };
 
     return (
         <>
@@ -242,7 +245,7 @@ const HomePage = () => {
                                 handleSetSearchParams({
                                     listAll: searchParams.get("listAll")
                                         ? searchParams.get("listAll") ===
-                                            "false"
+                                          "false"
                                             ? true
                                             : false
                                         : true,
