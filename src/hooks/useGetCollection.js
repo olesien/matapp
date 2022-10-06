@@ -18,7 +18,6 @@ const useGetCollection = (query, filterOptions, cityName) => {
                     ...doc.data(),
                 });
             });
-            // console.log(fetchedData)
             setData(fetchedData);
             setLoading(false);
         };

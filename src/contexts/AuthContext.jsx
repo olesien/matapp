@@ -30,7 +30,6 @@ const AuthContextProvider = ({ children }) => {
         let data = {};
         if (user) {
             //Get related docs
-            // console.log(user);
             const ref = doc(db, "users", user.uid);
             const snapshot = await getDoc(ref);
 
@@ -74,7 +73,6 @@ const AuthContextProvider = ({ children }) => {
     };
 
     const login = (email, password) => {
-        console.log(email, password);
         return signInWithEmailAndPassword(auth, email, password);
     };
 
@@ -95,9 +93,6 @@ const AuthContextProvider = ({ children }) => {
     };
 
     const setPhoto = async (photo) => {
-        /**
-         * @todo Om tid finns, se till så att den gamla profilbilden skrivs över i databasen när en ny profilbild laddas upp
-         */
         let photoURL = auth.currentUser.photoURL;
 
         if (photo) {

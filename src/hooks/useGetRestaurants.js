@@ -17,7 +17,6 @@ const useGetRestaurants = (filterOptions, cityName) => {
             queryConstraints.push(where("offers", "==", filterOptions.offering));
         }
         if (!filterOptions.listAll) {
-            console.log(cityName)
             queryConstraints.push(where("place", "==", cityName));
         }
     }

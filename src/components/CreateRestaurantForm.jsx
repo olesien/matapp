@@ -5,7 +5,6 @@ import { collection, addDoc, GeoPoint } from "firebase/firestore";
 import { db, storage } from "../firebase";
 import { useAuthContext } from "../contexts/AuthContext";
 import GeocodingAPI from "../services/GeocodingAPI";
-
 import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
 import { useState } from "react";
 
@@ -33,8 +32,8 @@ const CreateRestaurantForm = () => {
         const response = await GeocodingAPI.getCoordinates(
             `${data.street_number}%20${data.street_name}%20${data.postcode}%20${data.city}`
         );
-        // Handle error
 
+        // Handle error
         if (response.status !== "OK") {
             toast.error("Invalid address. Please try again!");
             return;
@@ -56,10 +55,6 @@ const CreateRestaurantForm = () => {
             const photoURL = await getDownloadURL(uploadResult.ref);
             // make firestore doc
             await addDoc(collection(db, "restaurants"), {
-                /**
-                 * @todo ändra namnet på fälten i databasen
-                 */
-                // ...data,
                 address: `${data.street_name} ${data.street_number}`,
                 createdBy: currentUser.uid,
                 cuisine: data.cuisine,
@@ -76,12 +71,9 @@ const CreateRestaurantForm = () => {
                 position: new GeoPoint(lat, lng),
                 postcode: data.postcode,
                 type_of_establishment: data.category,
-
                 website_url: data.website_url,
                 approved: currentUser.admin,
             });
-
-            // url: "https://firebasestorage.googleapis.com/v0/b/fed21-matguiden.appspot.com/o/restaurants%2F1663942025-london-stock.jpg?alt=media&token=bc832727-0b00-41a2-ac98-4425bbd87102",
 
             if (currentUser.admin) {
                 toast.success("Restaurant successfully created");

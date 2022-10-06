@@ -4,9 +4,7 @@ import useGetRestaurantImages from "../hooks/useGetRestaurantImages";
 
 export default function RestaurantImages({ id }) {
     const { data: images, loading } = useGetRestaurantImages(id);
-    console.log(images);
     if (loading || images.length < 1) return <></>;
-    console.log("running");
     return (
         <div className=" d-block w-100">
             User submitted images

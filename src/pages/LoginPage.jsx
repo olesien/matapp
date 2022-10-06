@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import {
     Container,
     Row,
@@ -11,7 +11,6 @@ import {
 } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuthContext } from "../contexts/AuthContext";
-// import logo from '../assets/images/logo.png'
 import { useForm } from "react-hook-form";
 
 const LoginPage = () => {
@@ -45,11 +44,6 @@ const LoginPage = () => {
 
     return (
         <Container className="py-3 center-y">
-            {/* <Row>
-				<Col xs={{ span: 6, offset: 3 }} md={{ span: 4, offset: 4 }} className="logo-wrapper">
-					<Image src={logo} fluid />
-				</Col>
-			</Row> */}
 
             <Row>
                 <Col md={{ span: 6, offset: 3 }}>

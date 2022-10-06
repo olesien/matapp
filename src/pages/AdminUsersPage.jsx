@@ -9,12 +9,10 @@ import useGetUsers from "../hooks/useStreamUsers";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import { useSortBy } from "react-table";
+import { toast } from "react-toastify";
 
 export default function AdminUsersPage() {
-    console.log("rendering");
-    const { currentUser, initialLoading } = useAuthContext();
     const { data: users, loading } = useGetUsers();
-    console.log(users);
     const setAdmin = async (mail, admin) => {
         const user = users.find((user) => user.email === mail);
         const uid = user.id;
@@ -24,9 +22,9 @@ export default function AdminUsersPage() {
             await updateDoc(userRef, {
                 admin: !admin,
             });
-            console.log("Succesfully updated");
+            toast.success('Successfully updated admin status')
         } catch (err) {
-            console.log(err);
+            toast.error(err.message)
         }
     };
 
@@ -44,9 +42,7 @@ export default function AdminUsersPage() {
 
     const adminSortByFunction = React.useMemo(() => {
         return (rowA, rowB, columnId, desc) => {
-            console.log(rowA, rowB);
             // inspect the row to see what data we have
-            console.log("rowA: ", rowA);
             if (rowA.original.admin && !rowB.original.admin) return 1;
             if (!rowA.original.admin && rowB.original.admin) return -1;
             return 0;
@@ -103,7 +99,6 @@ export default function AdminUsersPage() {
         ],
         [users, adminSortByFunction]
     );
-    // if (initialLoading || loading) return <></>;
 
     const tableInstance = useTable(
         {

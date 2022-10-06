@@ -3,7 +3,6 @@ import { useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 
-
 const FilterRestaurants = ({ handleSetSearchParams, filterOptions, handleSetShowAlert }) => {
     // state for controlled form input
     const [selectedType, setSelectedType] = useState(filterOptions.type ? filterOptions.type : "")

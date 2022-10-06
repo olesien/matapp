@@ -19,6 +19,31 @@ const containerStyle = {
 
 const defaultZoom = 10;
 
+//Custom styling and removing map type selection as it goes below searchbar in mobile
+const defaultOptions = {
+    styles: [
+        {
+            featureType: "all",
+            elementType: "labels.text",
+            stylers: [
+                {
+                    visibility: "off",
+                },
+            ],
+        },
+        {
+            featureType: "poi",
+            elementType: "labels.icon",
+            stylers: [
+                {
+                    visibility: "off",
+                },
+            ],
+        },
+    ],
+    mapTypeControl: false,
+};
+
 const Map = ({
     restaurants,
     userLocation,
@@ -26,16 +51,14 @@ const Map = ({
     restaurantLoading,
 }) => {
     const [restaurant, setRestaurant] = useState(null);
-
     const [currentZoom, setCurrentZoom] = useState(defaultZoom);
-    // const [zoom, setZoom] = useState(defaultZoom);
+    const [map, setMap] = React.useState(null);
+    const [searchBox, setSearchBox] = useState(null);
     const { isLoaded } = useJsApiLoader({
         id: "google-map-script",
         googleMapsApiKey: import.meta.env.VITE_MAPS_KEY,
         libraries,
     });
-
-    const [map, setMap] = React.useState(null);
 
     //Current zoom has changed
     const handleZoomChanged = () => {
@@ -58,7 +81,6 @@ const Map = ({
     }, []);
 
     // Gain access to the searchBox property from Search Box component
-    const [searchBox, setSearchBox] = useState(null);
     const onSearchBoxLoad = (ref) => setSearchBox(ref);
 
     const onClose = () => {
@@ -76,31 +98,6 @@ const Map = ({
             });
             await map.setZoom(10);
         }
-    };
-
-    //Custom styling and removing map type selection as it goes below searchbar in mobile
-    const defaultOptions = {
-        styles: [
-            {
-                featureType: "all",
-                elementType: "labels.text",
-                stylers: [
-                    {
-                        visibility: "off",
-                    },
-                ],
-            },
-            {
-                featureType: "poi",
-                elementType: "labels.icon",
-                stylers: [
-                    {
-                        visibility: "off",
-                    },
-                ],
-            },
-        ],
-        mapTypeControl: false,
     };
 
     //Has loaded, load the map and card

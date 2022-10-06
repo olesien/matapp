@@ -30,10 +30,6 @@ const HomePage = () => {
 
     const [mapReference, setMapReference] = useState(null);
 
-    const handleSetCityName = (name) => {
-        setCityName(name);
-    };
-
     const handleSetMapReference = (map) => {
         setMapReference(map);
     };
@@ -73,7 +69,6 @@ const HomePage = () => {
     const { initialLoading } = useAuthContext();
     
     const [showFilter, setShowFilter] = useState(false);
-    // const [sortBy, setSortBy] = useState(false);
     const sortBy = searchParams.get("sortByName")
         ? searchParams.get("sortByName") === "true"
             ? true
@@ -99,8 +94,6 @@ const HomePage = () => {
         });
     }, [searchParams]);
 
-    //const [tab, setTab] = useState("map");
-
     if (initialLoading) return <></>;
 
     const setTab = (tab) => {
@@ -110,14 +103,12 @@ const HomePage = () => {
         });
         setSearchParams({ ...oldParams, tab });
     };
-    // console.log(filterOptions);
 
     const handleSetSearchParams = (options) => {
         const oldParams = {};
         searchParams.forEach((value, key) => {
             oldParams[key] = value;
         });
-        // setFilterOptions(options);
         setSearchParams({ ...oldParams, ...options });
     };
 
@@ -132,9 +123,7 @@ const HomePage = () => {
                     lat: position.coords.latitude,
                     lng: position.coords.longitude,
                 };
-                console.log(userLocation);
                 center = userLocation;
-                console.log(center);
                 setUserLocation(center);
             });
         } else {

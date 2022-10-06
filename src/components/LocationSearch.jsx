@@ -58,8 +58,6 @@ const LocationSearch = ({ handleGetCityName, handleSetSearchParams }) => {
         const reformatedLocation = searchedLocation.charAt(0).toUpperCase() + searchedLocation.slice(1)
         handleSetSearchParams({ city: reformatedLocation })
 
-        // handleSetCityName(reformatedLocation)
-
         setSearchedLocation("")
         setFilteredSuggestions([])
     }
@@ -88,7 +86,6 @@ const LocationSearch = ({ handleGetCityName, handleSetSearchParams }) => {
                 onSubmit={onSearchFormSubmit}
             >
                 <div className="my-2 flex-grow-1 position-relative">
-                    {/* <Form.Label htmlFor='city-search'>Search for a location</Form.Label> */}
                     <Form.Control
                         className=""
                         id='city-search'

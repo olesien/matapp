@@ -25,10 +25,6 @@ const UpdateProfilePage = () => {
     userPhotoURL,
   } = useAuthContext()
 
-  /**
-   * @todo Om tid finns, lägg till validering för filuppladdning
-   */
-
   const handleFileChange = (img) => {
     if (!img.target.files.length) {
       setImage('https://via.placeholder.com/225');
@@ -69,7 +65,6 @@ const UpdateProfilePage = () => {
       setLoading(false)
 
     } catch (e) {
-      console.log("Error updating profile", e)
       setError(e.message)
       setLoading(false)
     }

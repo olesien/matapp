@@ -23,7 +23,6 @@ export default function SubmitRestaurantImage({ id }) {
         }
 
         setImage(img.target.files[0]);
-        console.log("File changed!", img.target.files[0]);
     };
 
     const onHandleSubmit = async (data) => {
@@ -66,7 +65,6 @@ export default function SubmitRestaurantImage({ id }) {
             reset()
         } catch (err) {
             setLoading(false);
-            console.log(err);
         }
     };
 

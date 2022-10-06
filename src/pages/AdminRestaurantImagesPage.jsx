@@ -4,7 +4,6 @@ import { useTable } from "react-table";
 import RenderSortedTable from "../components/RenderSortedTable";
 import Image from "react-bootstrap/Image";
 import Button from "react-bootstrap/Button";
-import { useAuthContext } from "../contexts/AuthContext";
 import useStreamRestaurantImages from "../hooks/useStreamRestaurantImages";
 import { doc, updateDoc, deleteDoc } from "firebase/firestore";
 import { db, storage } from "../firebase";
@@ -15,19 +14,14 @@ import { ref, deleteObject } from "firebase/storage";
 import { toast } from "react-toastify";
 
 export default function AdminRestaurantImagesPage() {
-    console.log("rendering");
-    const { currentUser, initialLoading } = useAuthContext();
     const { data: images, loading } = useStreamRestaurantImages();
     const [image, setImage] = useState(null);
-    console.log(images);
     const toggleRestaurant = (id) => {
-        console.log(id);
         const image = images.find((image) => image.id == id);
         setImage(image);
     };
 
     const toggleApproved = async (id, approved) => {
-        console.log(id);
 
         const imageRef = doc(db, "user-pictures", id);
 
@@ -35,9 +29,9 @@ export default function AdminRestaurantImagesPage() {
             await updateDoc(imageRef, {
                 approved: !approved,
             });
-            console.log("Succesfully updated");
+            toast.success("Image approved");
         } catch (err) {
-            console.log(err);
+            toast.error(err.message)
         }
     };
 
@@ -48,42 +42,27 @@ export default function AdminRestaurantImagesPage() {
             deleteObject(imgRef);
             toast.success("Image deleted");
         } catch (err) {
-            console.log(err);
+            toast.error(err.message)
         }
     };
-    // const setAdmin = async (mail, admin) => {
-    //     const user = users.find((user) => user.email === mail);
-    //     const uid = user.id;
-    //     const userRef = doc(db, "users", uid);
-
-    //     try {
-    //         await updateDoc(userRef, {
-    //             admin: !admin,
-    //         });
-    //         console.log("Succesfully updated");
-    //     } catch (err) {
-    //         console.log(err);
-    //     }
-    // };
 
     const data = React.useMemo(
         () =>
             loading
                 ? []
                 : images.map((image) => ({
-                      id: image.id,
-                      imageurl: image.imageurl,
-                      source: image.source,
-                      title: image.title,
-                      approved: image?.approved,
-                  })),
+                    id: image.id,
+                    imageurl: image.imageurl,
+                    source: image.source,
+                    title: image.title,
+                    approved: image?.approved,
+                })),
         [images]
     );
 
     const actionSortByFunction = React.useMemo(() => {
         return (rowA, rowB, columnId, desc) => {
             //Sort by approve / disapprove
-            console.log("rowA: ", rowA);
             if (rowA.original.approved && !rowB.original.approved) return 1;
             if (!rowA.original.approved && rowB.original.approved) return -1;
             return 0;
@@ -164,7 +143,6 @@ export default function AdminRestaurantImagesPage() {
         ],
         [images, actionSortByFunction]
     );
-    // if (initialLoading || loading) return <></>;
 
     const tableInstance = useTable({ columns, data }, useSortBy);
     return (

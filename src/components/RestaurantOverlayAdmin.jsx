@@ -10,7 +10,6 @@ import { useAuthContext } from "../contexts/AuthContext";
 import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
 
 export default function RestaurantOverlayAdmin({ restaurant, handleClose }) {
-    console.log(restaurant);
     //To please the tests
     const { currentUser } = useAuthContext();
     const [name, setName] = useState(restaurant?.name);
@@ -26,9 +25,7 @@ export default function RestaurantOverlayAdmin({ restaurant, handleClose }) {
     const [site, setSite] = useState(restaurant?.website);
     const [facebook, setFacebook] = useState(restaurant?.facebook);
     const [instagram, setInstagram] = useState(restaurant?.instagram);
-
     const [err, setErr] = useState(null);
-
     const [loading, setLoading] = useState(null);
 
     useEffect(() => {
@@ -60,7 +57,6 @@ export default function RestaurantOverlayAdmin({ restaurant, handleClose }) {
                 postcode,
             };
 
-            console.log(newData);
             let photoURL = url;
             if (image) {
                 //Upload new one
@@ -99,12 +95,10 @@ export default function RestaurantOverlayAdmin({ restaurant, handleClose }) {
                 newData.instagram = instagram;
             }
             await updateDoc(restaurantRef, newData);
-            console.log("Succesfully updated");
             toast.success("Restaurant Edited!");
             setLoading(false);
             handleClose();
         } catch (err) {
-            console.log(err);
             setLoading(false);
             setErr(err.message);
         }
@@ -130,7 +124,6 @@ export default function RestaurantOverlayAdmin({ restaurant, handleClose }) {
                                 type="text"
                                 isTitle
                             />
-                            {/* <Image src={restaurant?.url} /> */}
                             <InputField
                                 divClassName="option-card-child"
                                 value={url}
@@ -140,14 +133,12 @@ export default function RestaurantOverlayAdmin({ restaurant, handleClose }) {
                                 setImage={setImage}
                                 isImage
                             />
-
                             <InputField
                                 divClassName="option-card-child"
                                 value={description}
                                 onChange={setDescription}
                                 type="text"
                             />
-
                             <InputField
                                 divClassName="option-card-child"
                                 value={address}
@@ -162,7 +153,6 @@ export default function RestaurantOverlayAdmin({ restaurant, handleClose }) {
                                 type="text"
                                 title="City"
                             />
-
                             <InputField
                                 divClassName="option-card-child"
                                 value={postcode}
@@ -173,13 +163,6 @@ export default function RestaurantOverlayAdmin({ restaurant, handleClose }) {
                         </div>
                     </div>
                     <div className="restaurant-row">
-                        {/* <div className="option-card">
-                            <p>Type</p>
-                            <ul>
-                                <li>Cafe</li>
-                                <li>Restaurant</li>
-                            </ul>
-                        </div> */}
                         <InputField
                             divClassName="option-card-child"
                             value={category}
@@ -227,7 +210,6 @@ export default function RestaurantOverlayAdmin({ restaurant, handleClose }) {
                     </div>
                 </Form>
             </Modal.Body>
-
             <Modal.Footer>
                 <Button variant="secondary" onClick={handleClose}>
                     Close
