@@ -19,7 +19,12 @@ const containerStyle = {
 
 const defaultZoom = 10;
 
-const Map = ({ restaurants, userLocation, handleSetMapReference }) => {
+const Map = ({
+    restaurants,
+    userLocation,
+    handleSetMapReference,
+    restaurantLoading,
+}) => {
     const [restaurant, setRestaurant] = useState(null);
 
     const [currentZoom, setCurrentZoom] = useState(defaultZoom);
@@ -128,7 +133,7 @@ const Map = ({ restaurants, userLocation, handleSetMapReference }) => {
                 </StandaloneSearchBox>
 
                 {/* Child components, such as markers, info windows, etc. */}
-                {restaurants.length > 0 ? (
+                {!restaurantLoading ? (
                     <div>
                         <OverlayView
                             key="mwl"
