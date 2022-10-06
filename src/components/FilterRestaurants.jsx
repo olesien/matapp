@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 
 
-const FilterRestaurants = ({ handleSetSearchParams, filterOptions }) => {
+const FilterRestaurants = ({ handleSetSearchParams, filterOptions, handleSetShowAlert }) => {
     // state for controlled form input
     const [selectedType, setSelectedType] = useState(filterOptions.type ? filterOptions.type : "")
     const [selectedServing, setSelectedServing] = useState(filterOptions.offering ? filterOptions.offering : "")
@@ -17,6 +17,11 @@ const FilterRestaurants = ({ handleSetSearchParams, filterOptions }) => {
             type: selectedType,
             offering: selectedServing
         })
+
+        handleSetShowAlert()
+        // setTimeout(() => {
+        //     handleSetShowAlert()
+        // }, 5000);
     }
 
     // Make sure the dropdown inputs have the correct values if the user navigates to the page 
