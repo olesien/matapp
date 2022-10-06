@@ -168,6 +168,18 @@ const HomePage = () => {
         }
     }, [searchParams])
 
+    useEffect(() => {
+        if (mapReference) {
+            console.log("Panning when cityName changes")
+            GeocodingAPI.getCoordinates(cityName).then(res => {
+                mapReference.panTo({
+                    lat: res.results[0].geometry.location.lat,
+                    lng: res.results[0].geometry.location.lng
+                })
+            })
+        }
+    }, [cityName])
+
     return (
         <>
             <Container className="py-3">
