@@ -35,9 +35,10 @@ const HomePage = () => {
     };
 
     const handleGetCityName = async (userLocation) => {
-        const res = await GeocodingAPI.getCityName(userLocation);
         let retrievedLocation = searchParams.get("retrievedLocation");
-        if (res && !retrievedLocation) {
+        if (!retrievedLocation) return;
+        const res = await GeocodingAPI.getCityName(userLocation);
+        if (res) {
             // setCityName(res.results[0].address_components[0].long_name);
             handleSetSearchParams({
                 city: res.results[0].address_components[0].long_name,
