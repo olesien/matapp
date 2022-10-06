@@ -22,8 +22,10 @@ const HomePage = () => {
         lng: -117.214,
     });
 
+    // saving city name to state
     const [cityName, setCityName] = useState(null);
 
+    // saving city name that is initially fetched
     const [initialCityName, setInitialCityName] = useState(
         searchParams.get("city") ? searchParams.get("city") : null
     );
@@ -33,29 +35,48 @@ const HomePage = () => {
     const handleSetMapReference = (map) => {
         setMapReference(map);
     };
+    let retrievedLocation = searchParams.get("retrievedLocation");
 
-    const handleGetCityName = async () => {
+    // get city name via currentLocation.
+    const handleGetCityName = async (userLocation) => {
+        console.log(retrievedLocation);
+        if (retrievedLocation) return;
+        console.log("got this far");
         const res = await GeocodingAPI.getCityName(userLocation);
         if (res) {
             // setCityName(res.results[0].address_components[0].long_name);
             handleSetSearchParams({
                 city: res.results[0].address_components[0].long_name,
+                retrievedLocation: true,
             });
         }
     };
 
+    // reset city name to that of your current location.
+    const resetCityName = async () => {
+        const res = await GeocodingAPI.getCityName(userLocation);
+        if (res) {
+            handleSetSearchParams({
+                city: res.results[0].address_components[0].long_name,
+                // retrievedLocation: true,
+            });
+        }
+    }
+
     useEffect(() => {
         console.log("Recalculating city name from userLocation");
         if (initialCityName === null) {
-            handleGetCityName();
+            console.log("getting it");
+            handleGetCityName(userLocation);
         }
-    }, [userLocation]);
+    }, [userLocation, initialCityName]);
 
     let tab = searchParams.get("tab");
     if (!tab) {
         tab = "map";
     }
 
+    // initially get filter options from search params.
     const [filterOptions, setFilterOptions] = useState({
         type: searchParams.get("type"),
         offering: searchParams.get("offering"),
@@ -67,7 +88,7 @@ const HomePage = () => {
     });
 
     const { initialLoading } = useAuthContext();
-    
+
     const [showFilter, setShowFilter] = useState(false);
     const sortBy = searchParams.get("sortByName")
         ? searchParams.get("sortByName") === "true"
@@ -81,6 +102,7 @@ const HomePage = () => {
     );
 
     useEffect(() => {
+        // set filter options to search params
         setFilterOptions({
             type: searchParams.get("type") ? searchParams.get("type") : "",
             offering: searchParams.get("offering")
@@ -104,6 +126,7 @@ const HomePage = () => {
         setSearchParams({ ...oldParams, tab });
     };
 
+    // set new search params while saving old values
     const handleSetSearchParams = (options) => {
         const oldParams = {};
         searchParams.forEach((value, key) => {
@@ -125,6 +148,7 @@ const HomePage = () => {
                 };
                 center = userLocation;
                 setUserLocation(center);
+                handleGetCityName(center);
             });
         } else {
             // code for legacy browsers
@@ -135,6 +159,7 @@ const HomePage = () => {
     const restaurantIdUrlParam = searchParams.get("id");
 
     useEffect(() => {
+        // if restaurant id param changes, pan the map to the restaurant
         if (restaurantIdUrlParam) {
             const restaurant = restaurants.find(
                 (restaurant) => restaurant.id === restaurantIdUrlParam
@@ -151,6 +176,7 @@ const HomePage = () => {
 
     useEffect(() => {
         const city = searchParams.get("city");
+        // if city exists in the params, set cityName to it.
         if (city) {
             setCityName(city);
         }
@@ -169,6 +195,7 @@ const HomePage = () => {
     }, [searchParams]);
 
     useEffect(() => {
+        // Panning the map when cityName changes
         if (mapReference) {
             console.log("Panning when cityName changes");
             GeocodingAPI.getCoordinates(cityName).then((res) => {
@@ -180,21 +207,22 @@ const HomePage = () => {
         }
     }, [cityName]);
 
-    const [showAlert, setShowAlert] = useState(false)
+    const [showAlert, setShowAlert] = useState(false);
 
+    // function to toggle alert. Used in the filter component
     const handleSetShowAlert = () => {
-        setShowAlert(true)
+        setShowAlert(true);
         setTimeout(() => {
-            setShowAlert(false)
+            setShowAlert(false);
         }, 4000);
-    }
+    };
 
     return (
         <>
             <Container className="py-3">
                 <div className="location-search-wrapper mb-2">
                     <LocationSearch
-                        handleGetCityName={handleGetCityName}
+                        resetCityName={resetCityName}
                         handleSetSearchParams={handleSetSearchParams}
                     />
                 </div>
