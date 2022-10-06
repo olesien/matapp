@@ -2,6 +2,7 @@ import { Container, Navbar, Nav, Image } from "react-bootstrap";
 import { Link, NavLink } from "react-router-dom";
 import { useAuthContext } from "../contexts/AuthContext";
 import { NavDropdown } from "react-bootstrap";
+import Img from "../assets/icons/favicon.ico";
 
 const Navigation = () => {
     const { currentUser, userEmail, userPhotoURL } = useAuthContext();
@@ -10,7 +11,7 @@ const Navigation = () => {
             <Container>
                 <Navbar.Brand as={Link} to="/">
                     <img
-                        src="/src/assets/icons/favicon.ico"
+                        src={Img}
                         width="30"
                         height="30"
                         className="d-inline-block align-top"
@@ -55,17 +56,21 @@ const Navigation = () => {
                                     Create a new restaurant
                                 </Nav.Link>
 
-                                <NavDropdown title={
-                                    userPhotoURL
-                                        ? <Image
-                                            src={userPhotoURL}
-                                            height={30}
-                                            width={30}
-                                            fluid
-                                            roundedCircle
-                                        />
-                                        : userEmail
-                                }>
+                                <NavDropdown
+                                    title={
+                                        userPhotoURL ? (
+                                            <Image
+                                                src={userPhotoURL}
+                                                height={30}
+                                                width={30}
+                                                fluid
+                                                roundedCircle
+                                            />
+                                        ) : (
+                                            userEmail
+                                        )
+                                    }
+                                >
                                     <NavLink
                                         to="/update-profile"
                                         className="dropdown-item"
