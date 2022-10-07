@@ -72,7 +72,7 @@
         height: fit-content;
         img {
             height: auto;
-            width: 100%;
+            width: 100vw;
         }
         > * {
             max-width: 100%;
@@ -160,4 +160,14 @@
             font-size: 1em;
         }
     }
+}
+
+@media (max-width: 1000px) {
+
+    .option-card {
+        img {
+            width: 100%;
+        }
+    }
+
 }
