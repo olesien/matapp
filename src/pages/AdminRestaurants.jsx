@@ -29,7 +29,7 @@ export default function AdminRestaurantsPage() {
             await updateDoc(restaurantRef, {
                 approved: !approved,
             });
-            toast.success('Successfully approved restaurant!')
+            toast.success('Successfully updated restaurant!')
         } catch (err) {
             toast.error(err.message)
         }
