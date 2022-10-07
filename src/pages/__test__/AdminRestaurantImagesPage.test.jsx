@@ -1,13 +1,8 @@
 import { render, screen } from "@testing-library/react";
 import AdminRestaurantImagesPage from '../AdminRestaurantImagesPage'
-import AuthContextProvider from '../../contexts/AuthContext'
 
 test("table is initially empty", async () => {
-    render(
-        <AuthContextProvider>
-            <AdminRestaurantImagesPage />
-        </AuthContextProvider>
-    )
+    render(<AdminRestaurantImagesPage />)
 
     // find table
     const tableEls = await screen.findAllByRole('rowgroup')
