@@ -86,7 +86,9 @@ export default function RestaurantOverlay({ customRestaurant = null }) {
                                 {restaurant?.website ? (
                                     <>
                                         <h3>Website</h3>
-                                        <p>{restaurant.website}</p>
+                                        <p>
+                                            <a href={restaurant.website} target="_blank">{restaurant.website}</a>
+                                        </p>
                                     </>
                                 ) : (
                                     <></>
@@ -94,15 +96,19 @@ export default function RestaurantOverlay({ customRestaurant = null }) {
                                 {restaurant?.facebook ? (
                                     <>
                                         <h3>Facebook</h3>
-                                        <p>{restaurant.facebook}</p>
+                                        <p>
+                                            <a href={restaurant.facebook} target="_blank">{restaurant.facebook}</a>
+                                        </p>
                                     </>
                                 ) : (
                                     <></>
                                 )}
                                 {restaurant?.instagram ? (
                                     <>
-                                        <h3>Instagram</h3>
-                                        <p>{restaurant.instagram}</p>
+                                         <h3>Instagram</h3>
+                                        <p>
+                                            <a href={restaurant.instagram} target="_blank">{restaurant.instagram}</a>
+                                        </p>
                                     </>
                                 ) : (
                                     <></>
